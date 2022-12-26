@@ -7,23 +7,6 @@
 
 import UIKit
 
-func overwriteWithFiraSans(completion: @escaping (String) -> Void) {
-  overwriteWithFont(name: "FiraSans-Regular.woff2", completion: completion)
-}
-
-func overwriteWithRobotoSerif(completion: @escaping (String) -> Void) {
-  overwriteWithFont(
-    name: "RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.woff2", completion: completion)
-}
-
-func overwriteWithNotoSansMono(completion: @escaping (String) -> Void) {
-  overwriteWithFont(name: "NotoSansMono-VariableFont_wdth,wght.woff2", completion: completion)
-}
-
-func overwriteWithChocoCooky(completion: @escaping (String) -> Void) {
-  overwriteWithFont(name: "Chococooky.woff2", completion: completion)
-}
-
 func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
   DispatchQueue.global(qos: .userInteractive).async {
     let succeeded = overwriteWithFontImpl(name: name)
@@ -39,9 +22,9 @@ func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
 func overwriteWithFontImpl(name: String) -> Bool {
   let urlToFont = Bundle.main.url(
     forResource: name, withExtension: nil, subdirectory: "RepackedFonts")!
-  let fontData = try! Data(contentsOf: urlToFont)
-  // let pathToTargetFont = "/System/Library/Fonts/CoreUI/SFUI.ttf"
-  #if true
+  var fontData = try! Data(contentsOf: urlToFont)
+  let pathToTargetFont = "/System/Library/Fonts/CoreUI/SFUI.ttf"
+  #if false
     let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
       0
     ].path
@@ -65,13 +48,29 @@ func overwriteWithFontImpl(name: String) -> Bool {
     return false
   }
   lseek(fd, 0, SEEK_SET)
-  // Map the part of the font we want to overwrite
+
+  // patch our font with the padding
+  // https://www.w3.org/TR/WOFF2/#woff20Header
+  // length
+  withUnsafeBytes(of: UInt32(originalFontSize).bigEndian) {
+    fontData.replaceSubrange(0x8..<0x8 + 4, with: $0)
+  }
+  // privOffset
+  withUnsafeBytes(of: UInt32(fontData.count).bigEndian) {
+    fontData.replaceSubrange(0x28..<0x28 + 4, with: $0)
+  }
+  // privLength
+  withUnsafeBytes(of: UInt32(Int(originalFontSize) - fontData.count).bigEndian) {
+    fontData.replaceSubrange(0x2c..<0x2c + 4, with: $0)
+  }
+
+  // Map the font we want to overwrite so we can mlock it
   let fontMap = mmap(nil, fontData.count, PROT_READ, MAP_SHARED, fd, 0)
   if fontMap == MAP_FAILED {
     print("map failed")
     return false
   }
-  close(fd)
+  // mlock so the file gets cached in memory
   guard mlock(fontMap, fontData.count) == 0 else {
     print("can't mlock")
     return false
@@ -84,9 +83,8 @@ func overwriteWithFontImpl(name: String) -> Bool {
     var overwroteOne = false
     for _ in 0..<2 {
       let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
-        print(fontMap!.advanced(by: chunkOff), dataChunkBytes)
         return unaligned_copy_switch_race(
-          fontMap!.advanced(by: chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
+          fd, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
       }
       if overwriteSucceeded {
         overwroteOne = true
@@ -102,4 +100,14 @@ func overwriteWithFontImpl(name: String) -> Bool {
   }
   print("successfully overwrote everything")
   return true
+}
+
+func dumpCurrentFont() {
+  let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
+    0
+  ].path
+  let pathToTargetFont = documentDirectory + "/SFUI_dump.ttf"
+  let pathToRealTargetFont = "/System/Library/Fonts/CoreUI/SFUI.ttf"
+  let origData = try! Data(contentsOf: URL(fileURLWithPath: pathToRealTargetFont))
+  try! origData.write(to: URL(fileURLWithPath: pathToTargetFont))
 }

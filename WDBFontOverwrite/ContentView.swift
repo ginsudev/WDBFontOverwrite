@@ -14,31 +14,31 @@ struct ContentView: View {
       Text(message).padding(16)
       Button(action: {
         message = "Running"
-        overwriteWithFiraSans {
+        overwriteWithFont(name: "DejaVuSansCondensed.woff2") {
           message = $0
         }
       }) {
-        Text("Fira Sans").font(.custom("FiraSans-Regular", size: 18))
+        Text("DejaVu Sans Condensed").font(.custom("DejaVuSansCondensed", size: 18))
       }.padding(16)
       Button(action: {
         message = "Running"
-        overwriteWithRobotoSerif {
+        overwriteWithFont(name: "DejaVuSerif.woff2") {
           message = $0
         }
       }) {
-        Text("Roboto Serif").font(.custom("RobotoSerif-20ptRegular", size: 18))
+        Text("DejaVu Serif").font(.custom("DejaVuSerif", size: 18))
       }.padding(16)
       Button(action: {
         message = "Running"
-        overwriteWithNotoSansMono {
+        overwriteWithFont(name: "DejaVuSansMono.woff2") {
           message = $0
         }
       }) {
-        Text("Noto Sans Mono").font(.custom("NotoSansMono-Regular", size: 18))
+        Text("DejaVu Sans Mono").font(.custom("DejaVuSansMono", size: 18))
       }.padding(16)
       Button(action: {
         message = "Running"
-        overwriteWithChocoCooky {
+        overwriteWithFont(name: "Chococooky.woff2") {
           message = $0
         }
       }) {
