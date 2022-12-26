@@ -27,7 +27,7 @@ To work around this, I package the font using the [WOFF2](https://www.w3.org/TR/
 
 See `repackfonts/make_woff2src.sh` for details: this script:
 
-- renames the font to .SFUI-Regular with [TTX](https://github.com/fonttools/fonttools) following [this answer]()
+- renames the font to .SFUI-Regular with [TTX](https://github.com/fonttools/fonttools) following [this answer](https://superuser.com/a/694452)
 - rebuilds the font to .woff2
 - runs `repackfonts/BrotliPadding.swift` to decompress the WOFF2 file and insert padding to skip past the 16384th byte
 
