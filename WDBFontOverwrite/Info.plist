@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>RepackedFonts/Chococooky.woff2</string>
+		<string>RepackedFonts/FiraSans-Regular.woff2</string>
+		<string>RepackedFonts/NotoSansMono-VariableFont_wdth,wght.woff2</string>
+		<string>RepackedFonts/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.woff2</string>
+	</array>
+</dict>
+</plist>

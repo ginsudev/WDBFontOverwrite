@@ -11,6 +11,8 @@
 		C5C9A7952959261000466D87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7942959261000466D87 /* ContentView.swift */; };
 		C5C9A7972959261200466D87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7962959261200466D87 /* Assets.xcassets */; };
 		C5C9A79A2959261200466D87 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7992959261200466D87 /* Preview Assets.xcassets */; };
+		C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */; };
+		C5C9A7A32959341600466D87 /* RepackedFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7A22959341600466D87 /* RepackedFonts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,9 @@
 		C5C9A7942959261000466D87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C5C9A7962959261200466D87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C5C9A7992959261200466D87 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverwriteFontImpl.swift; sourceTree = "<group>"; };
+		C5C9A7A22959341600466D87 /* RepackedFonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = RepackedFonts; sourceTree = "<group>"; };
+		C5C9A7A72959351A00466D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +56,11 @@
 		C5C9A7912959261000466D87 /* WDBFontOverwrite */ = {
 			isa = PBXGroup;
 			children = (
+				C5C9A7A72959351A00466D87 /* Info.plist */,
+				C5C9A7A22959341600466D87 /* RepackedFonts */,
 				C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */,
 				C5C9A7942959261000466D87 /* ContentView.swift */,
+				C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */,
 				C5C9A7962959261200466D87 /* Assets.xcassets */,
 				C5C9A7982959261200466D87 /* Preview Content */,
 			);
@@ -126,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5C9A79A2959261200466D87 /* Preview Assets.xcassets in Resources */,
+				C5C9A7A32959341600466D87 /* RepackedFonts in Resources */,
 				C5C9A7972959261200466D87 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +148,7 @@
 			files = (
 				C5C9A7952959261000466D87 /* ContentView.swift in Sources */,
 				C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */,
+				C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,11 +280,13 @@
 				DEVELOPMENT_TEAM = 3D7RY4393N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WDBFontOverwrite/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -299,11 +311,13 @@
 				DEVELOPMENT_TEAM = 3D7RY4393N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WDBFontOverwrite/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -10,12 +10,19 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+          Button(action: overwriteWithFiraSans) {
+            Text("Fira Sans").font(.custom("FiraSans-Regular", size: 18))
+          }.padding(16)
+          Button(action: overwriteWithRobotoSerif) {
+            Text("Roboto Serif").font(.custom("RobotoSerif-20ptRegular", size: 18))
+          }.padding(16)
+          Button(action: overwriteWithNotoSansMono) {
+            Text("Noto Sans Mono").font(.custom("NotoSansMono-Regular", size: 18))
+          }.padding(16)
+          Button(action: overwriteWithChocoCooky) {
+            Text("Choco Cooky").font(.custom("Chococooky", size: 18))
+          }.padding(16)
         }
-        .padding()
     }
 }
 
