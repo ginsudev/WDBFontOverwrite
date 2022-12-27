@@ -2,19 +2,40 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIFileSharingEnabled</key>
-	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PreviewFonts/Chococooky.ttf</string>
-    <string>PreviewFonts/Comic Sans MS.ttf</string>
 		<string>PreviewFonts/DejaVuSansCondensed.ttf</string>
 		<string>PreviewFonts/DejaVuSansMono.ttf</string>
 		<string>PreviewFonts/DejaVuSerif.ttf</string>
-    <string>PreviewFonts/FiraSans-Regular.ttf</string>
-    <string>PreviewFonts/Go-Mono.ttf</string>
-    <string>PreviewFonts/Go-Regular.ttf</string>
-    <string>PreviewFonts/segoeui.ttf</string>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.font</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>WOFF2 Font</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
+			<key>UTTypeIdentifier</key>
+			<string>public.woff2</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>woff2</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>font/woff2</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

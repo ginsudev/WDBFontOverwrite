@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import UniformTypeIdentifiers
 
 func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
   DispatchQueue.global(qos: .userInteractive).async {
-    let succeeded = overwriteWithFontImpl(name: name)
+    let fontURL = Bundle.main.url(
+      forResource: name, withExtension: nil, subdirectory: "RepackedFonts")!
+    let succeeded = overwriteWithFontImpl(fontURL: fontURL)
     DispatchQueue.main.async {
       completion(succeeded ? "Success: force close an app to see results" : "Failed")
     }
@@ -19,10 +22,8 @@ func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
 /// Overwrite the system font with the given font using CVE-2022-46689.
 /// The font must be specially prepared so that it skips past the last byte in every 16KB page.
 /// See BrotliPadding.swift for an implementation that adds this padding to WOFF2 fonts.
-func overwriteWithFontImpl(name: String) -> Bool {
-  let urlToFont = Bundle.main.url(
-    forResource: name, withExtension: nil, subdirectory: "RepackedFonts")!
-  var fontData = try! Data(contentsOf: urlToFont)
+func overwriteWithFontImpl(fontURL: URL) -> Bool {
+  var fontData = try! Data(contentsOf: fontURL)
   let pathToTargetFont = "/System/Library/Fonts/CoreUI/SFUI.ttf"
   #if false
     let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
@@ -110,4 +111,94 @@ func dumpCurrentFont() {
   let pathToRealTargetFont = "/System/Library/Fonts/CoreUI/SFUI.ttf"
   let origData = try! Data(contentsOf: URL(fileURLWithPath: pathToRealTargetFont))
   try! origData.write(to: URL(fileURLWithPath: pathToTargetFont))
+}
+
+func overwriteWithCustomFont(name: String, completion: @escaping (String) -> Void) {
+  let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
+    0
+  ]
+  let fontURL = documentDirectory.appendingPathComponent(name)
+  guard FileManager.default.fileExists(atPath: fontURL.path) else {
+    completion("No custom font imported")
+    return
+  }
+  DispatchQueue.global(qos: .userInteractive).async {
+    let succeeded = overwriteWithFontImpl(fontURL: fontURL)
+    DispatchQueue.main.async {
+      completion(succeeded ? "Success: force close an app to see results" : "Failed")
+    }
+  }
+}
+
+class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
+  let completion: ([URL]?) -> Void
+  init(completion: @escaping ([URL]?) -> Void) {
+    self.completion = completion
+  }
+  func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
+  {
+    completion(urls)
+  }
+  func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+    completion(nil)
+  }
+}
+
+var globalDelegate: WDBImportCustomFontPickerViewControllerDelegate?
+
+func importCustomFont(name: String, completion: @escaping (String) -> Void) {
+  // yes I should use a real SwiftUI way to this, but #yolo
+  let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: [
+    UTType("public.truetype-ttf-font")!, UTType(filenameExtension: "woff2", conformingTo: .font)!,
+  ])
+  let delegate = WDBImportCustomFontPickerViewControllerDelegate { urls in
+    globalDelegate = nil
+    guard let urls = urls else {
+      completion("Cancelled")
+      return
+    }
+    guard urls.count == 1 else {
+      completion("import one file at a time")
+      return
+    }
+    DispatchQueue.global(qos: .userInteractive).async {
+      let fileURL = urls[0]
+      guard fileURL.startAccessingSecurityScopedResource() else {
+        DispatchQueue.main.async {
+          completion("startAccessingSecurityScopedResource false?")
+        }
+        return
+      }
+      let documentDirectory = FileManager.default.urls(
+        for: .documentDirectory, in: .userDomainMask)[
+          0
+        ]
+      let targetURL = documentDirectory.appendingPathComponent(name)
+      let success = importCustomFontImpl(fileURL: fileURL, targetURL: targetURL)
+      fileURL.stopAccessingSecurityScopedResource()
+      DispatchQueue.main.async {
+        completion(success ? "Imported" : "Failed to import")
+      }
+    }
+  }
+  pickerViewController.delegate = delegate
+  // I said this is yolo
+  globalDelegate = delegate
+  (UIApplication.shared.connectedScenes.first! as! UIWindowScene).windows[0].rootViewController!
+    .present(pickerViewController, animated: true)
+}
+
+func importCustomFontImpl(fileURL: URL, targetURL: URL) -> Bool {
+  // read first 16k of font
+  let fileHandle = try! FileHandle(forReadingFrom: fileURL)
+  defer { fileHandle.closeFile() }
+  let first16k = try! fileHandle.read(upToCount: 0x4000)!
+  if first16k.count == 0x4000 && first16k[0..<4] == Data([0x77, 0x4f, 0x46, 0x32])
+    && first16k[0x3fff] == 0x41
+  {
+    print("already padded WOFF2")
+    try! FileManager.default.copyItem(at: fileURL, to: targetURL)
+    return true
+  }
+  return false
 }

@@ -49,6 +49,22 @@ struct ContentView: View {
           Text(font.name).font(.custom(font.postScriptName, size: 18))
         }.padding(8)
       }
+      Button(action: {
+        message = "Running"
+        overwriteWithCustomFont(name: "CustomFont.woff2") {
+          message = $0
+        }
+      }) {
+        Text("Custom font")
+      }.padding(8)
+      Button(action: {
+        message = "Importing"
+        importCustomFont(name: "CustomFont.woff2") {
+          message = $0
+        }
+      }) {
+        Text("Import custom font")
+      }.padding(8)
     }
   }
 }
