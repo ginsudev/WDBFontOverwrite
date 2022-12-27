@@ -1,8 +1,36 @@
+// BrotliPadding.swift by zhuowei with modifications by staturnz @0x7FF7
+
 import Compression
 import Foundation
 
 enum PackageInBrotliError: Error {
   case notEnoughSpaceForHeader
+}
+
+
+func copy_file(at srcURL: URL, to dstURL: URL) -> Bool {
+    do {
+        if FileManager.default.fileExists(atPath: dstURL.path) {
+            try FileManager.default.removeItem(at: dstURL)
+        }
+        try FileManager.default.copyItem(at: srcURL, to: dstURL)
+    } catch (let error) {
+        print("Failed to copy \(srcURL) to \(dstURL): \(error)")
+        return false
+    }
+    return true
+}
+
+func clean_folders(_ path:String){
+  let pwd = FileManager.default.currentDirectoryPath
+    do {
+        if FileManager.default.fileExists(atPath: "\(pwd)/\(path)") {
+            try FileManager.default.removeItem(atPath: "\(pwd)/\(path)")
+        }
+            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+    } catch let error as NSError {
+        print("Unable to create directory \(error.debugDescription)")
+    }
 }
 
 /// Stores the input data in a Brotli stream: does not compress, only store.
@@ -72,7 +100,7 @@ func packageInBrotliSkippingLastByteOfPage(input: Data, startingAddress: Int) th
     }
     currentPageOff = 0
   }
-  // write eod-of-stream
+  // write end-of-stream
   write([0b11])
   return outStream.property(forKey: .dataWrittenToMemoryStreamKey) as! Data
 }
@@ -174,16 +202,81 @@ func repackWoff2Font(input: Data) throws -> Data {
   return outputData
 }
 
+
+func basename(args: String...) throws -> String {
+    let task = Process()
+    let pipe = Pipe()
+    task.standardOutput = pipe
+    task.standardError = pipe
+    task.arguments = args
+    task.executableURL = URL(fileURLWithPath: "/usr/bin/basename") 
+    task.standardInput = nil
+    try task.run()
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(data: data, encoding: .utf8)!
+    return output
+}
+
+func zsh(args: String, printOutput: Bool){
+    let task = Process()
+    let pipe = Pipe()
+    task.standardOutput = pipe
+    task.standardError = pipe
+    task.arguments = ["-c", args]
+    task.executableURL = URL(fileURLWithPath: "/bin/zsh") 
+    task.standardInput = nil
+    try? task.run()
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(data: data, encoding: .utf8)!
+    if(printOutput) {
+      print(output)
+    }
+}
+
+    
 func main() {
-  guard CommandLine.arguments.count == 3 else {
-    print("usage: BrotliPadding input.woff2 output.woff2")
-    return
+    guard CommandLine.arguments.count == 2 else {
+        print("[*] usage: ./BrotliPadding <font.ttf>")
+        return
   }
 
-  let inputData = try! Data(
-    contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
-  let myData = try! repackWoff2Font(input: inputData)
-  try! myData.write(to: URL(fileURLWithPath: CommandLine.arguments[2]))
+  // removes old folders and creates new ones in the working dir
+  clean_folders("PreviewFonts")
+  clean_folders("XmlFonts")
+  clean_folders("XmlFontsRenamed")
+  clean_folders("RecompiledFonts")
+  clean_folders("RepackedFonts")
+
+  // check the supplied argument is a ttf file by checking path extension
+  if ((CommandLine.arguments[1] as NSString).pathExtension == "ttf") {
+
+    let font = (CommandLine.arguments[1] as NSString)
+    let fontpsname = (((CommandLine.arguments[1] as NSString).lastPathComponent as NSString).deletingPathExtension)
+    let basename_ttf = (try! basename(args: "-s", ".ttf", font as String)).trimmingCharacters(in: CharacterSet.newlines)
+    let fontname = (try! basename(args: "-s", ".otf", basename_ttf)).trimmingCharacters(in: CharacterSet.newlines)
+
+    print("[*] font:", font)
+    print("[*] fontpsname:", fontpsname)
+    print("[*] fontname:", fontname)
+
+    // copies .ttf file over to PreviewFonts/
+    if(copy_file(at: URL(fileURLWithPath: font as String), to: URL(fileURLWithPath: "\(FileManager.default.currentDirectoryPath)/PreviewFonts"))) {
+        print("[*] Copied \(fontname).ttf to Preview Fonts/.")
+    } else {
+        print("[*] Failed to copy file to PreviewFonts/.")
+        return
+    }
+
+    zsh(args: "ttx -d XmlFonts \(font)", printOutput: true)
+    zsh(args: "sed -e \"s/\(fontpsname)/.SFUI-Regular/g\" \"XmlFonts/\(fontname).ttx\" > \"XmlFontsRenamed/\(fontname).ttx\"", printOutput: false)
+    zsh(args: "ttx -d RecompiledFonts --flavor woff2 XmlFontsRenamed/\(fontname).ttx", printOutput: true)
+
+    let inputData = try! Data(contentsOf: URL(fileURLWithPath: "RecompiledFonts/\(fontname).woff2"))
+    let myData = try! repackWoff2Font(input: inputData)
+    try! myData.write(to: URL(fileURLWithPath: "RepackedFonts/\(fontname).woff2"))
+    print("[*] Done!\n[*] Output: \(FileManager.default.currentDirectoryPath)/RepackedFonts/\(fontname).woff2")
+
+  }
 }
 
 main()
