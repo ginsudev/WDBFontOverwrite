@@ -24,6 +24,9 @@ let fonts = [
   ),
   FontToReplace(name: "Go Regular", postScriptName: "GoRegular", repackedPath: "Go-Regular.woff2"),
   FontToReplace(name: "Go Mono", postScriptName: "GoMono", repackedPath: "Go-Mono.woff2"),
+  FontToReplace(
+    name: "Fira Sans", postScriptName: "FiraSans-Regular",
+    repackedPath: "FiraSans-Regular.2048.woff2"),
   FontToReplace(name: "Segoe UI", postScriptName: "SegoeUI", repackedPath: "segoeui.woff2"),
   FontToReplace(
     name: "Comic Sans MS", postScriptName: "ComicSansMS", repackedPath: "Comic Sans MS.woff2"),

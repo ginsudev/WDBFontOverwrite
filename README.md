@@ -11,6 +11,7 @@ Fonts included:
 - DejaVu Sans Mono
 - Go Regular
 - Go Mono
+- Fira Sans
 - Segoe UI
 - Comic Sans MS
 - Choco Cooky
@@ -47,6 +48,7 @@ See `repackfonts/make_woff2src.sh` for details: this script:
 - Everyone on Twitter who helped out and experimented with CVE-2022-46689, especially [@dedbeddedbed](https://twitter.com/dedbeddedbed), [@AppleDry05](https://twitter.com/AppleDry05), and [@haxi0sm](https://twitter.com/haxi0sm) for exploring what can be done with this issue..
 - The [DejaVu fonts](https://dejavu-fonts.github.io) are distributed according to their [license](https://dejavu-fonts.github.io/License.html).
 - The [Go fonts](https://go.dev/blog/go-fonts) are distributed according to their license.
+- The [Fira Sans](https://mozilla.github.io/Fira/) font is converted by [@jonpalmisc](https://twitter.com/jonpalmisc/status/1607570871421468678) - thanks!
 - Segoe UI and Comic Sans MS are the property of Microsoft.
 - Choco Cooky is the property of Samsung.
 - I don't have any rights to redistribute these, but I'm posting them anyways because #yolo.
