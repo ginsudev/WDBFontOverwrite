@@ -177,7 +177,7 @@ func importCustomFont(name: String, completion: @escaping (String) -> Void) {
       let success = importCustomFontImpl(fileURL: fileURL, targetURL: targetURL)
       fileURL.stopAccessingSecurityScopedResource()
       DispatchQueue.main.async {
-        completion(success ? "Imported" : "Failed to import")
+        completion(success ?? "Imported")
       }
     }
   }
@@ -188,7 +188,7 @@ func importCustomFont(name: String, completion: @escaping (String) -> Void) {
     .present(pickerViewController, animated: true)
 }
 
-func importCustomFontImpl(fileURL: URL, targetURL: URL) -> Bool {
+func importCustomFontImpl(fileURL: URL, targetURL: URL) -> String? {
   // read first 16k of font
   let fileHandle = try! FileHandle(forReadingFrom: fileURL)
   defer { fileHandle.closeFile() }
@@ -198,7 +198,52 @@ func importCustomFontImpl(fileURL: URL, targetURL: URL) -> Bool {
   {
     print("already padded WOFF2")
     try! FileManager.default.copyItem(at: fileURL, to: targetURL)
-    return true
+    return nil
   }
-  return false
+  try! fileHandle.seek(toOffset: 0)
+  let fileData = try! fileHandle.readToEnd()!
+  if fileData.range(of: Data(".SFUI-Regular".utf8)) == nil {
+    return "Font not ported: please use a SFUI.ttf that's ported to iOS"
+  }
+  guard let repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData) else {
+    return "Failed to repack"
+  }
+  try! repackedData.write(to: targetURL)
+  return nil
+}
+
+func repackTrueTypeFontAsPaddedWoff2(input: Data) -> Data? {
+  var outputBuffer = [UInt8](repeating: 0, count: input.count + 1024)
+  var outputLength = outputBuffer.count
+  let woff2Result = outputBuffer.withUnsafeMutableBytes {
+    WOFF2WrapperConvertTTFToWOFF2([UInt8](input), input.count, $0.baseAddress, &outputLength)
+  }
+  guard woff2Result else {
+    print("woff2 convert failed")
+    return nil
+  }
+  let woff2Data = Data(bytes: outputBuffer, count: outputLength)
+  do {
+    return try repackWoff2Font(input: woff2Data)
+  } catch {
+    print("error: \(error).")
+    return nil
+  }
+}
+
+// Hack: fake Brotli compress method that just returns the original uncompressed data.'
+// (We're recompressing it anyways in a second!)
+@_cdecl("BrotliEncoderCompress")
+func fakeBrotliEncoderCompress(
+  quality: Int, lgwin: Int, mode: Int, inputSize: size_t, inputBuffer: UnsafePointer<UInt8>,
+  encodedSize: UnsafeMutablePointer<size_t>, encodedBuffer: UnsafeMutablePointer<UInt8>
+) -> Int {
+  let encodedSizeIn = encodedSize.pointee
+  if inputSize > encodedSizeIn {
+    return 0
+  }
+  UnsafeBufferPointer(start: inputBuffer, count: inputSize).copyBytes(
+    to: UnsafeMutableRawBufferPointer(start: encodedBuffer, count: encodedSizeIn))
+  encodedSize[0] = inputSize
+  return 1
 }
