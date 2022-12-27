@@ -2,20 +2,28 @@ Proof-of-concept app to overwrite fonts on iOS using [CVE-2022-46689](https://su
 
 Works on iOS 16.1.2 and below (tested on iOS 16.1) on unjailbroken devices.
 
+IPA available in the [Releases](https://github.com/zhuowei/WDBFontOverwrite/releases) section.
+
 Fonts included:
 
 - DejaVu Sans Condensed
 - DejaVu Serif
 - DejaVu Sans Mono
+- Go Regular
+- Go Mono
+- Segoe UI
+- Comic Sans MS
 - Choco Cooky
 
 ![Screenshot](https://user-images.githubusercontent.com/704768/209511898-a1477b66-28e4-471a-87d9-36c1c2eb25ca.png)
+
+![Another screenshot](https://user-images.githubusercontent.com/704768/209606970-a382c273-bdcb-425c-bca1-1b6f9b31862f.png)
 
 ## Choice of fonts
 
 I don't know how to port fonts for iOS properly: I did look for guides, but they were too difficult.
 
-The included fonts were the only fonts I found that worked without porting. Other fonts I tested all displayed in a really squished way.
+The included fonts were the only fonts I found that worked without porting. [Other fonts I tested](https://docs.google.com/document/d/1pGWevL6IVB8XBUhnAYazgMaWjMOsOfOZSjOoFwj6Jmk/edit?usp=sharing) all displayed in a really squished way.
 
 ## Font conversion
 
@@ -38,4 +46,7 @@ See `repackfonts/make_woff2src.sh` for details: this script:
 - Apple for the [test case](https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.61.2/tests/vm/vm_unaligned_copy_switch_race.c) and [patch](https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.61.2/osfmk/vm/vm_map.c#L10150). (I didn't change anything: I only wrapped the test case in a library.)
 - Everyone on Twitter who helped out and experimented with CVE-2022-46689, especially [@dedbeddedbed](https://twitter.com/dedbeddedbed), [@AppleDry05](https://twitter.com/AppleDry05), and [@haxi0sm](https://twitter.com/haxi0sm) for exploring what can be done with this issue..
 - The [DejaVu fonts](https://dejavu-fonts.github.io) are distributed according to their [license](https://dejavu-fonts.github.io/License.html).
-- Choco Cooky is the property of Samsung: I don't have any rights to redistribute it, but I'm posting it anyways because #yolo.
+- The [Go fonts](https://go.dev/blog/go-fonts) are distributed according to their license.
+- Segoe UI and Comic Sans MS are the property of Microsoft.
+- Choco Cooky is the property of Samsung.
+- I don't have any rights to redistribute these, but I'm posting them anyways because #yolo.

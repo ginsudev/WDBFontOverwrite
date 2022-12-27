@@ -7,43 +7,45 @@
 
 import SwiftUI
 
+struct FontToReplace {
+  var name: String
+  var postScriptName: String
+  var repackedPath: String
+}
+
+let fonts = [
+  FontToReplace(
+    name: "DejaVu Sans Condensed", postScriptName: "DejaVuSansCondensed",
+    repackedPath: "DejaVuSansCondensed.woff2"),
+  FontToReplace(
+    name: "DejaVu Serif", postScriptName: "DejaVuSerif", repackedPath: "DejaVuSerif.woff2"),
+  FontToReplace(
+    name: "DejaVu Sans Mono", postScriptName: "DejaVuSansMono", repackedPath: "DejaVuSansMono.woff2"
+  ),
+  FontToReplace(name: "Go Regular", postScriptName: "GoRegular", repackedPath: "Go-Regular.woff2"),
+  FontToReplace(name: "Go Mono", postScriptName: "GoMono", repackedPath: "Go-Mono.woff2"),
+  FontToReplace(name: "Segoe UI", postScriptName: "SegoeUI", repackedPath: "segoeui.woff2"),
+  FontToReplace(
+    name: "Comic Sans MS", postScriptName: "ComicSansMS", repackedPath: "Comic Sans MS.woff2"),
+  FontToReplace(
+    name: "Choco Cooky", postScriptName: "Chococooky", repackedPath: "Chococooky.woff2"),
+]
+
 struct ContentView: View {
   @State private var message = "Choose a font."
   var body: some View {
     VStack {
       Text(message).padding(16)
-      Button(action: {
-        message = "Running"
-        overwriteWithFont(name: "DejaVuSansCondensed.woff2") {
-          message = $0
-        }
-      }) {
-        Text("DejaVu Sans Condensed").font(.custom("DejaVuSansCondensed", size: 18))
-      }.padding(16)
-      Button(action: {
-        message = "Running"
-        overwriteWithFont(name: "DejaVuSerif.woff2") {
-          message = $0
-        }
-      }) {
-        Text("DejaVu Serif").font(.custom("DejaVuSerif", size: 18))
-      }.padding(16)
-      Button(action: {
-        message = "Running"
-        overwriteWithFont(name: "DejaVuSansMono.woff2") {
-          message = $0
-        }
-      }) {
-        Text("DejaVu Sans Mono").font(.custom("DejaVuSansMono", size: 18))
-      }.padding(16)
-      Button(action: {
-        message = "Running"
-        overwriteWithFont(name: "Chococooky.woff2") {
-          message = $0
-        }
-      }) {
-        Text("Choco Cooky").font(.custom("Chococooky", size: 18))
-      }.padding(16)
+      ForEach(fonts, id: \.name) { font in
+        Button(action: {
+          message = "Running"
+          overwriteWithFont(name: font.repackedPath) {
+            message = $0
+          }
+        }) {
+          Text(font.name).font(.custom(font.postScriptName, size: 18))
+        }.padding(8)
+      }
     }
   }
 }
