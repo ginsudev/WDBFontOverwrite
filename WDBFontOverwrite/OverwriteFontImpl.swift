@@ -202,9 +202,6 @@ func importCustomFontImpl(fileURL: URL, targetURL: URL) -> String? {
   }
   try! fileHandle.seek(toOffset: 0)
   let fileData = try! fileHandle.readToEnd()!
-  if fileData.range(of: Data(".SFUI-Regular".utf8)) == nil {
-    return "Font not ported: please use a SFUI.ttf that's ported to iOS"
-  }
   guard let repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData) else {
     return "Failed to repack"
   }

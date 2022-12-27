@@ -37,34 +37,36 @@ let fonts = [
 struct ContentView: View {
   @State private var message = "Choose a font."
   var body: some View {
-    VStack {
-      Text(message).padding(16)
-      ForEach(fonts, id: \.name) { font in
+    ScrollView {
+      VStack {
+        Text(message).padding(16)
+        ForEach(fonts, id: \.name) { font in
+          Button(action: {
+            message = "Running"
+            overwriteWithFont(name: font.repackedPath) {
+              message = $0
+            }
+          }) {
+            Text(font.name).font(.custom(font.postScriptName, size: 18))
+          }.padding(8)
+        }
         Button(action: {
           message = "Running"
-          overwriteWithFont(name: font.repackedPath) {
+          overwriteWithCustomFont(name: "CustomSFUI.woff2") {
             message = $0
           }
         }) {
-          Text(font.name).font(.custom(font.postScriptName, size: 18))
+          Text("Custom SFUI.ttf")
+        }.padding(8)
+        Button(action: {
+          message = "Importing"
+          importCustomFont(name: "CustomSFUI.woff2") {
+            message = $0
+          }
+        }) {
+          Text("Import custom SFUI.ttf")
         }.padding(8)
       }
-      Button(action: {
-        message = "Running"
-        overwriteWithCustomFont(name: "CustomFont.woff2") {
-          message = $0
-        }
-      }) {
-        Text("Custom font")
-      }.padding(8)
-      Button(action: {
-        message = "Importing"
-        importCustomFont(name: "CustomFont.woff2") {
-          message = $0
-        }
-      }) {
-        Text("Import custom font")
-      }.padding(8)
     }
   }
 }

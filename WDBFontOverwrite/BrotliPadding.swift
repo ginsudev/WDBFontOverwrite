@@ -138,7 +138,7 @@ func repackWoff2Font(input: Data) throws -> Data {
   // so instead of compressed data we get the uncompressed data directly
   // (See repackfonts/BrotliPadding.swift for how to decode Brotli properly)
   let decodedData =
-    input[tableEnd..<tableEnd + Int(header.totalCompressedSize.bigEndian)]
+    input.subdata(in: tableEnd..<tableEnd + Int(header.totalCompressedSize.bigEndian))
 
   let recompressedData = try packageInBrotliSkippingLastByteOfPage(
     input: decodedData, startingAddress: tableEnd)
