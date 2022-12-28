@@ -66,6 +66,25 @@ struct ContentView: View {
         }) {
           Text("Import custom SFUI.ttf")
         }.padding(8)
+        Button(action: {
+          message = "Running"
+          overwriteWithCustomFont(
+            name: "CustomAppleColorEmoji.woff2",
+            targetName: "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc"
+          ) {
+            message = $0
+          }
+        }) {
+          Text("Custom emoji")
+        }.padding(8)
+        Button(action: {
+          message = "Importing"
+          importCustomFont(name: "CustomAppleColorEmoji.woff2") {
+            message = $0
+          }
+        }) {
+          Text("Import custom emoji")
+        }.padding(8)
       }
     }
   }

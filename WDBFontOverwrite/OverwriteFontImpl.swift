@@ -22,9 +22,10 @@ func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
 /// Overwrite the system font with the given font using CVE-2022-46689.
 /// The font must be specially prepared so that it skips past the last byte in every 16KB page.
 /// See BrotliPadding.swift for an implementation that adds this padding to WOFF2 fonts.
-func overwriteWithFontImpl(fontURL: URL) -> Bool {
+func overwriteWithFontImpl(
+  fontURL: URL, pathToTargetFont: String = "/System/Library/Fonts/CoreUI/SFUI.ttf"
+) -> Bool {
   var fontData = try! Data(contentsOf: fontURL)
-  let pathToTargetFont = "/System/Library/Fonts/CoreUI/SFUI.ttf"
   #if false
     let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
       0
@@ -113,7 +114,10 @@ func dumpCurrentFont() {
   try! origData.write(to: URL(fileURLWithPath: pathToTargetFont))
 }
 
-func overwriteWithCustomFont(name: String, completion: @escaping (String) -> Void) {
+func overwriteWithCustomFont(
+  name: String, targetName: String = "/System/Library/Fonts/CoreUI/SFUI.ttf",
+  completion: @escaping (String) -> Void
+) {
   let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
     0
   ]
@@ -123,7 +127,7 @@ func overwriteWithCustomFont(name: String, completion: @escaping (String) -> Voi
     return
   }
   DispatchQueue.global(qos: .userInteractive).async {
-    let succeeded = overwriteWithFontImpl(fontURL: fontURL)
+    let succeeded = overwriteWithFontImpl(fontURL: fontURL, pathToTargetFont: targetName)
     DispatchQueue.main.async {
       completion(succeeded ? "Success: force close an app to see results" : "Failed")
     }
@@ -149,7 +153,7 @@ var globalDelegate: WDBImportCustomFontPickerViewControllerDelegate?
 func importCustomFont(name: String, completion: @escaping (String) -> Void) {
   // yes I should use a real SwiftUI way to this, but #yolo
   let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: [
-    UTType("public.truetype-ttf-font")!, UTType(filenameExtension: "woff2", conformingTo: .font)!,
+    UTType.font, UTType(filenameExtension: "woff2", conformingTo: .font)!,
   ])
   let delegate = WDBImportCustomFontPickerViewControllerDelegate { urls in
     globalDelegate = nil
