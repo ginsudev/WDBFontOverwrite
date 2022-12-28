@@ -15,6 +15,8 @@ Fonts included:
 - Segoe UI
 - Comic Sans MS
 - Choco Cooky
+- SF-Compact
+- SF-Compact-Rounded
 
 ![Screenshot](https://user-images.githubusercontent.com/704768/209511898-a1477b66-28e4-471a-87d9-36c1c2eb25ca.png)
 

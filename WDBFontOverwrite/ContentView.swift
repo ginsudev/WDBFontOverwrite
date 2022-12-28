@@ -32,6 +32,10 @@ let fonts = [
     name: "Comic Sans MS", postScriptName: "ComicSansMS", repackedPath: "Comic Sans MS.woff2"),
   FontToReplace(
     name: "Choco Cooky", postScriptName: "Chococooky", repackedPath: "Chococooky.woff2"),
+  FontToReplace(
+    name: "SF Compact", postScriptName: "SFCompact-Regular", repackedPath: "SF-Compact.woff2"),
+  FontToReplace(
+    name: "SF Compact Rounded", postScriptName: "SFCompactRounded-Regular", repackedPath: "SF-CompactRounded.woff2"),
 ]
 
 struct ContentView: View {
