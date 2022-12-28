@@ -20,6 +20,8 @@ Fonts included:
 
 You can also import custom fonts that were ported for iOS.
 
+## Screenshots
+
 DejaVu Sans Condensed | DejaVu Serif | DejaVu Sans Mono | Choco Cooky
 
 ![Screenshot](https://user-images.githubusercontent.com/704768/209511898-a1477b66-28e4-471a-87d9-36c1c2eb25ca.png)
