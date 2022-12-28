@@ -86,6 +86,28 @@ struct ContentView: View {
           Text("Import custom emoji")
         }.padding(8)
       }
+      Button(action: {
+        message = "Running"
+        overwriteWithCustomFont(
+          name: "CustomPingFang.woff2",
+          targetName: "/System/Library/Fonts/LanguageSupport/PingFang.ttc"
+        ) {
+          message = $0
+        }
+      }) {
+        Text("Custom PingFang.ttc")
+      }.padding(8)
+      Button(action: {
+        message = "Importing"
+        importCustomFont(name: "CustomPingFang.woff2") {
+          message = $0
+        }
+      }) {
+        Text("Import custom PingFang.ttc")
+      }.padding(8)
+      Text(
+        "Custom fonts require font files that are ported for iOS.\nSee https://github.com/zhuowei/WDBFontOverwrite for details."
+      ).font(.system(size: 12))
     }
   }
 }
