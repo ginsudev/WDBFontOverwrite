@@ -215,6 +215,7 @@ func importCustomFontImpl(fileURL: URL, targetURL: URL) -> String? {
     && first16k[0x3fff] == 0x41
   {
     print("already padded WOFF2")
+    try? FileManager.default.removeItem(at: targetURL)
     try! FileManager.default.copyItem(at: fileURL, to: targetURL)
     return nil
   }

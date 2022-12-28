@@ -36,11 +36,24 @@ Hanna Soft + JoyPixels | Bronkoh | Noto Serif SC | Fira Sans
 
 Screenshot credit: [@ev_ynw](https://twitter.com/ev_ynw) for the ported [Hanna Soft](https://app.box.com/s/g4uk1yyqxm36sl9ovbwkpbbpn9isol8h/file/997004671334) and [Bronkoh](https://app.box.com/s/g4uk1yyqxm36sl9ovbwkpbbpn9isol8h/file/915757902297) fonts, [JoyPixels](https://joypixels.com/download) for the emoji font
 
-## Choice of fonts
+## Where to find ported fonts
 
-I don't know how to port fonts for iOS properly: I did look for guides, but they were too difficult.
+- [@ev_ynw](https://twitter.com/ev_ynw)
+- [@PoomSmart](https://github.com/PoomSmart/EmojiFonts/releases)
 
-The included fonts were the only fonts I found that worked without porting. [Other fonts I tested](https://docs.google.com/document/d/1pGWevL6IVB8XBUhnAYazgMaWjMOsOfOZSjOoFwj6Jmk/edit?usp=sharing) all displayed in a really squished way.
+## Known issues
+
+ - The built-in fonts are not properly ported (I don't know how to port fonts). For best results, use a custom font.
+  - with the built-in fonts:
+  - Only regular text uses the changed font: thin/medium/bold text falls back to Helvetica instead.
+  - If the font doesn't show up at all, [disable "Bold Text"](https://twitter.com/m7mdabu7assan/status/1607609484901289985) in accessibility settings.
+ - File pickers in apps will fail to open with the error "Something went wrong while displaying documents."
+   - This happens if you replace the emoji font, or install fonts with [multiple weights](https://twitter.com/Gu3hi/status/1607986473198026752)
+   - These fonts use the .ttc format, which breaks the files picker.
+   - No workaround yet - you'll need to remove the custom font by rebooting.
+   - It may be possible to convert a .ttc font to a .ttf font with tools such as https://github.com/DavidBarts/getfonts: I have not tested if this would fix the issue.
+ - Importing a custom font from some cloud storage apps' file storage providers, such as Google Drive's file provider, crashes the app with a "The file doesn't exist" error.
+   - Workaround: use the Files app to copy the font to your Downloads folder first.
 
 ## Font conversion
 
