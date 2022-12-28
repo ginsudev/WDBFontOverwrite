@@ -133,6 +133,40 @@ func repackWoff2Font(input: Data) throws -> Data {
       tableEnd += 1
     }
   }
+  // if this is a collection, we need more
+  if header.flavor.bigEndian == 0x7474_6366 {
+    func read255UShort() -> UInt16 {
+      let oneMoreByteCode1 = 255
+      let oneMoreByteCode2 = 254
+      let wordCode = 253
+      let lowestUCode = 253
+      let first = input[tableEnd]
+      var outNum: UInt16 = 0
+      if first == wordCode {
+        outNum = UInt16(input[tableEnd]) << 8 | UInt16(input[tableEnd])
+        tableEnd += 2
+      } else if first == oneMoreByteCode1 || first == oneMoreByteCode2 {
+        outNum =
+          UInt16(input[tableEnd])
+          + UInt16(first == oneMoreByteCode1 ? lowestUCode : lowestUCode * 2)
+        tableEnd += 1
+      } else {
+        outNum = UInt16(first)
+      }
+      tableEnd += 1
+      return outNum
+    }
+    // version - skip
+    tableEnd += 4
+    let numCollectionFonts = read255UShort()
+    for _ in 0..<numCollectionFonts {
+      let numTables = read255UShort()  // numTables
+      tableEnd += 4  // version
+      for _ in 0..<numTables {
+        _ = read255UShort()  // table index
+      }
+    }
+  }
   // ok here's the Brotli data
   let brotliDataArray = [UInt8](
     input[tableEnd..<tableEnd + Int(header.totalCompressedSize.bigEndian)])
