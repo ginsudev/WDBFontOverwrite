@@ -50,6 +50,7 @@ switcheroo_thread(__unused void *arg)
 		/* wait for main thread to be done setting things up */
 		pthread_mutex_lock(&ctx->mtx);
 		if (ctx->done) {
+      pthread_mutex_unlock(&ctx->mtx);
 			break;
 		}
 		/* switch e0 to RW mapping */

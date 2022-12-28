@@ -8,11 +8,20 @@
 import UIKit
 import UniformTypeIdentifiers
 
-func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
+func overwriteWithFont(name: String, progress: Progress, completion: @escaping (String) -> Void) {
+  let fontURL = Bundle.main.url(
+    forResource: name, withExtension: nil, subdirectory: "RepackedFonts")!
+  overwriteWithFont(
+    fontURL: fontURL, pathToTargetFont: "/System/Library/Fonts/CoreUI/SFUI.ttf", progress: progress,
+    completion: completion)
+}
+
+func overwriteWithFont(
+  fontURL: URL, pathToTargetFont: String, progress: Progress, completion: @escaping (String) -> Void
+) {
   DispatchQueue.global(qos: .userInteractive).async {
-    let fontURL = Bundle.main.url(
-      forResource: name, withExtension: nil, subdirectory: "RepackedFonts")!
-    let succeeded = overwriteWithFontImpl(fontURL: fontURL)
+    let succeeded = overwriteWithFontImpl(
+      fontURL: fontURL, pathToTargetFont: pathToTargetFont, progress: progress)
     DispatchQueue.main.async {
       completion(succeeded ? "Success: force close an app to see results" : "Failed")
     }
@@ -22,9 +31,7 @@ func overwriteWithFont(name: String, completion: @escaping (String) -> Void) {
 /// Overwrite the system font with the given font using CVE-2022-46689.
 /// The font must be specially prepared so that it skips past the last byte in every 16KB page.
 /// See BrotliPadding.swift for an implementation that adds this padding to WOFF2 fonts.
-func overwriteWithFontImpl(
-  fontURL: URL, pathToTargetFont: String = "/System/Library/Fonts/CoreUI/SFUI.ttf"
-) -> Bool {
+func overwriteWithFontImpl(fontURL: URL, pathToTargetFont: String, progress: Progress) -> Bool {
   var fontData = try! Data(contentsOf: fontURL)
   #if false
     let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
@@ -78,8 +85,17 @@ func overwriteWithFontImpl(
     return false
   }
 
+  // TODO(zhuowei): probably not the right way to use NSProgress...
+  let overwriteProgress = Progress(totalUnitCount: Int64(fontData.count))
+  progress.addChild(overwriteProgress, withPendingUnitCount: Int64(1))
+
   // for every 16k chunk, rewrite
+  print(Date())
   for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
+    print(String(format: "%lx", chunkOff))
+    if chunkOff % 0x40000 == 0 {
+      overwriteProgress.completedUnitCount = Int64(chunkOff)
+    }
     // we only rewrite 16383 bytes out of every 16384 bytes.
     let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x3fff)]
     var overwroteOne = false
@@ -93,14 +109,15 @@ func overwriteWithFontImpl(
         break
       }
       print("try again?!")
-      sleep(1)
     }
     guard overwroteOne else {
       print("can't overwrite")
       return false
     }
   }
+  print(Date())
   print("successfully overwrote everything")
+  overwriteProgress.completedUnitCount = Int64(fontData.count)
   return true
 }
 
@@ -115,7 +132,8 @@ func dumpCurrentFont() {
 }
 
 func overwriteWithCustomFont(
-  name: String, targetName: String = "/System/Library/Fonts/CoreUI/SFUI.ttf",
+  name: String, targetName: String,
+  progress: Progress,
   completion: @escaping (String) -> Void
 ) {
   let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
@@ -126,12 +144,8 @@ func overwriteWithCustomFont(
     completion("No custom font imported")
     return
   }
-  DispatchQueue.global(qos: .userInteractive).async {
-    let succeeded = overwriteWithFontImpl(fontURL: fontURL, pathToTargetFont: targetName)
-    DispatchQueue.main.async {
-      completion(succeeded ? "Success: force close an app to see results" : "Failed")
-    }
-  }
+  overwriteWithFont(
+    fontURL: fontURL, pathToTargetFont: targetName, progress: progress, completion: completion)
 }
 
 class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {

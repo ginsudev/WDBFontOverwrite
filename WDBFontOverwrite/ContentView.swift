@@ -34,77 +34,68 @@ let fonts = [
     name: "Choco Cooky", postScriptName: "Chococooky", repackedPath: "Chococooky.woff2"),
 ]
 
+struct CustomFont {
+  var name: String
+  var targetPath: String
+  var localPath: String
+}
+
+let customFonts = [
+  CustomFont(
+    name: "SFUI.ttf", targetPath: "/System/Library/Fonts/CoreUI/SFUI.ttf",
+    localPath: "CustomSFUI.woff2"),
+  CustomFont(
+    name: "Emoji", targetPath: "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
+    localPath: "CustomAppleColorEmoji.woff2"),
+  CustomFont(
+    name: "PingFang.ttc", targetPath: "/System/Library/Fonts/LanguageSupport/PingFang.ttc",
+    localPath: "CustomPingFang.woff2"),
+]
+
 struct ContentView: View {
   @State private var message = "Choose a font."
+  @State private var progress: Progress!
   var body: some View {
     ScrollView {
       VStack {
-        Text(message).padding(16)
+        Text(message).padding(8)
+        if let progress = progress {
+          ProgressView(progress)
+        }
         ForEach(fonts, id: \.name) { font in
           Button(action: {
             message = "Running"
-            overwriteWithFont(name: font.repackedPath) {
+            progress = Progress(totalUnitCount: 1)
+            overwriteWithFont(name: font.repackedPath, progress: progress) {
               message = $0
             }
           }) {
             Text(font.name).font(.custom(font.postScriptName, size: 18))
           }.padding(8)
         }
-        Button(action: {
-          message = "Running"
-          overwriteWithCustomFont(name: "CustomSFUI.woff2") {
-            message = $0
-          }
-        }) {
-          Text("Custom SFUI.ttf")
-        }.padding(8)
-        Button(action: {
-          message = "Importing"
-          importCustomFont(name: "CustomSFUI.woff2") {
-            message = $0
-          }
-        }) {
-          Text("Import custom SFUI.ttf")
-        }.padding(8)
-        Button(action: {
-          message = "Running"
-          overwriteWithCustomFont(
-            name: "CustomAppleColorEmoji.woff2",
-            targetName: "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc"
-          ) {
-            message = $0
-          }
-        }) {
-          Text("Custom emoji")
-        }.padding(8)
-        Button(action: {
-          message = "Importing"
-          importCustomFont(name: "CustomAppleColorEmoji.woff2") {
-            message = $0
-          }
-        }) {
-          Text("Import custom emoji")
-        }.padding(8)
+        Divider()
+        ForEach(customFonts, id: \.name) { font in
+          Button(action: {
+            message = "Running"
+            progress = Progress(totalUnitCount: 1)
+            overwriteWithCustomFont(
+              name: font.localPath, targetName: font.targetPath, progress: progress
+            ) {
+              message = $0
+            }
+          }) {
+            Text("Custom \(font.name)")
+          }.padding(8)
+          Button(action: {
+            message = "Importing..."
+            importCustomFont(name: font.localPath) {
+              message = $0
+            }
+          }) {
+            Text("Import custom \(font.name)")
+          }.padding(8)
+        }
       }
-      Button(action: {
-        message = "Running"
-        overwriteWithCustomFont(
-          name: "CustomPingFang.woff2",
-          targetName: "/System/Library/Fonts/LanguageSupport/PingFang.ttc"
-        ) {
-          message = $0
-        }
-      }) {
-        Text("Custom PingFang.ttc")
-      }.padding(8)
-      Button(action: {
-        message = "Importing"
-        importCustomFont(name: "CustomPingFang.woff2") {
-          message = $0
-        }
-      }) {
-        Text("Import custom PingFang.ttc")
-      }.padding(8)
       Text(
         "Custom fonts require font files that are ported for iOS.\nSee https://github.com/zhuowei/WDBFontOverwrite for details."
       ).font(.system(size: 12))
