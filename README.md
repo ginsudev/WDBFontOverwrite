@@ -52,6 +52,8 @@ Screenshot credit: [@ev_ynw](https://twitter.com/ev_ynw) for the ported [Hanna S
    - These fonts use the .ttc format, which breaks the files picker.
    - No workaround yet - you'll need to remove the custom font by rebooting.
    - It may be possible to convert a .ttc font to a .ttf font with tools such as https://github.com/DavidBarts/getfonts: I have not tested if this would fix the issue.
+ - Custom font imports may not work: tapping on a font to import it [doesn't do anything](https://twitter.com/linshijin111/status/1607993438997446657)
+   - No workaround yet. The built-in fonts should still work.
  - Importing a custom font from some cloud storage apps' file storage providers, such as Google Drive's file provider, crashes the app with a "The file doesn't exist" error.
    - Workaround: use the Files app to copy the font to your Downloads folder first.
 
