@@ -68,6 +68,7 @@ struct ContentView: View {
             progress = Progress(totalUnitCount: 1)
             overwriteWithFont(name: font.repackedPath, progress: progress) {
               message = $0
+              progress = nil
             }
           }) {
             Text(font.name).font(.custom(font.postScriptName, size: 18))
@@ -82,6 +83,7 @@ struct ContentView: View {
               name: font.localPath, targetName: font.targetPath, progress: progress
             ) {
               message = $0
+              progress = nil
             }
           }) {
             Text("Custom \(font.name)")

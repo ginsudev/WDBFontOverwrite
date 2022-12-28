@@ -4,6 +4,8 @@ Works on iOS 16.1.2 and below (tested on iOS 16.1) on unjailbroken devices.
 
 IPA available in the [Releases](https://github.com/zhuowei/WDBFontOverwrite/releases) section.
 
+I'm probably not going to work on this further. If anyone else wants to take over, feel free.
+
 Fonts included:
 
 - DejaVu Sans Condensed
@@ -16,9 +18,21 @@ Fonts included:
 - Comic Sans MS
 - Choco Cooky
 
+You can also import custom fonts that were ported for iOS.
+
+DejaVu Sans Condensed | DejaVu Serif | DejaVu Sans Mono | Choco Cooky
+
 ![Screenshot](https://user-images.githubusercontent.com/704768/209511898-a1477b66-28e4-471a-87d9-36c1c2eb25ca.png)
 
+Go Regular | Go Mono | Segoe UI | Comic Sans MS
+
 ![Another screenshot](https://user-images.githubusercontent.com/704768/209606970-a382c273-bdcb-425c-bca1-1b6f9b31862f.png)
+
+Hanna Soft + JoyPixels | Bronkoh | Noto Serif SC | Fira Sans
+
+![Another screenshot](https://user-images.githubusercontent.com/704768/209753262-b8204c92-b873-41a7-8127-38bf86096470.png)
+
+Screenshot credit: [@ev_ynw](https://twitter.com/ev_ynw) for the ported [Hanna Soft](https://app.box.com/s/g4uk1yyqxm36sl9ovbwkpbbpn9isol8h/file/997004671334) and [Bronkoh](https://app.box.com/s/g4uk1yyqxm36sl9ovbwkpbbpn9isol8h/file/915757902297) fonts, [JoyPixels](https://joypixels.com/download) for the emoji font
 
 ## Choice of fonts
 
