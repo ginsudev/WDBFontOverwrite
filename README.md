@@ -56,6 +56,8 @@ Screenshot credit: [@ev_ynw](https://twitter.com/ev_ynw) for the ported [Hanna S
    - No workaround yet. The built-in fonts should still work.
  - Importing a custom font from some cloud storage apps' file storage providers, such as Google Drive's file provider, crashes the app with a "The file doesn't exist" error.
    - Workaround: use the Files app to copy the font to your Downloads folder first.
+ - iOS 14.x devices which are jailbroken / were jailbroken before will not be able to revert to the original font.
+   - Workaround: do not use this app if you're on iOS 14.x and have previously jailbroken. Instead, just jailbreak and replace fonts normally.
 
 ## Font conversion
 
