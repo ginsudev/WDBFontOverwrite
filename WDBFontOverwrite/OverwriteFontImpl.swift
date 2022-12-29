@@ -148,64 +148,6 @@ func overwriteWithCustomFont(
     fontURL: fontURL, pathToTargetFont: targetName, progress: progress, completion: completion)
 }
 
-class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
-  let completion: ([URL]?) -> Void
-  init(completion: @escaping ([URL]?) -> Void) {
-    self.completion = completion
-  }
-  func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
-  {
-    completion(urls)
-  }
-  func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-    completion(nil)
-  }
-}
-
-var globalDelegate: WDBImportCustomFontPickerViewControllerDelegate?
-
-func importCustomFont(name: String, completion: @escaping (String) -> Void) {
-  // yes I should use a real SwiftUI way to this, but #yolo
-  let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: [
-    UTType.font, UTType(filenameExtension: "woff2", conformingTo: .font)!,
-  ])
-  let delegate = WDBImportCustomFontPickerViewControllerDelegate { urls in
-    globalDelegate = nil
-    guard let urls = urls else {
-      completion("Cancelled")
-      return
-    }
-    guard urls.count == 1 else {
-      completion("import one file at a time")
-      return
-    }
-    DispatchQueue.global(qos: .userInteractive).async {
-      let fileURL = urls[0]
-      guard fileURL.startAccessingSecurityScopedResource() else {
-        DispatchQueue.main.async {
-          completion("startAccessingSecurityScopedResource false?")
-        }
-        return
-      }
-      let documentDirectory = FileManager.default.urls(
-        for: .documentDirectory, in: .userDomainMask)[
-          0
-        ]
-      let targetURL = documentDirectory.appendingPathComponent(name)
-      let success = importCustomFontImpl(fileURL: fileURL, targetURL: targetURL)
-      fileURL.stopAccessingSecurityScopedResource()
-      DispatchQueue.main.async {
-        completion(success ?? "Imported")
-      }
-    }
-  }
-  pickerViewController.delegate = delegate
-  // I said this is yolo
-  globalDelegate = delegate
-  (UIApplication.shared.connectedScenes.first! as! UIWindowScene).windows[0].rootViewController!
-    .present(pickerViewController, animated: true)
-}
-
 func importCustomFontImpl(fileURL: URL, targetURL: URL) -> String? {
   // read first 16k of font
   let fileHandle = try! FileHandle(forReadingFrom: fileURL)

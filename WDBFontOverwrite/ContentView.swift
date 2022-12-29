@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct FontToReplace {
   var name: String
@@ -55,6 +56,8 @@ let customFonts = [
 struct ContentView: View {
   @State private var message = "Choose a font."
   @State private var progress: Progress!
+  @State private var importPresented: Bool = false
+  @State private var importName: String = ""
   var body: some View {
     ScrollView {
       VStack {
@@ -90,9 +93,8 @@ struct ContentView: View {
           }.padding(8)
           Button(action: {
             message = "Importing..."
-            importCustomFont(name: font.localPath) {
-              message = $0
-            }
+            importName = font.localPath
+            importPresented = true
           }) {
             Text("Import custom \(font.name)")
           }.padding(8)
@@ -102,7 +104,69 @@ struct ContentView: View {
         "Custom fonts require font files that are ported for iOS.\nSee https://github.com/zhuowei/WDBFontOverwrite for details."
       ).font(.system(size: 12))
     }
+    .sheet(isPresented: $importPresented) {
+      DocumentPicker(name: importName) {
+        message = $0
+      }
+    }
   }
+}
+
+class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
+  let name: String
+  let completion: (String) -> Void
+  init(name: String, completion: @escaping (String) -> Void) {
+    self.name = name
+    self.completion = completion
+  }
+  func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
+  {
+    guard urls.count == 1 else {
+      completion("import one file at a time")
+      return
+    }
+    DispatchQueue.global(qos: .userInteractive).async {
+      let fileURL = urls[0]
+      guard fileURL.startAccessingSecurityScopedResource() else {
+        DispatchQueue.main.async {
+          self.completion("startAccessingSecurityScopedResource false?")
+        }
+        return
+      }
+      let documentDirectory = FileManager.default.urls(
+        for: .documentDirectory, in: .userDomainMask)[
+          0
+        ]
+      let targetURL = documentDirectory.appendingPathComponent(self.name)
+      let success = importCustomFontImpl(fileURL: fileURL, targetURL: targetURL)
+      fileURL.stopAccessingSecurityScopedResource()
+      DispatchQueue.main.async {
+        self.completion(success ?? "Imported")
+      }
+    }
+  }
+  func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+    completion("Cancelled")
+  }
+}
+
+// https://capps.tech/blog/read-files-with-documentpicker-in-swiftui
+struct DocumentPicker: UIViewControllerRepresentable {
+  let controllerDelegate: WDBImportCustomFontPickerViewControllerDelegate
+  init(name: String, completion: @escaping (String) -> Void) {
+    controllerDelegate = WDBImportCustomFontPickerViewControllerDelegate(
+      name: name, completion: completion)
+  }
+  func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+    print("make ui view controller?")
+    let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: [
+      UTType.font, UTType(filenameExtension: "woff2", conformingTo: .font)!,
+    ])
+    pickerViewController.delegate = self.controllerDelegate
+    return pickerViewController
+  }
+  func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context)
+  {}
 }
 
 struct ContentView_Previews: PreviewProvider {
