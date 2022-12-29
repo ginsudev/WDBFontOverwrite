@@ -68,7 +68,7 @@ switcheroo_thread(__unused void *arg)
 		T_QUIET; T_EXPECT_MACH_SUCCESS(kr, " vm_map() RW");
 		/* wait a little bit */
 		usleep(100);
-		/* switch bakc to original RO mapping */
+		/* switch back to original RO mapping */
 		kr = vm_map(mach_task_self(),
 		    &ctx->e0,
 		    ctx->obj_size,
