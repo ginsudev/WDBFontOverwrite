@@ -4,7 +4,7 @@ Works on iOS 16.1.2 and below (tested on iOS 16.1) on unjailbroken devices.
 
 IPA available in the [Releases](https://github.com/zhuowei/WDBFontOverwrite/releases) section.
 
-I'm probably not going to work on this further. If anyone else wants to take over, feel free.
+I'm not going to work on this app further. If anyone else wants to take over, feel free.
 
 Fonts included:
 
@@ -47,15 +47,9 @@ Screenshot credit: [@ev_ynw](https://twitter.com/ev_ynw) for the ported [Hanna S
    - with the built-in fonts:
    - Only regular text uses the changed font: thin/medium/bold text falls back to Helvetica instead.
    - If the font doesn't show up at all, [disable "Bold Text"](https://twitter.com/m7mdabu7assan/status/1607609484901289985) in accessibility settings.
- - File pickers in apps will fail to open with the error "Something went wrong while displaying documents."
+ - File pickers in apps will fail to open with the error "Something went wrong while displaying documents." 
    - This happens if you replace the emoji font, or install fonts with [multiple weights](https://twitter.com/Gu3hi/status/1607986473198026752)
-   - These fonts use the .ttc format, which breaks the files picker.
-   - No workaround yet - you'll need to remove the custom font by rebooting.
-   - It may be possible to convert a .ttc font to a .ttf font with tools such as https://github.com/DavidBarts/getfonts: I have not tested if this would fix the issue.
- - Custom font imports may not work: tapping on a font to import it [doesn't do anything](https://twitter.com/linshijin111/status/1607993438997446657)
-   - No workaround yet. The built-in fonts should still work.
- - Importing a custom font from some cloud storage apps' file storage providers, such as Google Drive's file provider, crashes the app with a "The file doesn't exist" error.
-   - Workaround: use the Files app to copy the font to your Downloads folder first.
+   - Try the experimental .ttc fix by using "Import custom <font> with fix for .ttc"
  - iOS 14.x devices which are jailbroken / were jailbroken before will not be able to revert to the original font.
    - Workaround: do not use this app if you're on iOS 14.x and have previously jailbroken. Instead, just jailbreak and replace fonts normally.
 
@@ -79,7 +73,9 @@ See `repackfonts/make_woff2src.sh` for details: this script:
 - Ian Beer of [Project Zero](https://googleprojectzero.blogspot.com) for finding CVE-2022-46689.
 - Apple for the [test case](https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.61.2/tests/vm/vm_unaligned_copy_switch_race.c) and [patch](https://github.com/apple-oss-distributions/xnu/blob/xnu-8792.61.2/osfmk/vm/vm_map.c#L10150). (I didn't change anything: I only wrapped the test case in a library.)
 - Everyone on Twitter who helped out and experimented with CVE-2022-46689, especially [@dedbeddedbed](https://twitter.com/dedbeddedbed), [@AppleDry05](https://twitter.com/AppleDry05), and [@haxi0sm](https://twitter.com/haxi0sm) for exploring what can be done with this issue..
-- [WOFF2 compressor](https://twitter.com/ev_ynw) by Google
+- [WOFF2 compressor](https://github.com/google/woff2) by Google
+- [ttcpad](https://github.com/LIJI32/ttcpad) by LIJI32
+- [Fontforge stripttc](https://github.com/fontforge/fontforge/blob/master/contrib/fonttools/stripttc.c)
 - The [DejaVu fonts](https://dejavu-fonts.github.io) are distributed according to their [license](https://dejavu-fonts.github.io/License.html).
 - The [Go fonts](https://go.dev/blog/go-fonts) are distributed according to their license.
 - The [Fira Sans](https://mozilla.github.io/Fira/) font is converted by [@jonpalmisc](https://twitter.com/jonpalmisc/status/1607570871421468678) - thanks!
