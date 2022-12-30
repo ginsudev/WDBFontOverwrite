@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F4E64A7295F9AB600D4F04D /* ContentView.ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */; };
 		C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */; };
 		C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF775295BA9B1000DE71C /* BrotliPadding.swift */; };
 		C55CF778295BAF42000DE71C /* libwoff2enc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76E295BA346000DE71C /* libwoff2enc.a */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.ViewModel.swift; sourceTree = "<group>"; };
 		C55CF76E295BA346000DE71C /* libwoff2enc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2enc.a; sourceTree = "<group>"; };
 		C55CF76F295BA346000DE71C /* libwoff2common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2common.a; sourceTree = "<group>"; };
 		C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = woff2_wrapper.cpp; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				C5C9A7A22959341600466D87 /* RepackedFonts */,
 				C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */,
 				C5C9A7942959261000466D87 /* ContentView.swift */,
+				4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */,
 				C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */,
 				C55CF775295BA9B1000DE71C /* BrotliPadding.swift */,
 				C5C9A7962959261200466D87 /* Assets.xcassets */,
@@ -200,6 +203,7 @@
 				C5999BFC295E69C200BBBE1F /* ttcpad.m in Sources */,
 				C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */,
 				C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */,
+				4F4E64A7295F9AB600D4F04D /* ContentView.ViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,7 +333,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WDBFontOverwrite/Preview Content\"";
-				DEVELOPMENT_TEAM = 3D7RY4393N;
+				DEVELOPMENT_TEAM = WNUZX4NA7T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WDBFontOverwrite/Info.plist;
@@ -348,7 +352,7 @@
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
 				MARKETING_VERSION = 1.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.worthdoingbadly.WDBFontOverwrite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h";
@@ -367,7 +371,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WDBFontOverwrite/Preview Content\"";
-				DEVELOPMENT_TEAM = 3D7RY4393N;
+				DEVELOPMENT_TEAM = WNUZX4NA7T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WDBFontOverwrite/Info.plist;
@@ -386,7 +390,7 @@
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
 				MARKETING_VERSION = 1.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.worthdoingbadly.WDBFontOverwrite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h";
