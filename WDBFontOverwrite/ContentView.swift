@@ -39,18 +39,19 @@ struct CustomFont {
   var name: String
   var targetPath: String
   var localPath: String
+  var alternativeTTCRepackMode: TTCRepackMode
 }
 
 let customFonts = [
   CustomFont(
     name: "SFUI.ttf", targetPath: "/System/Library/Fonts/CoreUI/SFUI.ttf",
-    localPath: "CustomSFUI.woff2"),
+    localPath: "CustomSFUI.woff2", alternativeTTCRepackMode: .ttcpad),
   CustomFont(
     name: "Emoji", targetPath: "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
-    localPath: "CustomAppleColorEmoji.woff2"),
+    localPath: "CustomAppleColorEmoji.woff2", alternativeTTCRepackMode: .firstFontOnly),
   CustomFont(
     name: "PingFang.ttc", targetPath: "/System/Library/Fonts/LanguageSupport/PingFang.ttc",
-    localPath: "CustomPingFang.woff2"),
+    localPath: "CustomPingFang.woff2", alternativeTTCRepackMode: .ttcpad),
 ]
 
 struct ContentView: View {
@@ -58,6 +59,7 @@ struct ContentView: View {
   @State private var progress: Progress!
   @State private var importPresented: Bool = false
   @State private var importName: String = ""
+  @State private var importTTCRepackMode: TTCRepackMode = .woff2
   var body: some View {
     ScrollView {
       VStack {
@@ -94,10 +96,20 @@ struct ContentView: View {
           Button(action: {
             message = "Importing..."
             importName = font.localPath
+            importTTCRepackMode = .woff2
             importPresented = true
           }) {
             Text("Import custom \(font.name)")
           }.padding(8)
+          Button(action: {
+            message = "Importing..."
+            importName = font.localPath
+            importTTCRepackMode = font.alternativeTTCRepackMode
+            importPresented = true
+          }) {
+            Text("Import custom \(font.name) with fix for .ttc")
+          }.padding(8)
+          Divider()
         }
       }
       Text(
@@ -105,7 +117,7 @@ struct ContentView: View {
       ).font(.system(size: 12))
     }
     .sheet(isPresented: $importPresented) {
-      DocumentPicker(name: importName) {
+      DocumentPicker(name: importName, ttcRepackMode: importTTCRepackMode) {
         message = $0
       }
     }
@@ -114,9 +126,11 @@ struct ContentView: View {
 
 class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
   let name: String
+  let ttcRepackMode: TTCRepackMode
   let completion: (String) -> Void
-  init(name: String, completion: @escaping (String) -> Void) {
+  init(name: String, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
     self.name = name
+    self.ttcRepackMode = ttcRepackMode
     self.completion = completion
   }
   func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
@@ -138,7 +152,8 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
           0
         ]
       let targetURL = documentDirectory.appendingPathComponent(self.name)
-      let success = importCustomFontImpl(fileURL: fileURL, targetURL: targetURL)
+      let success = importCustomFontImpl(
+        fileURL: fileURL, targetURL: targetURL, ttcRepackMode: self.ttcRepackMode)
       fileURL.stopAccessingSecurityScopedResource()
       DispatchQueue.main.async {
         self.completion(success ?? "Imported")
@@ -153,9 +168,9 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
 // https://capps.tech/blog/read-files-with-documentpicker-in-swiftui
 struct DocumentPicker: UIViewControllerRepresentable {
   let controllerDelegate: WDBImportCustomFontPickerViewControllerDelegate
-  init(name: String, completion: @escaping (String) -> Void) {
+  init(name: String, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
     controllerDelegate = WDBImportCustomFontPickerViewControllerDelegate(
-      name: name, completion: completion)
+      name: name, ttcRepackMode: ttcRepackMode, completion: completion)
   }
   func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
     print("make ui view controller?")
