@@ -70,7 +70,7 @@ static void copytable(FILE *ttf,FILE *ttc,int offset,int length) {
     }
 }
 
-static int handlefont(char *filename,int which,FILE *ttc,int offset) {
+static int handlefont(const char *filename,int which,FILE *ttc,int offset) {
     char outfile[2000], *pt;
     FILE *ttf;
     int i, cnt, *offsets, *lengths, head, tag, pos, headpos;
@@ -132,7 +132,7 @@ static int handlefont(char *filename,int which,FILE *ttc,int offset) {
     return( 0 );
 }
 
-static int handlefile(char *filename) {
+int stripttc_handlefile(const char *filename) {
     FILE *ttc = fopen(filename,"rb");
     int version, cnt, e, i;
     int *offsets;
@@ -157,7 +157,9 @@ static int handlefile(char *filename) {
     for ( i=0; i<cnt; ++i )
 	offsets[i] = getlong(ttc);
     printf( "%s => ", filename );
-    for ( i=0; i<cnt; ++i )
+    // zhuowei: only the first font, please
+    // for ( i=0; i<cnt; ++i )
+    for ( i=0; i<cnt && i<1; ++i )
 	if ( (e = handlefont(filename,i,ttc,offsets[i])) ) {
 	    fclose(ttc);
 	    free(offsets);
@@ -169,6 +171,7 @@ static int handlefile(char *filename) {
     return( 0 );
 }
 
+#if 0
 int main(int argc, char *argv[]) {
     int e, i;
 
@@ -177,3 +180,4 @@ int main(int argc, char *argv[]) {
 	    return( e );
     return( 0 );
 }
+#endif

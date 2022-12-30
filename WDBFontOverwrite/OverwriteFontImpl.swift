@@ -183,7 +183,19 @@ func importCustomFontImpl(fileURL: URL, targetURL: URL, ttcRepackMode: TTCRepack
       repackedData = repack_ttc(
         fileData, /*delete_noncritical=*/ false, /*allow_corrupt_loca=*/ true)
     } else if ttcRepackMode == .firstFontOnly {
-      fatalError("TODO(zhuowei)")
+      let documentDirectory = FileManager.default.urls(
+        for: .documentDirectory, in: .userDomainMask)[0]
+      let tempDirectoryURL = documentDirectory.appendingPathComponent("ttc_convert")
+      try? FileManager.default.removeItem(at: tempDirectoryURL)
+      try! FileManager.default.createDirectory(
+        at: tempDirectoryURL, withIntermediateDirectories: false)
+      let tempTTCURL = tempDirectoryURL.appendingPathComponent("font.ttc")
+      try! FileManager.default.copyItem(at: fileURL, to: tempTTCURL)
+      if stripttc_handlefile(tempTTCURL.path) == 0 {
+        let ttfData = try! Data(contentsOf: tempDirectoryURL.appendingPathComponent("font_00.ttf"))
+        try! FileManager.default.removeItem(at: tempDirectoryURL)
+        repackedData = repackTrueTypeFontAsPaddedWoff2(input: ttfData)
+      }
     }
   } else {
     repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData)
