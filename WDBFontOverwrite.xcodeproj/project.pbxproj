@@ -12,6 +12,7 @@
 		C55CF778295BAF42000DE71C /* libwoff2enc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76E295BA346000DE71C /* libwoff2enc.a */; };
 		C55CF779295BAF42000DE71C /* libwoff2common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76F295BA346000DE71C /* libwoff2common.a */; };
 		C5999BFC295E69C200BBBE1F /* ttcpad.m in Sources */ = {isa = PBXBuildFile; fileRef = C5999BFB295E69C100BBBE1F /* ttcpad.m */; };
+		C5999BFF295E769700BBBE1F /* stripttc.c in Sources */ = {isa = PBXBuildFile; fileRef = C5999BFE295E769700BBBE1F /* stripttc.c */; };
 		C5A95F46295964AE00C58FDB /* PreviewFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5A95F45295964AE00C58FDB /* PreviewFonts */; };
 		C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */; };
 		C5C9A7952959261000466D87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7942959261000466D87 /* ContentView.swift */; };
@@ -30,6 +31,7 @@
 		C55CF775295BA9B1000DE71C /* BrotliPadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrotliPadding.swift; sourceTree = "<group>"; };
 		C5999BFB295E69C100BBBE1F /* ttcpad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ttcpad.m; sourceTree = "<group>"; };
 		C5999BFD295E6A4A00BBBE1F /* ttcpad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ttcpad.h; sourceTree = "<group>"; };
+		C5999BFE295E769700BBBE1F /* stripttc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stripttc.c; sourceTree = "<group>"; };
 		C5A95F45295964AE00C58FDB /* PreviewFonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PreviewFonts; sourceTree = "<group>"; };
 		C5C9A78F2959261000466D87 /* WDBFontOverwrite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WDBFontOverwrite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WDBFontOverwriteApp.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				C55CF773295BA37D000DE71C /* woff2_wrapper.h */,
 				C5999BFB295E69C100BBBE1F /* ttcpad.m */,
 				C5999BFD295E6A4A00BBBE1F /* ttcpad.h */,
+				C5999BFE295E769700BBBE1F /* stripttc.c */,
 				C5C9A7982959261200466D87 /* Preview Content */,
 			);
 			path = WDBFontOverwrite;
@@ -187,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5999BFF295E769700BBBE1F /* stripttc.c in Sources */,
 				C5C9A7952959261000466D87 /* ContentView.swift in Sources */,
 				C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */,
 				C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */,
