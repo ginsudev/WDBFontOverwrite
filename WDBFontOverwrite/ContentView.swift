@@ -141,20 +141,11 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
     }
     DispatchQueue.global(qos: .userInteractive).async {
       let fileURL = urls[0]
-      guard fileURL.startAccessingSecurityScopedResource() else {
-        DispatchQueue.main.async {
-          self.completion("startAccessingSecurityScopedResource false?")
-        }
-        return
-      }
       let documentDirectory = FileManager.default.urls(
-        for: .documentDirectory, in: .userDomainMask)[
-          0
-        ]
+        for: .documentDirectory, in: .userDomainMask)[0]
       let targetURL = documentDirectory.appendingPathComponent(self.name)
       let success = importCustomFontImpl(
         fileURL: fileURL, targetURL: targetURL, ttcRepackMode: self.ttcRepackMode)
-      fileURL.stopAccessingSecurityScopedResource()
       DispatchQueue.main.async {
         self.completion(success ?? "Imported")
       }
@@ -174,9 +165,10 @@ struct DocumentPicker: UIViewControllerRepresentable {
   }
   func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
     print("make ui view controller?")
-    let pickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: [
-      UTType.font, UTType(filenameExtension: "woff2", conformingTo: .font)!,
-    ])
+    let pickerViewController = UIDocumentPickerViewController(
+      forOpeningContentTypes: [
+        UTType.font, UTType(filenameExtension: "woff2", conformingTo: .font)!,
+      ], asCopy: true)
     pickerViewController.delegate = self.controllerDelegate
     return pickerViewController
   }
