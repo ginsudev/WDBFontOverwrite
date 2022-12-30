@@ -42,7 +42,7 @@ static void repack_glyf(NSData *glyf, NSData *loca, NSData **out_glyf, NSData **
     }
 }
 
-static NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_corrupt_loca)
+NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_corrupt_loca)
 {
     if (original.length < 0x4000) {
         return original;
@@ -243,6 +243,7 @@ static NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_
     return output;
 }
 
+#if 0
 int main(int argc, const char * argv[])
 {
     NSMutableArray<NSString *> *args = [[NSProcessInfo processInfo] arguments].mutableCopy;
@@ -287,3 +288,4 @@ int main(int argc, const char * argv[])
     
     return 0;
 }
+#endif

@@ -58,19 +58,22 @@ func overwriteWithFontImpl(fontURL: URL, pathToTargetFont: String, progress: Pro
   }
   lseek(fd, 0, SEEK_SET)
 
-  // patch our font with the padding
-  // https://www.w3.org/TR/WOFF2/#woff20Header
-  // length
-  withUnsafeBytes(of: UInt32(originalFontSize).bigEndian) {
-    fontData.replaceSubrange(0x8..<0x8 + 4, with: $0)
-  }
-  // privOffset
-  withUnsafeBytes(of: UInt32(fontData.count).bigEndian) {
-    fontData.replaceSubrange(0x28..<0x28 + 4, with: $0)
-  }
-  // privLength
-  withUnsafeBytes(of: UInt32(Int(originalFontSize) - fontData.count).bigEndian) {
-    fontData.replaceSubrange(0x2c..<0x2c + 4, with: $0)
+  if fontData[0..<4] == Data([0x77, 0x4f, 0x46, 0x32]) {
+    // if this is a woff2 (and not a ttc)
+    // patch our font with the padding
+    // https://www.w3.org/TR/WOFF2/#woff20Header
+    // length
+    withUnsafeBytes(of: UInt32(originalFontSize).bigEndian) {
+      fontData.replaceSubrange(0x8..<0x8 + 4, with: $0)
+    }
+    // privOffset
+    withUnsafeBytes(of: UInt32(fontData.count).bigEndian) {
+      fontData.replaceSubrange(0x28..<0x28 + 4, with: $0)
+    }
+    // privLength
+    withUnsafeBytes(of: UInt32(Int(originalFontSize) - fontData.count).bigEndian) {
+      fontData.replaceSubrange(0x2c..<0x2c + 4, with: $0)
+    }
   }
 
   // Map the font we want to overwrite so we can mlock it
@@ -148,7 +151,15 @@ func overwriteWithCustomFont(
     fontURL: fontURL, pathToTargetFont: targetName, progress: progress, completion: completion)
 }
 
-func importCustomFontImpl(fileURL: URL, targetURL: URL) -> String? {
+enum TTCRepackMode {
+  case woff2
+  case ttcpad
+  case firstFontOnly
+}
+
+func importCustomFontImpl(fileURL: URL, targetURL: URL, ttcRepackMode: TTCRepackMode = .woff2)
+  -> String?
+{
   // read first 16k of font
   let fileHandle = try! FileHandle(forReadingFrom: fileURL)
   defer { fileHandle.closeFile() }
@@ -163,7 +174,21 @@ func importCustomFontImpl(fileURL: URL, targetURL: URL) -> String? {
   }
   try! fileHandle.seek(toOffset: 0)
   let fileData = try! fileHandle.readToEnd()!
-  guard let repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData) else {
+  var repackedData: Data? = nil
+  if first16k.count >= 4 && first16k[0..<4] == Data([0x74, 0x74, 0x63, 0x66]) {
+    // ttcf
+    if ttcRepackMode == .woff2 {
+      repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData)
+    } else if ttcRepackMode == .ttcpad {
+      repackedData = repack_ttc(
+        fileData, /*delete_noncritical=*/ false, /*allow_corrupt_loca=*/ true)
+    } else if ttcRepackMode == .firstFontOnly {
+      fatalError("TODO(zhuowei)")
+    }
+  } else {
+    repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData)
+  }
+  guard let repackedData = repackedData else {
     return "Failed to repack"
   }
   try! repackedData.write(to: targetURL)
