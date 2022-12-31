@@ -72,6 +72,7 @@ struct ContentView: View {
                     overwriteWithCustomFont(
                         name: font.localPath,
                         targetName: font.targetPath,
+                        targetNames: font.targetPaths,
                         progress: viewModel.progress
                     ) {
                         viewModel.message = $0

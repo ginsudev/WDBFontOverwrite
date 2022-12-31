@@ -135,7 +135,9 @@ func dumpCurrentFont() {
 }
 
 func overwriteWithCustomFont(
-  name: String, targetName: String,
+  name: String,
+  targetName: String?,
+  targetNames: [String]?,
   progress: Progress,
   completion: @escaping (String) -> Void
 ) {
@@ -147,8 +149,19 @@ func overwriteWithCustomFont(
     completion("No custom font imported")
     return
   }
-  overwriteWithFont(
-    fontURL: fontURL, pathToTargetFont: targetName, progress: progress, completion: completion)
+    if (targetNames != nil) {
+        for targetName in targetNames! {
+            if (access(targetName, F_OK) == 0) {
+                overwriteWithFont(
+                  fontURL: fontURL, pathToTargetFont: targetName, progress: progress, completion: completion)
+            }
+        }
+    } else if (targetName != nil) {
+        overwriteWithFont(
+            fontURL: fontURL, pathToTargetFont: targetName!, progress: progress, completion: completion)
+    } else {
+        completion("Either targetName or targetNames must be provided")
+    }
 }
 
 enum TTCRepackMode {
