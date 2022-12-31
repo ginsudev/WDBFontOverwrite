@@ -149,16 +149,24 @@ func overwriteWithCustomFont(
     completion("No custom font imported")
     return
   }
-    if (targetNames != nil) {
-        for targetName in targetNames! {
+    if let targetNames {
+        for targetName in targetNames {
             if (access(targetName, F_OK) == 0) {
                 overwriteWithFont(
-                  fontURL: fontURL, pathToTargetFont: targetName, progress: progress, completion: completion)
+                  fontURL: fontURL,
+                  pathToTargetFont: targetName,
+                  progress: progress,
+                  completion: completion
+                )
             }
         }
-    } else if (targetName != nil) {
+    } else if let targetName {
         overwriteWithFont(
-            fontURL: fontURL, pathToTargetFont: targetName!, progress: progress, completion: completion)
+            fontURL: fontURL,
+            pathToTargetFont: targetName,
+            progress: progress,
+            completion: completion
+        )
     } else {
         completion("Either targetName or targetNames must be provided")
     }
