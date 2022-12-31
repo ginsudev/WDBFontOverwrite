@@ -16,7 +16,8 @@ extension ContentView {
     
     struct CustomFont {
       var name: String
-      var targetPath: String
+      var targetPath: String?
+      var targetPaths: [String]?
       var localPath: String
       var alternativeTTCRepackMode: TTCRepackMode
     }
@@ -85,7 +86,10 @@ extension ContentView {
             ),
             CustomFont(
                 name: "Emoji",
-                targetPath: "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
+                targetPaths: [
+                    "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
+                    "/System/Library/Fonts/Core/AppleColorEmoji.ttc",
+                ],
                 localPath: "CustomAppleColorEmoji.woff2",
                 alternativeTTCRepackMode: .firstFontOnly
             ),
