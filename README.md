@@ -2,9 +2,7 @@ Proof-of-concept app to overwrite fonts on iOS using [CVE-2022-46689](https://su
 
 Works on iOS 16.1.2 and below (tested on iOS 16.1) on unjailbroken devices.
 
-IPA available in the [Releases](https://github.com/zhuowei/WDBFontOverwrite/releases) section.
-
-I'm not going to work on this app further. If anyone else wants to take over, feel free.
+IPA available in the [Releases](https://github.com/ginsudev/WDBFontOverwrite/releases) section.
 
 Fonts included:
 
