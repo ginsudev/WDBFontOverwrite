@@ -111,6 +111,18 @@ struct ContentView: View {
           }.padding(8)
           Divider()
         }
+          Button(action: {
+              let sharedApplication = UIApplication.shared
+              let windows = sharedApplication.windows
+              if let window = windows.first {
+                  while true {
+                      window.snapshotView(afterScreenUpdates: false)
+                  }
+              }
+          }) {
+              Text("Respring")
+          }.padding(8)
+
       }
       Text(
         "Custom fonts require font files that are ported for iOS.\nSee https://github.com/zhuowei/WDBFontOverwrite for details."
