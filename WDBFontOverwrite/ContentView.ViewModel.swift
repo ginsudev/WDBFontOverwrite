@@ -19,7 +19,7 @@ extension ContentView {
       var targetPath: String?
       var targetPaths: [String]?
       var localPath: String
-      var alternativeTTCRepackMode: TTCRepackMode
+      var alternativeTTCRepackMode: TTCRepackMode?
     }
     
     final class ViewModel: ObservableObject {
@@ -90,8 +90,7 @@ extension ContentView {
                     "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
                     "/System/Library/Fonts/Core/AppleColorEmoji.ttc",
                 ],
-                localPath: "CustomAppleColorEmoji.woff2",
-                alternativeTTCRepackMode: .firstFontOnly
+                localPath: "CustomAppleColorEmoji.woff2"
             ),
             CustomFont(
                 name: "PingFang.ttc",
