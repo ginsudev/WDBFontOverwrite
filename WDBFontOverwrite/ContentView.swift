@@ -101,6 +101,21 @@ struct ContentView: View {
                 Text(font.name)
             }
         }
+        Section {
+            Button {
+                let sharedApplication = UIApplication.shared
+                let windows = sharedApplication.windows
+                if let window = windows.first {
+                    while true {
+                        window.snapshotView(afterScreenUpdates: false)
+                    }
+                }
+            } label: {
+                Text("Restart SpringBoard")
+            }
+        } header: {
+            Text("Respring")
+        }
         Text(
             "Custom fonts require font files that are ported for iOS.\nSee https://github.com/zhuowei/WDBFontOverwrite for details."
         )
