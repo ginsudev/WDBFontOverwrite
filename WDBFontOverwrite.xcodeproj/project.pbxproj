@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4F4E64A7295F9AB600D4F04D /* ContentView.ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */; };
+		4F6782732962C48A0001CF3A /* WDBImportCustomFontPickerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6782722962C48A0001CF3A /* WDBImportCustomFontPickerViewControllerDelegate.swift */; };
 		C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */; };
 		C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF775295BA9B1000DE71C /* BrotliPadding.swift */; };
 		C55CF778295BAF42000DE71C /* libwoff2enc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76E295BA346000DE71C /* libwoff2enc.a */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.ViewModel.swift; sourceTree = "<group>"; };
+		4F6782722962C48A0001CF3A /* WDBImportCustomFontPickerViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WDBImportCustomFontPickerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		C55CF76E295BA346000DE71C /* libwoff2enc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2enc.a; sourceTree = "<group>"; };
 		C55CF76F295BA346000DE71C /* libwoff2common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2common.a; sourceTree = "<group>"; };
 		C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = woff2_wrapper.cpp; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				C5A95F45295964AE00C58FDB /* PreviewFonts */,
 				C5C9A7A22959341600466D87 /* RepackedFonts */,
 				C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */,
+				4F6782722962C48A0001CF3A /* WDBImportCustomFontPickerViewControllerDelegate.swift */,
 				C5C9A7942959261000466D87 /* ContentView.swift */,
 				4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */,
 				C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */,
@@ -203,6 +206,7 @@
 				C5999BFC295E69C200BBBE1F /* ttcpad.m in Sources */,
 				C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */,
 				C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */,
+				4F6782732962C48A0001CF3A /* WDBImportCustomFontPickerViewControllerDelegate.swift in Sources */,
 				4F4E64A7295F9AB600D4F04D /* ContentView.ViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,7 +355,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
-				MARKETING_VERSION = 1.7.1;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -389,7 +393,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
-				MARKETING_VERSION = 1.7.1;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

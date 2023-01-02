@@ -23,6 +23,7 @@ extension ContentView {
     }
     
     final class ViewModel: ObservableObject {
+        @Published var fontListSelection: Int = 0
         @Published var message = "Choose a font."
         @Published var progress: Progress!
         @Published var importPresented: Bool = false
@@ -98,6 +99,24 @@ extension ContentView {
                 localPath: "CustomPingFang.woff2",
                 alternativeTTCRepackMode: .ttcpad
             ),
+            CustomFont(
+                name: "Keycaps.ttc",
+                targetPath: "/System/Library/Fonts/CoreAddition/Keycaps.ttc",
+                localPath: "CustomKeycaps.woff2",
+                alternativeTTCRepackMode: .ttcpad
+            ),
+            CustomFont(
+                name: "KeycapsPad.ttc",
+                targetPath: "/System/Library/Fonts/CoreAddition/KeycapsPad.ttc",
+                localPath: "CustomKeycapsPad.woff2",
+                alternativeTTCRepackMode: .ttcpad
+            ),
+            CustomFont(
+                name: "PhoneKeyCaps.ttf",
+                targetPath: "/System/Library/Fonts/CoreAddition/PhoneKeyCaps.ttf",
+                localPath: "CustomPhoneKeyCaps.woff2",
+                alternativeTTCRepackMode: .ttcpad
+            )
         ]
     }
 }

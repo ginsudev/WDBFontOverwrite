@@ -13,12 +13,15 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
+            Form {
                 progressView
-                List {
+                segmentControl
+                if viewModel.fontListSelection == 0 {
                     fontsList
+                } else {
                     customFontsList
                 }
+                respringSection
             }
             .navigationTitle(viewModel.message)
             .sheet(isPresented: $viewModel.importPresented) {
@@ -30,6 +33,16 @@ struct ContentView: View {
             }
         }
         .navigationViewStyle(.stack)
+    }
+    
+    private var segmentControl: some View {
+        Picker("Font choice", selection: $viewModel.fontListSelection) {
+            Text("Preset")
+                .tag(0)
+            Text("Custom")
+                .tag(1)
+        }
+        .pickerStyle(.segmented)
     }
     
     @ViewBuilder
@@ -62,8 +75,41 @@ struct ContentView: View {
         }
     }
     
+    private var respringSection: some View {
+        Section {
+            Button {
+                let sharedApplication = UIApplication.shared
+                let windows = sharedApplication.windows
+                if let window = windows.first {
+                    while true {
+                        window.snapshotView(afterScreenUpdates: false)
+                    }
+                }
+            } label: {
+                Text("Restart SpringBoard")
+            }
+        } header: {
+            Text("Respring")
+        }
+    }
+    
+    private var customFontNoticeSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "info.circle")
+                Text(
+                    "Custom fonts require font files that are ported for iOS.\n\nSee https://github.com/ginsudev/WDBFontOverwrite for details."
+                )
+                .font(.system(size: 12))
+            }
+        } header: {
+            Text("Notice")
+        }
+    }
+    
     @ViewBuilder
     private var customFontsList: some View {
+        customFontNoticeSection
         ForEach(viewModel.customFonts, id: \.name) { font in
             Section {
                 Button {
@@ -103,78 +149,7 @@ struct ContentView: View {
                 Text(font.name)
             }
         }
-        Section {
-            Button {
-                let sharedApplication = UIApplication.shared
-                let windows = sharedApplication.windows
-                if let window = windows.first {
-                    while true {
-                        window.snapshotView(afterScreenUpdates: false)
-                    }
-                }
-            } label: {
-                Text("Restart SpringBoard")
-            }
-        } header: {
-            Text("Respring")
-        }
-        Text(
-            "Custom fonts require font files that are ported for iOS.\nSee https://github.com/zhuowei/WDBFontOverwrite for details."
-        )
-        .font(.system(size: 12))
     }
-}
-
-class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
-    let name: String
-    let ttcRepackMode: TTCRepackMode
-    let completion: (String) -> Void
-    init(name: String, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
-        self.name = name
-        self.ttcRepackMode = ttcRepackMode
-        self.completion = completion
-    }
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
-    {
-        guard urls.count == 1 else {
-            completion("import one file at a time")
-            return
-        }
-        DispatchQueue.global(qos: .userInteractive).async {
-            let fileURL = urls[0]
-            let documentDirectory = FileManager.default.urls(
-                for: .documentDirectory, in: .userDomainMask)[0]
-            let targetURL = documentDirectory.appendingPathComponent(self.name)
-            let success = importCustomFontImpl(
-                fileURL: fileURL, targetURL: targetURL, ttcRepackMode: self.ttcRepackMode)
-            DispatchQueue.main.async {
-                self.completion(success ?? "Imported")
-            }
-        }
-    }
-    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        completion("Cancelled")
-    }
-}
-
-// https://capps.tech/blog/read-files-with-documentpicker-in-swiftui
-struct DocumentPicker: UIViewControllerRepresentable {
-    let controllerDelegate: WDBImportCustomFontPickerViewControllerDelegate
-    init(name: String, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
-        controllerDelegate = WDBImportCustomFontPickerViewControllerDelegate(
-            name: name, ttcRepackMode: ttcRepackMode, completion: completion)
-    }
-    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        print("make ui view controller?")
-        let pickerViewController = UIDocumentPickerViewController(
-            forOpeningContentTypes: [
-                UTType.font, UTType(filenameExtension: "woff2", conformingTo: .font)!,
-            ], asCopy: true)
-        pickerViewController.delegate = self.controllerDelegate
-        return pickerViewController
-    }
-    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context)
-    {}
 }
 
 struct ContentView_Previews: PreviewProvider {
