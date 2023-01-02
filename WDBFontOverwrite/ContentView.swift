@@ -89,13 +89,15 @@ struct ContentView: View {
                 } label: {
                     Text("Import custom \(font.name)")
                 }
-                Button {
-                    viewModel.message = "Importing..."
-                    viewModel.importName = font.localPath
-                    viewModel.importTTCRepackMode = font.alternativeTTCRepackMode
-                    viewModel.importPresented = true
-                } label: {
-                    Text("Import custom \(font.name) with fix for .ttc")
+                if let alternativeTTCRepackMode = font.alternativeTTCRepackMode  {
+                    Button {
+                        viewModel.message = "Importing..."
+                        viewModel.importName = font.localPath
+                        viewModel.importTTCRepackMode = alternativeTTCRepackMode
+                        viewModel.importPresented = true
+                    } label: {
+                        Text("Import custom \(font.name) with fix for .ttc")
+                    }
                 }
             } header: {
                 Text(font.name)
