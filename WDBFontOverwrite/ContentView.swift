@@ -27,23 +27,13 @@ struct ContentView: View {
             .navigationTitle("WDBFontOverwrite")
         }
         .navigationViewStyle(.stack)
-        .fileImporter(
-            isPresented: $viewModel.importPresented,
-            allowedContentTypes: [
-                UTType.font,
-                UTType(
-                    filenameExtension: "woff2",
-                    conformingTo: .font
-                )!
-            ]) { result in
-                switch result {
-                case .success(let url):
-                    viewModel.importSelectedFile(fromURL: url)
-                case .failure(let failure):
-                    viewModel.message = "Failed to import"
-                    print(failure.localizedDescription)
+        .sheet(isPresented: $viewModel.importPresented) {
+            DocumentPicker(
+                name: viewModel.importName,
+                ttcRepackMode: viewModel.importTTCRepackMode) {
+                    viewModel.message = $0
                 }
-            }
+        }
     }
     
     private var segmentControl: some View {
@@ -113,17 +103,19 @@ struct ContentView: View {
         
         Section {
             Button {
+                viewModel.message = "Importing..."
                 viewModel.importName = viewModel.selectedCustomFont.localPath
                 viewModel.importTTCRepackMode = .woff2
-                presentPicker()
+                viewModel.importPresented = true
             } label: {
                 Text("Import custom \(viewModel.selectedCustomFont.name)")
             }
             if let alternativeTTCRepackMode = viewModel.selectedCustomFont.alternativeTTCRepackMode  {
                 Button {
+                    viewModel.message = "Importing..."
                     viewModel.importName = viewModel.selectedCustomFont.localPath
                     viewModel.importTTCRepackMode = alternativeTTCRepackMode
-                    presentPicker()
+                    viewModel.importPresented = true
                 } label: {
                     Text("Import custom \(viewModel.selectedCustomFont.name) with fix for .ttc")
                 }
@@ -166,18 +158,6 @@ struct ContentView: View {
             Text("Actions")
         } footer: {
             Text("Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev).")
-        }
-    }
-    
-    private func presentPicker() {
-        if viewModel.importPresented {
-            // Fixes broken fileimporter sheet not resetting binding bool on swipe down
-            viewModel.importPresented = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                viewModel.importPresented = true
-            })
-        } else {
-            viewModel.importPresented = true
         }
     }
 }

@@ -143,24 +143,5 @@ extension ContentView {
                 notice: .keyboard
             )
         ]
-        
-        func importSelectedFile(fromURL url: URL) {
-            url.startAccessingSecurityScopedResource()
-            
-            let documentDirectory = FileManager.default.urls(
-                for: .documentDirectory,
-                in: .userDomainMask
-            )[0]
-            
-            let targetURL = documentDirectory.appendingPathComponent(selectedCustomFont.localPath)
-            
-            let importResult = importCustomFontImpl(
-                fileURL: url,
-                targetURL: targetURL,
-                ttcRepackMode: importTTCRepackMode
-            )
-            
-            message = importResult ?? "Successfully imported font"
-        }
     }
 }
