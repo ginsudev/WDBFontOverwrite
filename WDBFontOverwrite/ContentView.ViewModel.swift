@@ -110,6 +110,12 @@ extension ContentView {
                 localPath: "CustomAppleColorEmoji.woff2"
             ),
             CustomFont(
+                name: "SFUISoft.ttc",
+                targetPath: .single("/System/Library/Fonts/CoreUI/SFUISoft.ttc"),
+                localPath: "CustomSFUISoft.woff2",
+                alternativeTTCRepackMode: .ttcpad
+            ),
+            CustomFont(
                 name: "PingFang.ttc",
                 targetPath: .single("/System/Library/Fonts/LanguageSupport/PingFang.ttc"),
                 localPath: "CustomPingFang.woff2",
