@@ -10,14 +10,23 @@ import UniformTypeIdentifiers
 
 func overwriteWithFont(name: String, progress: Progress, completion: @escaping (String) -> Void) {
     let fontURL = Bundle.main.url(
-        forResource: name, withExtension: nil, subdirectory: "RepackedFonts")!
+        forResource: name,
+        withExtension: nil,
+        subdirectory: "RepackedFonts"
+    )!
     overwriteWithFont(
-        fontURL: fontURL, pathToTargetFont: "/System/Library/Fonts/CoreUI/SFUI.ttf", progress: progress,
-        completion: completion)
+        fontURL: fontURL,
+        pathToTargetFont: "/System/Library/Fonts/CoreUI/SFUI.ttf",
+        progress: progress,
+        completion: completion
+    )
 }
 
 func overwriteWithFont(
-    fontURL: URL, pathToTargetFont: String, progress: Progress, completion: @escaping (String) -> Void
+    fontURL: URL,
+    pathToTargetFont: String,
+    progress: Progress,
+    completion: @escaping (String) -> Void
 ) {
     DispatchQueue.global(qos: .userInteractive).async {
         let succeeded = overwriteWithFontImpl(
@@ -136,38 +145,41 @@ func dumpCurrentFont() {
 
 func overwriteWithCustomFont(
     name: String,
-    targetName: String?,
-    targetNames: [String]?,
+    targetName: PathType?,
     progress: Progress,
     completion: @escaping (String) -> Void
 ) {
-    let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[
-        0
-    ]
+    let documentDirectory = FileManager.default.urls(
+        for: .documentDirectory,
+        in: .userDomainMask
+    )[0]
+    
     let fontURL = documentDirectory.appendingPathComponent(name)
     guard FileManager.default.fileExists(atPath: fontURL.path) else {
         completion("No custom font imported")
         return
     }
-    if let targetNames {
-        for targetName in targetNames {
-            if (access(targetName, F_OK) == 0) {
+    
+    switch targetName {
+    case .single(let path):
+        overwriteWithFont(
+            fontURL: fontURL,
+            pathToTargetFont: path,
+            progress: progress,
+            completion: completion
+        )
+    case .many(let paths):
+        for path in paths {
+            if (access(path, F_OK) == 0) {
                 overwriteWithFont(
                     fontURL: fontURL,
-                    pathToTargetFont: targetName,
+                    pathToTargetFont: path,
                     progress: progress,
                     completion: completion
                 )
             }
         }
-    } else if let targetName {
-        overwriteWithFont(
-            fontURL: fontURL,
-            pathToTargetFont: targetName,
-            progress: progress,
-            completion: completion
-        )
-    } else {
+    default:
         completion("Either targetName or targetNames must be provided")
     }
 }

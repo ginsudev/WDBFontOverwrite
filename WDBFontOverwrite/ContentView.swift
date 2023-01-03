@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var viewModel = ViewModel()
+    @Environment(\.openURL) private var openURL
     
     var body: some View {
         NavigationView {
@@ -21,18 +22,28 @@ struct ContentView: View {
                 } else {
                     customFontsList
                 }
-                respringSection
+                actionSection
             }
-            .navigationTitle(viewModel.message)
-            .sheet(isPresented: $viewModel.importPresented) {
-                DocumentPicker(
-                    name: viewModel.importName,
-                    ttcRepackMode: viewModel.importTTCRepackMode) {
-                        viewModel.message = $0
-                    }
-            }
+            .navigationTitle("WDBFontOverwrite")
         }
         .navigationViewStyle(.stack)
+        .fileImporter(
+            isPresented: $viewModel.importPresented,
+            allowedContentTypes: [
+                UTType.font,
+                UTType(
+                    filenameExtension: "woff2",
+                    conformingTo: .font
+                )!
+            ]) { result in
+                switch result {
+                case .success(let url):
+                    viewModel.importSelectedFile(fromURL: url)
+                case .failure(let failure):
+                    viewModel.message = "Failed to import"
+                    print(failure.localizedDescription)
+                }
+            }
     }
     
     private var segmentControl: some View {
@@ -47,6 +58,13 @@ struct ContentView: View {
     
     @ViewBuilder
     private var progressView: some View {
+        if #available(iOS 16.2, *) {
+            NoticeView(notice: .iosVersion)
+                .bold()
+                .foregroundColor(.red)
+        } else {
+            Text(viewModel.message)
+        }
         if let progress = viewModel.progress {
             ProgressView(progress)
         }
@@ -58,7 +76,10 @@ struct ContentView: View {
                 Button {
                     viewModel.message = "Running"
                     viewModel.progress = Progress(totalUnitCount: 1)
-                    overwriteWithFont(name: font.repackedPath, progress: viewModel.progress) {
+                    overwriteWithFont(
+                        name: font.repackedPath,
+                        progress: viewModel.progress
+                    ) {
                         viewModel.message = $0
                         viewModel.progress = nil
                     }
@@ -75,7 +96,60 @@ struct ContentView: View {
         }
     }
     
-    private var respringSection: some View {
+    @ViewBuilder
+    private var customFontsList: some View {
+        Section {
+            NoticeView(notice: .beforeUse)
+            Picker("Custom font", selection: $viewModel.customFontPickerSelection) {
+                ForEach(Array(viewModel.customFonts.enumerated()), id: \.element.name) { index, font in
+                    Text(font.name)
+                        .tag(index)
+                }
+            }
+            .pickerStyle(.wheel)
+        } header: {
+            Text("Custom fonts")
+        }
+        
+        Section {
+            Button {
+                viewModel.importName = viewModel.selectedCustomFont.localPath
+                viewModel.importTTCRepackMode = .woff2
+                presentPicker()
+            } label: {
+                Text("Import custom \(viewModel.selectedCustomFont.name)")
+            }
+            if let alternativeTTCRepackMode = viewModel.selectedCustomFont.alternativeTTCRepackMode  {
+                Button {
+                    viewModel.importName = viewModel.selectedCustomFont.localPath
+                    viewModel.importTTCRepackMode = alternativeTTCRepackMode
+                    presentPicker()
+                } label: {
+                    Text("Import custom \(viewModel.selectedCustomFont.name) with fix for .ttc")
+                }
+            }
+            Button {
+                viewModel.message = "Running"
+                viewModel.progress = Progress(totalUnitCount: 1)
+                overwriteWithCustomFont(
+                    name: viewModel.selectedCustomFont.localPath,
+                    targetName: viewModel.selectedCustomFont.targetPath,
+                    progress: viewModel.progress
+                ) {
+                    viewModel.message = $0
+                    viewModel.progress = nil
+                }
+            } label: {
+                Text("Apply \(viewModel.selectedCustomFont.name)")
+            }
+            
+            if let notice = viewModel.selectedCustomFont.notice {
+                NoticeView(notice: notice)
+            }
+        }
+    }
+    
+    private var actionSection: some View {
         Section {
             Button {
                 let sharedApplication = UIApplication.shared
@@ -89,65 +163,21 @@ struct ContentView: View {
                 Text("Restart SpringBoard")
             }
         } header: {
-            Text("Respring")
+            Text("Actions")
+        } footer: {
+            Text("Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev).")
         }
     }
     
-    private var customFontNoticeSection: some View {
-        Section {
-            HStack {
-                Image(systemName: "info.circle")
-                Text(
-                    "Custom fonts require font files that are ported for iOS.\n\nSee https://github.com/ginsudev/WDBFontOverwrite for details."
-                )
-                .font(.system(size: 12))
-            }
-        } header: {
-            Text("Notice")
-        }
-    }
-    
-    @ViewBuilder
-    private var customFontsList: some View {
-        customFontNoticeSection
-        ForEach(viewModel.customFonts, id: \.name) { font in
-            Section {
-                Button {
-                    viewModel.message = "Running"
-                    viewModel.progress = Progress(totalUnitCount: 1)
-                    overwriteWithCustomFont(
-                        name: font.localPath,
-                        targetName: font.targetPath,
-                        targetNames: font.targetPaths,
-                        progress: viewModel.progress
-                    ) {
-                        viewModel.message = $0
-                        viewModel.progress = nil
-                    }
-                } label: {
-                    Text("Custom \(font.name)")
-                }
-                Button {
-                    viewModel.message = "Importing..."
-                    viewModel.importName = font.localPath
-                    viewModel.importTTCRepackMode = .woff2
-                    viewModel.importPresented = true
-                } label: {
-                    Text("Import custom \(font.name)")
-                }
-                if let alternativeTTCRepackMode = font.alternativeTTCRepackMode  {
-                    Button {
-                        viewModel.message = "Importing..."
-                        viewModel.importName = font.localPath
-                        viewModel.importTTCRepackMode = alternativeTTCRepackMode
-                        viewModel.importPresented = true
-                    } label: {
-                        Text("Import custom \(font.name) with fix for .ttc")
-                    }
-                }
-            } header: {
-                Text(font.name)
-            }
+    private func presentPicker() {
+        if viewModel.importPresented {
+            // Fixes broken fileimporter sheet not resetting binding bool on swipe down
+            viewModel.importPresented = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                viewModel.importPresented = true
+            })
+        } else {
+            viewModel.importPresented = true
         }
     }
 }
