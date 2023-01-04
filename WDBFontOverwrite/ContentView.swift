@@ -116,7 +116,14 @@ struct ContentView: View {
                 viewModel.importTTCRepackMode = .woff2
                 viewModel.importPresented = true
             } label: {
-                Text("Import custom \(viewModel.selectedCustomFontType.rawValue)")
+                HStack {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Import custom \(viewModel.selectedCustomFontType.rawValue)")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
             if viewModel.selectedCustomFontType == .font {
                 Button {
@@ -124,7 +131,14 @@ struct ContentView: View {
                     viewModel.importTTCRepackMode = .ttcpad
                     viewModel.importPresented = true
                 } label: {
-                    Text("Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc")
+                    HStack {
+                        Image(systemName: "square.and.arrow.down")
+                            .font(.system(size: 20))
+                            .frame(width: 32, height: 32)
+                            .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                        Text("Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc")
+                            .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                    }
                 }
             }
             Button {
@@ -134,7 +148,14 @@ struct ContentView: View {
                     await viewModel.batchOverwriteFonts()
                 }
             } label: {
-                Text("Apply \(viewModel.selectedCustomFontType.rawValue)")
+                HStack {
+                    Image(systemName: "checkmark.circle")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Apply \(viewModel.selectedCustomFontType.rawValue)")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
         } header: {
             Text("Custom fonts")
@@ -146,7 +167,14 @@ struct ContentView: View {
             Button {
                 viewModel.isPresentedFileEditor = true
             } label: {
-                Text("Manage imported fonts")
+                HStack {
+                    Image(systemName: "doc.badge.gearshape")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Manage imported fonts")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
             Button {
                 let sharedApplication = UIApplication.shared
@@ -157,7 +185,14 @@ struct ContentView: View {
                     }
                 }
             } label: {
-                Text("Restart SpringBoard")
+                HStack {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Restart SpringBoard")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
         } header: {
             Text("Actions")
