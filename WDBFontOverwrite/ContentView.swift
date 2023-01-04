@@ -16,7 +16,7 @@ struct ContentView: View {
         NavigationView {
             Form {
                 progressView
-                segmentControl
+                listPickerView
                 if viewModel.fontListSelection == 0 {
                     fontsList
                 } else {
@@ -29,14 +29,27 @@ struct ContentView: View {
         .navigationViewStyle(.stack)
         .sheet(isPresented: $viewModel.importPresented) {
             DocumentPicker(
-                name: viewModel.importName,
-                ttcRepackMode: viewModel.importTTCRepackMode) {
-                    viewModel.message = $0
+                importType: viewModel.selectedCustomFontType,
+                ttcRepackMode: viewModel.importTTCRepackMode
+            ) {
+                viewModel.message = $0
+            }
+        }
+        .sheet(isPresented: $viewModel.isPresentedFileEditor) {
+            FileEditorView()
+        }
+        .onAppear {
+            Task(priority: .background) {
+                do {
+                    try await FontMap.populateFontMap()
+                } catch {
+                    viewModel.message = "Error: Unable to populate font map."
                 }
+            }
         }
     }
     
-    private var segmentControl: some View {
+    private var listPickerView: some View {
         Picker("Font choice", selection: $viewModel.fontListSelection) {
             Text("Preset")
                 .tag(0)
@@ -90,59 +103,79 @@ struct ContentView: View {
     private var customFontsList: some View {
         Section {
             NoticeView(notice: .beforeUse)
-            Picker("Custom font", selection: $viewModel.customFontPickerSelection) {
-                ForEach(Array(viewModel.customFonts.enumerated()), id: \.element.name) { index, font in
-                    Text(font.name)
-                        .tag(index)
-                }
+            Picker("Custom fonts", selection: $viewModel.customFontPickerSelection) {
+                Text("Custom font")
+                    .tag(0)
+                Text("Custom Emoji")
+                    .tag(1)
             }
             .pickerStyle(.wheel)
-        } header: {
-            Text("Custom fonts")
-        }
-        
-        Section {
+            
             Button {
                 viewModel.message = "Importing..."
-                viewModel.importName = viewModel.selectedCustomFont.localPath
                 viewModel.importTTCRepackMode = .woff2
                 viewModel.importPresented = true
             } label: {
-                Text("Import custom \(viewModel.selectedCustomFont.name)")
+                HStack {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Import custom \(viewModel.selectedCustomFontType.rawValue)")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
-            if let alternativeTTCRepackMode = viewModel.selectedCustomFont.alternativeTTCRepackMode  {
+            if viewModel.selectedCustomFontType == .font {
                 Button {
                     viewModel.message = "Importing..."
-                    viewModel.importName = viewModel.selectedCustomFont.localPath
-                    viewModel.importTTCRepackMode = alternativeTTCRepackMode
+                    viewModel.importTTCRepackMode = .ttcpad
                     viewModel.importPresented = true
                 } label: {
-                    Text("Import custom \(viewModel.selectedCustomFont.name) with fix for .ttc")
+                    HStack {
+                        Image(systemName: "square.and.arrow.down")
+                            .font(.system(size: 20))
+                            .frame(width: 32, height: 32)
+                            .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                        Text("Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc")
+                            .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                    }
                 }
             }
             Button {
                 viewModel.message = "Running"
                 viewModel.progress = Progress(totalUnitCount: 1)
-                overwriteWithCustomFont(
-                    name: viewModel.selectedCustomFont.localPath,
-                    targetName: viewModel.selectedCustomFont.targetPath,
-                    progress: viewModel.progress
-                ) {
-                    viewModel.message = $0
-                    viewModel.progress = nil
+                Task {
+                    await viewModel.batchOverwriteFonts()
                 }
             } label: {
-                Text("Apply \(viewModel.selectedCustomFont.name)")
+                HStack {
+                    Image(systemName: "checkmark.circle")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Apply \(viewModel.selectedCustomFontType.rawValue)")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
-            
-            if let notice = viewModel.selectedCustomFont.notice {
-                NoticeView(notice: notice)
-            }
+        } header: {
+            Text("Custom fonts")
         }
     }
     
     private var actionSection: some View {
         Section {
+            Button {
+                viewModel.isPresentedFileEditor = true
+            } label: {
+                HStack {
+                    Image(systemName: "doc.badge.gearshape")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Manage imported fonts")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
+            }
             Button {
                 let sharedApplication = UIApplication.shared
                 let windows = sharedApplication.windows
@@ -152,7 +185,14 @@ struct ContentView: View {
                     }
                 }
             } label: {
-                Text("Restart SpringBoard")
+                HStack {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 20))
+                        .frame(width: 32, height: 32)
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
+                    Text("Restart SpringBoard")
+                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
+                }
             }
         } header: {
             Text("Actions")

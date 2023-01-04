@@ -1,63 +1,100 @@
+//
+//  ContentView.ViewModel.swift
+//  WDBFontOverwrite
+//
+//  Created by Noah Little (@ginsudev) on 3/1/2023.
+//
+
 import SwiftUI
 import UniformTypeIdentifiers
 
 class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
-    let name: String
+    let importType: CustomFontType
     let ttcRepackMode: TTCRepackMode
     let completion: (String) -> Void
     
-    init(name: String, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
-        self.name = name
+    init(importType: CustomFontType, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
+        self.importType = importType
         self.ttcRepackMode = ttcRepackMode
         self.completion = completion
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard urls.count == 1 else {
-            completion("import one file at a time")
-            return
-        }
-        
-        Task(priority: .background) {
-            let fileURL = urls[0]
-            let documentDirectory = FileManager.default.urls(
-                for: .documentDirectory,
-                in: .userDomainMask
-            )[0]
-            let targetURL = documentDirectory.appendingPathComponent(self.name)
-            let success = importCustomFontImpl(
-                fileURL: fileURL,
-                targetURL: targetURL,
-                ttcRepackMode: self.ttcRepackMode
-            )
-            await MainActor.run { [weak self] in
-                self?.completion(success ?? "Imported")
-            }
+        Task {
+            await importSelectedFonts(atURLs: urls)
         }
     }
     
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         completion("Cancelled")
     }
+    
+    private func importSelectedFonts(atURLs urls: [URL]) async {
+        let documentDirectory = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        )[0]
+        
+        var successfullyImportedCount = 0
+        
+        // Import selected font files into the documents directory, one by one.
+        for url in urls {
+            if importType == .emoji {
+                let emojiFont = FontMap.emojiCustomFont
+                let targetURL = documentDirectory.appendingPathComponent(emojiFont.localPath)
+                let success = await importFont(withFileURL: url, targetURL: targetURL)
+                successfullyImportedCount += success
+            } else {
+                let key = FontMap.key(forFont: url.lastPathComponent)
+                if let customFont = FontMap.fontMap[key] {
+                    let targetURL = documentDirectory.appendingPathComponent(customFont.localPath)
+                    let success = await importFont(withFileURL: url, targetURL: targetURL)
+                    successfullyImportedCount += success
+                }
+            }
+        }
+
+        await MainActor.run { [weak self] in
+            self?.completion(
+                String(
+                    format: "Successfully imported %d/%d files.%@",
+                    successfullyImportedCount,
+                    urls.count,
+                    successfullyImportedCount == urls.count ? "" : " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device."
+                )
+            )
+        }
+    }
+    
+    private func importFont(withFileURL fileURL: URL, targetURL: URL) async -> Int {
+        let success = await importCustomFontImpl(
+            fileURL: fileURL,
+            targetURL: targetURL,
+            ttcRepackMode: self.ttcRepackMode
+        )
+        if success == nil {
+            return 1
+        } else {
+            return 0
+        }
+    }
 }
 
 // https://capps.tech/blog/read-files-with-documentpicker-in-swiftui
 struct DocumentPicker: UIViewControllerRepresentable {
-    var name: String
+    var importType: CustomFontType
     var ttcRepackMode: TTCRepackMode
     var completion: (String) -> Void
     
     func makeCoordinator() -> WDBImportCustomFontPickerViewControllerDelegate {
         return WDBImportCustomFontPickerViewControllerDelegate(
-            name: name,
+            importType: importType,
             ttcRepackMode: ttcRepackMode,
             completion: completion
         )
     }
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<DocumentPicker>) -> UIDocumentPickerViewController {
-        print("make ui view controller?")
-        
         let pickerViewController = UIDocumentPickerViewController(
             forOpeningContentTypes: [
                 UTType.font,
@@ -69,6 +106,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
             asCopy: true
         )
         
+        pickerViewController.allowsMultipleSelection = importType == .font
         pickerViewController.delegate = context.coordinator
         return pickerViewController
     }
