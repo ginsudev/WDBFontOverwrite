@@ -26,13 +26,19 @@ func overwriteWithFont(
     fontURL: URL,
     pathToTargetFont: String,
     progress: Progress,
-    completion: @escaping (String) -> Void
+    completion: ((String) -> Void)?
 ) {
     DispatchQueue.global(qos: .userInteractive).async {
         let succeeded = overwriteWithFontImpl(
-            fontURL: fontURL, pathToTargetFont: pathToTargetFont, progress: progress)
+            fontURL: fontURL,
+            pathToTargetFont: pathToTargetFont,
+            progress: progress
+        )
+        
+        print("done")
+        
         DispatchQueue.main.async {
-            completion(succeeded ? "Success: force close an app to see results" : "Failed")
+            completion?(succeeded ? "Success: force close an app to see results" : "Failed")
         }
     }
 }
@@ -145,9 +151,9 @@ func dumpCurrentFont() {
 
 func overwriteWithCustomFont(
     name: String,
-    targetName: PathType?,
+    targetPath: PathType?,
     progress: Progress,
-    completion: @escaping (String) -> Void
+    completion: ((String) -> Void)? = nil
 ) {
     let documentDirectory = FileManager.default.urls(
         for: .documentDirectory,
@@ -156,11 +162,13 @@ func overwriteWithCustomFont(
     
     let fontURL = documentDirectory.appendingPathComponent(name)
     guard FileManager.default.fileExists(atPath: fontURL.path) else {
-        completion("No custom font imported")
+        completion?("No custom font imported")
         return
     }
+
+    print("b4 switch")
     
-    switch targetName {
+    switch targetPath {
     case .single(let path):
         overwriteWithFont(
             fontURL: fontURL,
@@ -180,7 +188,7 @@ func overwriteWithCustomFont(
             }
         }
     default:
-        completion("Either targetName or targetNames must be provided")
+        completion?("Either targetName or targetNames must be provided")
     }
 }
 

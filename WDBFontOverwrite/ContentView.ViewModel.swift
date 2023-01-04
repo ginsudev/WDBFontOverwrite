@@ -18,29 +18,40 @@ enum Notice: String {
     case keyboard = "Keyboard fonts may not be applied immediately due to iOS caching issues. IF POSSIBLE, remove the folder /var/mobile/Library/Caches/com.apple.keyboards/ if you wish for changes to take effect immediately."
 }
 
+struct CustomFont {
+    var name: String
+    var targetPath: PathType?
+    var localPath: String
+    var alternativeTTCRepackMode: TTCRepackMode?
+    var notice: Notice?
+}
+
+struct FontToReplace {
+    var name: String
+    var postScriptName: String
+    var repackedPath: String
+}
+
+enum CustomFontType: String {
+    case font = "font"
+    case emoji = "emoji"
+}
+
 extension ContentView {
-    struct FontToReplace {
-        var name: String
-        var postScriptName: String
-        var repackedPath: String
-    }
-    
-    struct CustomFont {
-        var name: String
-        var targetPath: PathType?
-        var localPath: String
-        var alternativeTTCRepackMode: TTCRepackMode?
-        var notice: Notice?
-    }
-    
     final class ViewModel: ObservableObject {
         @Published var fontListSelection: Int = 0
         @Published var customFontPickerSelection: Int = 0
         @Published var message = "Choose a font."
         @Published var progress: Progress!
         @Published var importPresented: Bool = false
-        @Published var importName: String = ""
+        @Published var isPresentedFileEditor: Bool = false
         @Published var importTTCRepackMode: TTCRepackMode = .woff2
+        @Published var allowsMultipleSelection: Bool = true
+        @Published var importType: CustomFontType = .font
+        
+        var selectedCustomFontType: CustomFontType {
+            return customFontPickerSelection == 0 ? .font : .emoji
+        }
         
         let fonts = [
             FontToReplace(
@@ -89,65 +100,36 @@ extension ContentView {
                 repackedPath: "Chococooky.woff2"
             ),
         ]
-
-        let specialCustomFonts = [
-            CustomFont(
-                name: "Emoji",
-                targetPath: .many([
-                    "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
-                    "/System/Library/Fonts/Core/AppleColorEmoji.ttc",
-                ]),
-                localPath: "CustomAppleColorEmoji.woff2"
-            )
-        ]
         
-        var customFontMap = [String: CustomFont]()
-        
-        func populateFontMap() async {
-            let fm = FileManager.default
-            let fontDirPath = "/System/Library/Fonts/"
-            
+        func batchOverwriteFonts() async {
+            let fileManager = FileManager.default
+            let documentsDirectory = fileManager.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            )[0]
             do {
-                let fontSubDirectories = try fm.contentsOfDirectory(atPath: fontDirPath)
-                for dir in fontSubDirectories {
-                    let fontFiles = try fm.contentsOfDirectory(atPath: "\(fontDirPath)\(dir)")
-                    for font in fontFiles {
-                        guard !font.contains("AppleColorEmoji") else {
-                            continue
-                        }
-                        guard let validatedLocalPath = validateFont(name: font) else {
-                            continue
-                        }
-                        customFontMap[font] = CustomFont(
-                            name: font,
-                            targetPath: .single("\(fontDirPath)\(dir)/\(font)"),
-                            localPath: "Custom\(validatedLocalPath)",
-                            alternativeTTCRepackMode: .ttcpad,
-                            notice: notice(forFont: font)
+                let fonts = try fileManager.contentsOfDirectory(atPath: documentsDirectory.relativePath)
+                print(fonts)
+                for font in fonts {
+                    let key = FontMap.key(forFont: font)
+                    if let customFont = FontMap.fontMap[key] {
+                        overwriteWithCustomFont(
+                            name: customFont.localPath,
+                            targetPath: customFont.targetPath,
+                            progress: progress
                         )
                     }
+                    print("loop done for \(key)")
                 }
-            } catch {
+                print("exited loop")
+                
+                await MainActor.run { [weak self] in
+                    self?.progress = nil
+                }
+            } catch  {
                 print(error)
+                message = "Failed to read imported fonts."
             }
-            
-            print(customFontMap)
-        }
-        
-        private func validateFont(name: String) -> String? {
-            var components = name.components(separatedBy: ".")
-            guard components.last == "ttc" || components.last == "ttf" else {
-                return nil
-            }
-            components[components.count - 1] = "woff2"
-            return components.joined(separator: ".")
-        }
-        
-        private func notice(forFont font: String) -> Notice? {
-            if font.lowercased().contains("keycaps") {
-                return .keyboard
-            }
-            return nil
         }
     }
 }

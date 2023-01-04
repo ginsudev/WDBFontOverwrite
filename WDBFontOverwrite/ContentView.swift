@@ -16,7 +16,7 @@ struct ContentView: View {
         NavigationView {
             Form {
                 progressView
-                segmentControl
+                listPickerView
                 if viewModel.fontListSelection == 0 {
                     fontsList
                 } else {
@@ -29,19 +29,27 @@ struct ContentView: View {
         .navigationViewStyle(.stack)
         .sheet(isPresented: $viewModel.importPresented) {
             DocumentPicker(
-                name: viewModel.importName,
-                ttcRepackMode: viewModel.importTTCRepackMode) {
-                    viewModel.message = $0
-                }
+                importType: viewModel.importType,
+                ttcRepackMode: viewModel.importTTCRepackMode
+            ) {
+                viewModel.message = $0
+            }
+        }
+        .sheet(isPresented: $viewModel.isPresentedFileEditor) {
+            FileEditorView()
         }
         .onAppear {
             Task(priority: .background) {
-                await viewModel.populateFontMap()
+                do {
+                    try await FontMap.populateFontMap()
+                } catch {
+                    viewModel.message = "Error: Unable to populate font map."
+                }
             }
         }
     }
     
-    private var segmentControl: some View {
+    private var listPickerView: some View {
         Picker("Font choice", selection: $viewModel.fontListSelection) {
             Text("Preset")
                 .tag(0)
@@ -101,75 +109,45 @@ struct ContentView: View {
                 Text("Custom Emoji")
                     .tag(1)
             }
-            
-            switch viewModel.customFontPickerSelection {
-            case 0:
-                Button {
-                    <#code#>
-                } label: {
-                    Text("Import custom fonts")
-                }
-            case 1:
-                Button {
-                    <#code#>
-                } label: {
-                    Text("Import custom fonts")
-                }
-            }
-
-            Picker("Custom font", selection: $viewModel.customFontPickerSelection) {
-                ForEach(Array(viewModel.customFonts.enumerated()), id: \.element.name) { index, font in
-                    Text(font.name)
-                        .tag(index)
-                }
-            }
             .pickerStyle(.wheel)
-        } header: {
-            Text("Custom fonts")
-        }
-        
-        Section {
+            
             Button {
                 viewModel.message = "Importing..."
-                viewModel.importName = viewModel.selectedCustomFont.localPath
                 viewModel.importTTCRepackMode = .woff2
                 viewModel.importPresented = true
             } label: {
-                Text("Import custom \(viewModel.selectedCustomFont.name)")
+                Text("Import custom \(viewModel.selectedCustomFontType.rawValue)")
             }
-            if let alternativeTTCRepackMode = viewModel.selectedCustomFont.alternativeTTCRepackMode  {
+            if viewModel.selectedCustomFontType == .font {
                 Button {
                     viewModel.message = "Importing..."
-                    viewModel.importName = viewModel.selectedCustomFont.localPath
-                    viewModel.importTTCRepackMode = alternativeTTCRepackMode
+                    viewModel.importTTCRepackMode = .ttcpad
                     viewModel.importPresented = true
                 } label: {
-                    Text("Import custom \(viewModel.selectedCustomFont.name) with fix for .ttc")
+                    Text("Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc")
                 }
             }
             Button {
                 viewModel.message = "Running"
                 viewModel.progress = Progress(totalUnitCount: 1)
-                overwriteWithCustomFont(
-                    name: viewModel.selectedCustomFont.localPath,
-                    targetName: viewModel.selectedCustomFont.targetPath,
-                    progress: viewModel.progress
-                ) {
-                    viewModel.message = $0
-                    viewModel.progress = nil
+                Task {
+                    await viewModel.batchOverwriteFonts()
                 }
             } label: {
-                Text("Apply \(viewModel.selectedCustomFont.name)")
+                Text("Apply \(viewModel.selectedCustomFontType.rawValue)")
             }
-            
-            if let notice = viewModel.selectedCustomFont.notice {
-                NoticeView(notice: notice)
-            }
+        } header: {
+            Text("Custom fonts")
         }
     }
     
     private var actionSection: some View {
         Section {
+            Button {
+                viewModel.isPresentedFileEditor = true
+            } label: {
+                Text("Manage imported fonts")
+            }
             Button {
                 let sharedApplication = UIApplication.shared
                 let windows = sharedApplication.windows
