@@ -117,14 +117,11 @@ extension ContentView {
                             name: customFont.localPath,
                             targetPath: customFont.targetPath,
                             progress: progress
-                        )
+                        ) {
+                            self.progress = nil
+                            self.message = $0
+                        }
                     }
-                    print("loop done for \(key)")
-                }
-                print("exited loop")
-                
-                await MainActor.run { [weak self] in
-                    self?.progress = nil
                 }
             } catch  {
                 print(error)

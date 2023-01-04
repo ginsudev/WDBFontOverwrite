@@ -21,38 +21,7 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         Task {
-            let documentDirectory = FileManager.default.urls(
-                for: .documentDirectory,
-                in: .userDomainMask
-            )[0]
-            
-            var successfullyImportedCount = 0
-            
-            // Import selected font files into the documents directory, one by one.
-            for url in urls {
-                if importType == .emoji {
-                    let emojiFont = FontMap.emojiCustomFont
-                    let targetURL = documentDirectory.appendingPathComponent(emojiFont.localPath)
-                    successfullyImportedCount += importFont(withFileURL: url, targetURL: targetURL)
-                } else {
-                    let key = FontMap.key(forFont: url.lastPathComponent)
-                    if let customFont = FontMap.fontMap[key] {
-                        let targetURL = documentDirectory.appendingPathComponent(customFont.localPath)
-                        successfullyImportedCount += importFont(withFileURL: url, targetURL: targetURL)
-                    }
-                }
-            }
-            
-            await MainActor.run { [weak self] in
-                self?.completion(
-                    String(
-                        format: "Successfully imported %d/%d files.%@",
-                        successfullyImportedCount,
-                        urls.count,
-                        successfullyImportedCount == urls.count ? "" : " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device."
-                    )
-                )
-            }
+            await importSelectedFonts(atURLs: urls)
         }
     }
     
@@ -60,15 +29,54 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
         completion("Cancelled")
     }
     
-    private func importFont(withFileURL fileURL: URL, targetURL: URL) -> Int {
-        if importCustomFontImpl(
+    private func importSelectedFonts(atURLs urls: [URL]) async {
+        let documentDirectory = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        )[0]
+        
+        var successfullyImportedCount = 0
+        
+        // Import selected font files into the documents directory, one by one.
+        for url in urls {
+            if importType == .emoji {
+                let emojiFont = FontMap.emojiCustomFont
+                let targetURL = documentDirectory.appendingPathComponent(emojiFont.localPath)
+                let success = await importFont(withFileURL: url, targetURL: targetURL)
+                successfullyImportedCount += success
+            } else {
+                let key = FontMap.key(forFont: url.lastPathComponent)
+                if let customFont = FontMap.fontMap[key] {
+                    let targetURL = documentDirectory.appendingPathComponent(customFont.localPath)
+                    let success = await importFont(withFileURL: url, targetURL: targetURL)
+                    successfullyImportedCount += success
+                }
+            }
+        }
+
+        await MainActor.run { [weak self] in
+            self?.completion(
+                String(
+                    format: "Successfully imported %d/%d files.%@",
+                    successfullyImportedCount,
+                    urls.count,
+                    successfullyImportedCount == urls.count ? "" : " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device."
+                )
+            )
+        }
+    }
+    
+    private func importFont(withFileURL fileURL: URL, targetURL: URL) async -> Int {
+        let success = await importCustomFontImpl(
             fileURL: fileURL,
             targetURL: targetURL,
             ttcRepackMode: self.ttcRepackMode
-        ) == nil {
+        )
+        if success == nil {
             return 1
+        } else {
+            return 0
         }
-        return 0
     }
 }
 

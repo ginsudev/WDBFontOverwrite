@@ -198,9 +198,7 @@ enum TTCRepackMode {
     case firstFontOnly
 }
 
-func importCustomFontImpl(fileURL: URL, targetURL: URL, ttcRepackMode: TTCRepackMode = .woff2)
--> String?
-{
+func importCustomFontImpl(fileURL: URL, targetURL: URL, ttcRepackMode: TTCRepackMode = .woff2) async -> String? {
     // read first 16k of font
     let fileHandle = try! FileHandle(forReadingFrom: fileURL)
     defer { fileHandle.closeFile() }
