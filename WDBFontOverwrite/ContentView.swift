@@ -34,6 +34,11 @@ struct ContentView: View {
                     viewModel.message = $0
                 }
         }
+        .onAppear {
+            Task(priority: .background) {
+                await viewModel.populateFontMap()
+            }
+        }
     }
     
     private var segmentControl: some View {
@@ -90,6 +95,28 @@ struct ContentView: View {
     private var customFontsList: some View {
         Section {
             NoticeView(notice: .beforeUse)
+            Picker("Custom fonts", selection: $viewModel.customFontPickerSelection) {
+                Text("Custom font")
+                    .tag(0)
+                Text("Custom Emoji")
+                    .tag(1)
+            }
+            
+            switch viewModel.customFontPickerSelection {
+            case 0:
+                Button {
+                    <#code#>
+                } label: {
+                    Text("Import custom fonts")
+                }
+            case 1:
+                Button {
+                    <#code#>
+                } label: {
+                    Text("Import custom fonts")
+                }
+            }
+
             Picker("Custom font", selection: $viewModel.customFontPickerSelection) {
                 ForEach(Array(viewModel.customFonts.enumerated()), id: \.element.name) { index, font in
                     Text(font.name)

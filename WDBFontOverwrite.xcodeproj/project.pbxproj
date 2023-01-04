@@ -341,7 +341,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WDBFontOverwrite/Preview Content\"";
-				DEVELOPMENT_TEAM = WNUZX4NA7T;
+				DEVELOPMENT_TEAM = Y88XFZJFQK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WDBFontOverwrite/Info.plist;
@@ -360,7 +360,7 @@
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
 				MARKETING_VERSION = 1.9.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudevc.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h";
@@ -379,7 +379,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WDBFontOverwrite/Preview Content\"";
-				DEVELOPMENT_TEAM = WNUZX4NA7T;
+				DEVELOPMENT_TEAM = Y88XFZJFQK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WDBFontOverwrite/Info.plist;
@@ -398,7 +398,7 @@
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
 				MARKETING_VERSION = 1.9.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudevc.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h";

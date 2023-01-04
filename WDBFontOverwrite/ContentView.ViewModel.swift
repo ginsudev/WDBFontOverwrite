@@ -42,10 +42,6 @@ extension ContentView {
         @Published var importName: String = ""
         @Published var importTTCRepackMode: TTCRepackMode = .woff2
         
-        var selectedCustomFont: CustomFont {
-            return customFonts[customFontPickerSelection]
-        }
-        
         let fonts = [
             FontToReplace(
                 name: "DejaVu Sans Condensed",
@@ -94,13 +90,7 @@ extension ContentView {
             ),
         ]
 
-        let customFonts = [
-            CustomFont(
-                name: "SFUI.ttf",
-                targetPath: .single("/System/Library/Fonts/CoreUI/SFUI.ttf"),
-                localPath: "CustomSFUI.woff2",
-                alternativeTTCRepackMode: .ttcpad
-            ),
+        let specialCustomFonts = [
             CustomFont(
                 name: "Emoji",
                 targetPath: .many([
@@ -108,40 +98,56 @@ extension ContentView {
                     "/System/Library/Fonts/Core/AppleColorEmoji.ttc",
                 ]),
                 localPath: "CustomAppleColorEmoji.woff2"
-            ),
-            CustomFont(
-                name: "SFUISoft.ttc",
-                targetPath: .single("/System/Library/Fonts/CoreUI/SFUISoft.ttc"),
-                localPath: "CustomSFUISoft.woff2",
-                alternativeTTCRepackMode: .ttcpad
-            ),
-            CustomFont(
-                name: "PingFang.ttc",
-                targetPath: .single("/System/Library/Fonts/LanguageSupport/PingFang.ttc"),
-                localPath: "CustomPingFang.woff2",
-                alternativeTTCRepackMode: .ttcpad
-            ),
-            CustomFont(
-                name: "Keycaps.ttc",
-                targetPath: .single("/System/Library/Fonts/CoreAddition/Keycaps.ttc"),
-                localPath: "CustomKeycaps.woff2",
-                alternativeTTCRepackMode: .ttcpad,
-                notice: .keyboard
-            ),
-            CustomFont(
-                name: "KeycapsPad.ttc",
-                targetPath: .single("/System/Library/Fonts/CoreAddition/KeycapsPad.ttc"),
-                localPath: "CustomKeycapsPad.woff2",
-                alternativeTTCRepackMode: .ttcpad,
-                notice: .keyboard
-            ),
-            CustomFont(
-                name: "PhoneKeyCaps.ttf",
-                targetPath: .single("/System/Library/Fonts/CoreAddition/PhoneKeyCaps.ttf"),
-                localPath: "CustomPhoneKeyCaps.woff2",
-                alternativeTTCRepackMode: .ttcpad,
-                notice: .keyboard
             )
         ]
+        
+        var customFontMap = [String: CustomFont]()
+        
+        func populateFontMap() async {
+            let fm = FileManager.default
+            let fontDirPath = "/System/Library/Fonts/"
+            
+            do {
+                let fontSubDirectories = try fm.contentsOfDirectory(atPath: fontDirPath)
+                for dir in fontSubDirectories {
+                    let fontFiles = try fm.contentsOfDirectory(atPath: "\(fontDirPath)\(dir)")
+                    for font in fontFiles {
+                        guard !font.contains("AppleColorEmoji") else {
+                            continue
+                        }
+                        guard let validatedLocalPath = validateFont(name: font) else {
+                            continue
+                        }
+                        customFontMap[font] = CustomFont(
+                            name: font,
+                            targetPath: .single("\(fontDirPath)\(dir)/\(font)"),
+                            localPath: "Custom\(validatedLocalPath)",
+                            alternativeTTCRepackMode: .ttcpad,
+                            notice: notice(forFont: font)
+                        )
+                    }
+                }
+            } catch {
+                print(error)
+            }
+            
+            print(customFontMap)
+        }
+        
+        private func validateFont(name: String) -> String? {
+            var components = name.components(separatedBy: ".")
+            guard components.last == "ttc" || components.last == "ttf" else {
+                return nil
+            }
+            components[components.count - 1] = "woff2"
+            return components.joined(separator: ".")
+        }
+        
+        private func notice(forFont font: String) -> Notice? {
+            if font.lowercased().contains("keycaps") {
+                return .keyboard
+            }
+            return nil
+        }
     }
 }
