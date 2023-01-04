@@ -29,7 +29,7 @@ struct ContentView: View {
         .navigationViewStyle(.stack)
         .sheet(isPresented: $viewModel.importPresented) {
             DocumentPicker(
-                importType: viewModel.importType,
+                importType: viewModel.selectedCustomFontType,
                 ttcRepackMode: viewModel.importTTCRepackMode
             ) {
                 viewModel.message = $0

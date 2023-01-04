@@ -102,14 +102,27 @@ extension ContentView {
         ]
         
         func batchOverwriteFonts() async {
+            guard selectedCustomFontType == .font else {
+                // Overwrite emoji
+                let emojiFont = FontMap.emojiCustomFont
+                overwriteWithCustomFont(
+                    name: emojiFont.localPath,
+                    targetPath: emojiFont.targetPath,
+                    progress: progress
+                ) {
+                    self.progress = nil
+                    self.message = $0
+                }
+                return
+            }
+            
             let fileManager = FileManager.default
             let documentsDirectory = fileManager.urls(
                 for: .documentDirectory,
                 in: .userDomainMask
             )[0]
             do {
-                let fonts = try fileManager.contentsOfDirectory(atPath: documentsDirectory.relativePath)
-                print(fonts)
+                let fonts = try fileManager.contentsOfDirectory(atPath: documentsDirectory.relativePath).filter({!$0.contains("AppleColorEmoji")})
                 for font in fonts {
                     let key = FontMap.key(forFont: font)
                     if let customFont = FontMap.fontMap[key] {

@@ -10,7 +10,7 @@ import Foundation
 struct FontMap {
     static var fontMap = [String: CustomFont]()
     
-    static var emojiCustomFont = CustomFont(
+    static let emojiCustomFont = CustomFont(
         name: "Emoji",
         targetPath: .many([
             "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
