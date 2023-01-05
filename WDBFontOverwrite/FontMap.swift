@@ -55,6 +55,9 @@ struct FontMap {
     
     private static func validateFont(name: String) -> String? {
         var components = name.components(separatedBy: ".")
+        guard components.last != "woff2" else {
+            return components.joined(separator: ".")
+        }
         guard components.last == "ttc" || components.last == "ttf" else {
             return nil
         }

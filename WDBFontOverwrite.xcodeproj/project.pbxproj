@@ -14,6 +14,7 @@
 		4FE5EF38296561A5003384EC /* FileEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF37296561A5003384EC /* FileEditorView.swift */; };
 		4FE5EF3A296561B2003384EC /* FileEditorView.ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF39296561B2003384EC /* FileEditorView.ViewModel.swift */; };
 		4FE5EF3E29664537003384EC /* ProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF3D29664537003384EC /* ProgressManager.swift */; };
+		4FE5EF4129668C9C003384EC /* AlignedRowContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF4029668C9C003384EC /* AlignedRowContentView.swift */; };
 		C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */; };
 		C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF775295BA9B1000DE71C /* BrotliPadding.swift */; };
 		C55CF778295BAF42000DE71C /* libwoff2enc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76E295BA346000DE71C /* libwoff2enc.a */; };
@@ -38,11 +39,12 @@
 		4FE5EF37296561A5003384EC /* FileEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileEditorView.swift; sourceTree = "<group>"; };
 		4FE5EF39296561B2003384EC /* FileEditorView.ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileEditorView.ViewModel.swift; sourceTree = "<group>"; };
 		4FE5EF3D29664537003384EC /* ProgressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManager.swift; sourceTree = "<group>"; };
+		4FE5EF4029668C9C003384EC /* AlignedRowContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedRowContentView.swift; sourceTree = "<group>"; };
 		C55CF76E295BA346000DE71C /* libwoff2enc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2enc.a; sourceTree = "<group>"; };
 		C55CF76F295BA346000DE71C /* libwoff2common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2common.a; sourceTree = "<group>"; };
 		C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = woff2_wrapper.cpp; sourceTree = "<group>"; };
 		C55CF773295BA37D000DE71C /* woff2_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = woff2_wrapper.h; sourceTree = "<group>"; };
-		C55CF775295BA9B1000DE71C /* BrotliPadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrotliPadding.swift; sourceTree = "<group>"; };
+		C55CF775295BA9B1000DE71C /* BrotliPadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BrotliPadding.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		C561309C295E7C66004FE863 /* stripttc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stripttc.h; sourceTree = "<group>"; };
 		C5999BFB295E69C100BBBE1F /* ttcpad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ttcpad.m; sourceTree = "<group>"; };
 		C5999BFD295E6A4A00BBBE1F /* ttcpad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ttcpad.h; sourceTree = "<group>"; };
@@ -91,6 +93,18 @@
 			path = Progress;
 			sourceTree = "<group>";
 		};
+		4FE5EF3F29668BF2003384EC /* MainInterface */ = {
+			isa = PBXGroup;
+			children = (
+				4FE5EF362965617D003384EC /* FileEditor */,
+				C5C9A7942959261000466D87 /* ContentView.swift */,
+				4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */,
+				4FE5EF302963E460003384EC /* NoticeView.swift */,
+				4FE5EF4029668C9C003384EC /* AlignedRowContentView.swift */,
+			);
+			path = MainInterface;
+			sourceTree = "<group>";
+		};
 		C55CF777295BAF42000DE71C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,13 +135,10 @@
 				C5C9A7A72959351A00466D87 /* Info.plist */,
 				C5A95F45295964AE00C58FDB /* PreviewFonts */,
 				C5C9A7A22959341600466D87 /* RepackedFonts */,
+				4FE5EF3F29668BF2003384EC /* MainInterface */,
 				4FE5EF3C2966452A003384EC /* Progress */,
-				4FE5EF362965617D003384EC /* FileEditor */,
 				C55CF775295BA9B1000DE71C /* BrotliPadding.swift */,
-				C5C9A7942959261000466D87 /* ContentView.swift */,
-				4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */,
 				4FE5EF3429653188003384EC /* FontMap.swift */,
-				4FE5EF302963E460003384EC /* NoticeView.swift */,
 				C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */,
 				C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */,
 				4FE5EF3229640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift */,
@@ -237,6 +248,7 @@
 				C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */,
 				4FE5EF38296561A5003384EC /* FileEditorView.swift in Sources */,
 				C5C9A7AA2959417100466D87 /* vm_unaligned_copy_switch_race.c in Sources */,
+				4FE5EF4129668C9C003384EC /* AlignedRowContentView.swift in Sources */,
 				4FE5EF3529653188003384EC /* FontMap.swift in Sources */,
 				C5999BFC295E69C200BBBE1F /* ttcpad.m in Sources */,
 				4FE5EF312963E460003384EC /* NoticeView.swift in Sources */,
@@ -391,7 +403,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
-				MARKETING_VERSION = 1.10.0;
+				MARKETING_VERSION = 1.10.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -429,7 +441,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
-				MARKETING_VERSION = 1.10.0;
+				MARKETING_VERSION = 1.10.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

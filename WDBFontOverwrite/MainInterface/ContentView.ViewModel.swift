@@ -12,12 +12,6 @@ enum PathType {
     case many([String])
 }
 
-enum Notice: String {
-    case iosVersion = "iOS version not supported. Don't ask us to support newer versions because the exploit used just simply does not support newer iOS versions."
-    case beforeUse = "Custom fonts require font files that are ported for iOS. See https://github.com/ginsudev/WDBFontOverwrite for details."
-    case keyboard = "Keyboard fonts may not be applied immediately due to iOS caching issues. IF POSSIBLE, remove the folder /var/mobile/Library/Caches/com.apple.keyboards/ if you wish for changes to take effect immediately."
-}
-
 struct CustomFont {
     var name: String
     var targetPath: PathType?
