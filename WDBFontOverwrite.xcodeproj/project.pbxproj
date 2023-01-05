@@ -96,6 +96,7 @@
 		4FE5EF3F29668BF2003384EC /* MainInterface */ = {
 			isa = PBXGroup;
 			children = (
+				4FE5EF362965617D003384EC /* FileEditor */,
 				C5C9A7942959261000466D87 /* ContentView.swift */,
 				4F4E64A6295F9AB600D4F04D /* ContentView.ViewModel.swift */,
 				4FE5EF302963E460003384EC /* NoticeView.swift */,
@@ -136,7 +137,6 @@
 				C5C9A7A22959341600466D87 /* RepackedFonts */,
 				4FE5EF3F29668BF2003384EC /* MainInterface */,
 				4FE5EF3C2966452A003384EC /* Progress */,
-				4FE5EF362965617D003384EC /* FileEditor */,
 				C55CF775295BA9B1000DE71C /* BrotliPadding.swift */,
 				4FE5EF3429653188003384EC /* FontMap.swift */,
 				C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */,
