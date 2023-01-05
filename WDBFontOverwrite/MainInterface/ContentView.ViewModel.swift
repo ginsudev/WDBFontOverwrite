@@ -27,8 +27,8 @@ struct FontToReplace {
 }
 
 enum CustomFontType: String {
-    case font = "font"
-    case emoji = "emoji"
+    case font = "fonts"
+    case emoji = "emojis"
 }
 
 extension ContentView {
@@ -38,6 +38,7 @@ extension ContentView {
         @Published var message = "Choose a font."
         @Published var importPresented: Bool = false
         @Published var isPresentedFileEditor: Bool = false
+        @Published var isPresentedFontDiscovery: Bool = false
         @Published var importTTCRepackMode: TTCRepackMode = .woff2
         @Published var allowsMultipleSelection: Bool = true
         @Published var importType: CustomFontType = .font

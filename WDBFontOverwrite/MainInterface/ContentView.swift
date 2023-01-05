@@ -39,6 +39,9 @@ struct ContentView: View {
         .sheet(isPresented: $viewModel.isPresentedFileEditor) {
             FileEditorView()
         }
+        .sheet(isPresented: $viewModel.isPresentedFontDiscovery) {
+            FontDiscoveryView()
+        }
         .onAppear {
             Task(priority: .background) {
                 do {
@@ -104,7 +107,15 @@ struct ContentView: View {
     @ViewBuilder
     private var customFontsList: some View {
         Section {
-            NoticeView(notice: .beforeUse)
+            Button {
+                viewModel.isPresentedFontDiscovery = true
+            } label: {
+                AlignedRowContentView(
+                    imageName: "star",
+                    text: "Find custom fonts/emoji here"
+                )
+            }
+
             Picker("Custom fonts", selection: $viewModel.customFontPickerSelection) {
                 Text("Custom font")
                     .tag(0)
