@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var viewModel = ViewModel()
+    @StateObject private var progressManager = ProgressManager.shared
     @Environment(\.openURL) private var openURL
     
     var body: some View {
@@ -68,8 +69,12 @@ struct ContentView: View {
         } else {
             Text(viewModel.message)
         }
-        if let progress = viewModel.progress {
-            ProgressView(progress)
+        if progressManager.isBusy {
+            ProgressView(
+                value: progressManager.completedProgress,
+                total: progressManager.totalProgress
+            )
+            .progressViewStyle(.linear)
         }
     }
     
@@ -78,13 +83,10 @@ struct ContentView: View {
             ForEach(viewModel.fonts, id: \.name) { font in
                 Button {
                     viewModel.message = "Running"
-                    viewModel.progress = Progress(totalUnitCount: 1)
-                    overwriteWithFont(
-                        name: font.repackedPath,
-                        progress: viewModel.progress
-                    ) {
-                        viewModel.message = $0
-                        viewModel.progress = nil
+                    Task {
+                        await overwriteWithFont(name: font.repackedPath) {
+                            viewModel.message = $0
+                        }
                     }
                 } label: {
                     Text(font.name)
@@ -142,8 +144,8 @@ struct ContentView: View {
                 }
             }
             Button {
+                progressManager.isBusy = true
                 viewModel.message = "Running"
-                viewModel.progress = Progress(totalUnitCount: 1)
                 Task {
                     await viewModel.batchOverwriteFonts()
                 }

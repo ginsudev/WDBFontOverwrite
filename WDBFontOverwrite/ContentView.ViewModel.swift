@@ -42,7 +42,6 @@ extension ContentView {
         @Published var fontListSelection: Int = 0
         @Published var customFontPickerSelection: Int = 0
         @Published var message = "Choose a font."
-        @Published var progress: Progress!
         @Published var importPresented: Bool = false
         @Published var isPresentedFileEditor: Bool = false
         @Published var importTTCRepackMode: TTCRepackMode = .woff2
@@ -105,14 +104,13 @@ extension ContentView {
             guard selectedCustomFontType == .font else {
                 // Overwrite emoji
                 let emojiFont = FontMap.emojiCustomFont
-                overwriteWithCustomFont(
+                await overwriteWithCustomFont(
                     name: emojiFont.localPath,
-                    targetPath: emojiFont.targetPath,
-                    progress: progress
+                    targetPath: emojiFont.targetPath
                 ) {
-                    self.progress = nil
                     self.message = $0
                 }
+                ProgressManager.shared.isBusy = false
                 return
             }
             
@@ -126,16 +124,15 @@ extension ContentView {
                 for font in fonts {
                     let key = FontMap.key(forFont: font)
                     if let customFont = FontMap.fontMap[key] {
-                        overwriteWithCustomFont(
+                        await overwriteWithCustomFont(
                             name: customFont.localPath,
-                            targetPath: customFont.targetPath,
-                            progress: progress
+                            targetPath: customFont.targetPath
                         ) {
-                            self.progress = nil
                             self.message = $0
                         }
                     }
                 }
+                ProgressManager.shared.isBusy = false
             } catch  {
                 print(error)
                 message = "Failed to read imported fonts."
