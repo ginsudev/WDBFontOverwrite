@@ -359,7 +359,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
+<<<<<<< Updated upstream
 				MARKETING_VERSION = 1.9.1;
+=======
+				MARKETING_VERSION = 1.10.2;
+>>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -397,7 +401,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
+<<<<<<< Updated upstream
 				MARKETING_VERSION = 1.9.1;
+=======
+				MARKETING_VERSION = 1.10.2;
+>>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsudev.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
