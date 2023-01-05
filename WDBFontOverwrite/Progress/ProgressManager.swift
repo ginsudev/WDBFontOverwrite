@@ -16,8 +16,10 @@ final class ProgressManager: ObservableObject {
         didSet {
             if !isBusy {
                 // Reset values when done.
-                completedProgress = 0
-                totalProgress = 0
+                Task { @MainActor in
+                    completedProgress = 0
+                    totalProgress = 0
+                }
             }
         }
     }
