@@ -97,7 +97,14 @@ struct DocumentPicker: UIViewControllerRepresentable {
     func makeUIViewController(context: UIViewControllerRepresentableContext<DocumentPicker>) -> UIDocumentPickerViewController {
         let pickerViewController = UIDocumentPickerViewController(
             forOpeningContentTypes: [
-                UTType.font,
+                UTType(
+                    filenameExtension: "ttf",
+                    conformingTo: .font
+                )!,
+                UTType(
+                    filenameExtension: "ttc",
+                    conformingTo: .font
+                )!,
                 UTType(
                     filenameExtension: "woff2",
                     conformingTo: .font

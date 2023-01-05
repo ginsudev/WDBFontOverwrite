@@ -13,11 +13,13 @@ extension FileEditorView {
         @Published var files = [String]()
         @Published var isVisibleRemoveAllAlert = false
         
-        func populateFiles() {
+        func populateFiles() async {
             do {
                 let path = documentsDirectory().relativePath
-                print(path)
-                files = try fileManager.contentsOfDirectory(atPath: path)
+                
+                try await MainActor.run { [weak self] in
+                    self?.files = try fileManager.contentsOfDirectory(atPath: path)
+                }
             } catch {
                 print(error)
             }

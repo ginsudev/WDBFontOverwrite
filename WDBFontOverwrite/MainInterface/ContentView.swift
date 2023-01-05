@@ -118,14 +118,10 @@ struct ContentView: View {
                 viewModel.importTTCRepackMode = .woff2
                 viewModel.importPresented = true
             } label: {
-                HStack {
-                    Image(systemName: "square.and.arrow.down")
-                        .font(.system(size: 20))
-                        .frame(width: 32, height: 32)
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
-                    Text("Import custom \(viewModel.selectedCustomFontType.rawValue)")
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
-                }
+                AlignedRowContentView(
+                    imageName: "square.and.arrow.down",
+                    text: "Import custom \(viewModel.selectedCustomFontType.rawValue)"
+                )
             }
             if viewModel.selectedCustomFontType == .font {
                 Button {
@@ -133,14 +129,10 @@ struct ContentView: View {
                     viewModel.importTTCRepackMode = .ttcpad
                     viewModel.importPresented = true
                 } label: {
-                    HStack {
-                        Image(systemName: "square.and.arrow.down")
-                            .font(.system(size: 20))
-                            .frame(width: 32, height: 32)
-                            .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
-                        Text("Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc")
-                            .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
-                    }
+                    AlignedRowContentView(
+                        imageName: "square.and.arrow.down",
+                        text: "Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc"
+                    )
                 }
             }
             Button {
@@ -150,14 +142,10 @@ struct ContentView: View {
                     await viewModel.batchOverwriteFonts()
                 }
             } label: {
-                HStack {
-                    Image(systemName: "checkmark.circle")
-                        .font(.system(size: 20))
-                        .frame(width: 32, height: 32)
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
-                    Text("Apply \(viewModel.selectedCustomFontType.rawValue)")
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
-                }
+                AlignedRowContentView(
+                    imageName: "checkmark.circle",
+                    text: "Apply \(viewModel.selectedCustomFontType.rawValue)"
+                )
             }
         } header: {
             Text("Custom fonts")
@@ -169,14 +157,10 @@ struct ContentView: View {
             Button {
                 viewModel.isPresentedFileEditor = true
             } label: {
-                HStack {
-                    Image(systemName: "doc.badge.gearshape")
-                        .font(.system(size: 20))
-                        .frame(width: 32, height: 32)
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
-                    Text("Manage imported fonts")
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
-                }
+                AlignedRowContentView(
+                    imageName: "doc.badge.gearshape",
+                    text: "Manage imported fonts"
+                )
             }
             Button {
                 let sharedApplication = UIApplication.shared
@@ -187,14 +171,10 @@ struct ContentView: View {
                     }
                 }
             } label: {
-                HStack {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                        .font(.system(size: 20))
-                        .frame(width: 32, height: 32)
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.center] }
-                    Text("Restart SpringBoard")
-                        .alignmentGuide(.leading) { d in d[HorizontalAlignment.leading] }
-                }
+                AlignedRowContentView(
+                    imageName: "arrow.triangle.2.circlepath",
+                    text: "Restart SpringBoard"
+                )
             }
         } header: {
             Text("Actions")

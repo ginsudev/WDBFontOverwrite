@@ -18,7 +18,9 @@ struct FileEditorView: View {
                     Spacer()
                     Button {
                         viewModel.remove(file: file)
-                        viewModel.populateFiles()
+                        Task {
+                            await viewModel.populateFiles()
+                        }
                     } label: {
                         Image(systemName: "trash")
                             .padding()
@@ -47,13 +49,17 @@ struct FileEditorView: View {
                 message: Text("Are you sure you want to remove all imported font files?"),
                 primaryButton: .destructive(Text("Remove all")) {
                     viewModel.removeAllFiles()
-                    viewModel.populateFiles()
+                    Task {
+                        await viewModel.populateFiles()
+                    }
                 },
                 secondaryButton: .cancel()
             )
         }
         .onAppear {
-            viewModel.populateFiles()
+            Task {
+                await viewModel.populateFiles()
+            }
         }
     }
 }
