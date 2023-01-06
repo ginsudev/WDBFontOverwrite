@@ -33,14 +33,79 @@ static void repack_glyf(NSData *glyf, NSData *loca, NSData **out_glyf, NSData **
         }
         NSData *data = [glyf subdataWithRange:NSMakeRange(offset, size)];
         if (uses_16bit_loca) {
-            offsets[i] = htons((*out_loca).length / 2);
+            offsets[i] = htons((*out_glyf).length / 2);
         }
         else {
-            offsets32[i] = htonl((*out_loca).length);
+            offsets32[i] = htonl((*out_glyf).length);
         }
         [((NSMutableData *)*out_glyf) appendData:data];
     }
 }
+
+static NSData *repack_sbix(NSData *sbix, uint16_t glyph_count)
+{
+    struct sbix_header_s {
+        uint16_t version;
+        uint16_t flags;
+        uint32_t strike_count;
+        uint32_t offsets[];
+    };
+    
+    struct strike_s {
+        uint16_t ppem;
+        uint16_t ppi;
+        uint32_t offsets[];
+    };
+    
+    const struct sbix_header_s *orig_header = sbix.bytes;
+    NSMutableData *out = [NSMutableData dataWithLength:sizeof(*orig_header) + sizeof(orig_header->offsets[0]) * htonl(orig_header->strike_count)];
+    struct sbix_header_s *new_header = out.mutableBytes;
+    new_header->version = orig_header->version;
+    new_header->flags = orig_header->flags;
+    new_header->strike_count = orig_header->strike_count;
+    
+    size_t strike_size = sizeof(struct strike_s) + (glyph_count + 1) * 4;
+    for (unsigned strike = 0; strike < htonl(orig_header->strike_count); strike++) {
+        if ((out.length & 0x3FFF) + strike_size > 0x3FFF) {
+            size_t length = out.length;
+            length |= 0x3FFF;
+            length++;
+            out.length = length;
+        }
+        new_header = out.mutableBytes;
+        size_t strike_offset = out.length;
+        new_header->offsets[strike] = htonl(strike_offset);
+        out.length += strike_size;
+        
+        const struct strike_s *orig_strike = (const void *)((uint8_t *)orig_header + htonl(orig_header->offsets[strike]));
+        struct strike_s *new_strike = (void *)((uint8_t *)out.mutableBytes + strike_offset);
+        new_strike->ppem = orig_strike->ppem;
+        new_strike->ppi = orig_strike->ppi;
+        assert((uint8_t *)orig_strike - (uint8_t *)orig_header + strike_size <= sbix.length);
+        
+        for (unsigned glyph = 0; glyph < glyph_count; glyph++) {
+            const uint8_t *data = (uint8_t *)orig_strike + htonl(orig_strike->offsets[glyph]);
+            size_t size = htonl(orig_strike->offsets[glyph + 1]) - htonl(orig_strike->offsets[glyph]);
+            assert((uint8_t *)data - (uint8_t *)orig_header + size <= sbix.length);
+            if (size > 0x3FFF) {
+                log(@"A glyph larger than a page (%zu bytes) was found, it will be corrupted", size);
+            }
+            else if ((out.length & 0x3FFF) + size > 0x3FFF) {
+                size_t length = out.length;
+                length |= 0x3FFF;
+                length++;
+                out.length = length;
+            }
+            size_t glyph_offset = out.length - strike_offset;
+            [out appendBytes:data length:size];
+            new_strike = (void *)((uint8_t *)out.mutableBytes + strike_offset);
+            new_strike->offsets[glyph] = htonl(glyph_offset);
+            new_strike->offsets[glyph + 1] = htonl(glyph_offset + size);
+        }
+    }
+    return out;
+}
+
 
 NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_corrupt_loca)
 {
@@ -99,14 +164,15 @@ NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_corrupt
     for (NSMutableData *font in fonts) {
         struct header_s *header = font.mutableBytes;
         NSMutableDictionary<NSNumber *, NSData *> *tables = [NSMutableDictionary dictionary];
+        NSMutableDictionary<NSNumber *, NSNumber *> *table_to_offset = [NSMutableDictionary dictionary];
         for (unsigned i = htons(header->tables); i--;) {
             // Filter unessential tables
             switch (htonl(header->records[i].tag)) {
                 default:
-                    if (delete_noncritical) {
+                    if (delete_noncritical || htonl(header->records[i].length) > 0x3FFF) {
                         char tag[5] = {0,};
                         *(uint32_t *)&tag[0] = header->records[i].tag;
-                        log(@"Deleted unessential table '%s', saving %d bytes.", tag, htonl(header->records[i].length));
+                        log(@"Deleted %s table '%s', saving %d bytes.", delete_noncritical? "non-essential" : "unknown oversized", tag, htonl(header->records[i].length));
                         memmove(&header->records[i], &header->records[i + 1], sizeof(header->records[i]) * (htons(header->tables) - i - 1));
                         header->tables = htons(htons(header->tables) - 1);
                         font.length -= sizeof((header->records[i]));
@@ -125,15 +191,16 @@ NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_corrupt
                 case 'loca':
                 case 'maxp':
                 case 'name':
-                case 'post': {
+                case 'post':
+                case 'sbix': {
                     NSData *data = [original subdataWithRange:NSMakeRange(htonl(header->records[i].offset),
                                                                           htonl(header->records[i].length))];
                     assert(data.length == htonl(header->records[i].length));
                     tables[@(header->records[i].tag)] = data;
                     global_tables[@(header->records[i].offset)] = data;
+                    table_to_offset[@(header->records[i].tag)] = @(header->records[i].offset);
                     break;
                 }
-
             }
         }
         
@@ -159,8 +226,30 @@ NSData *repack_ttc(NSData *original, bool delete_noncritical, bool allow_corrupt
         
         if (loca.length > 0x3fff || glyf.length > 0x3fff) {
             repack_glyf(glyf, loca, &glyf, &loca, uses_16bit_loca);
-            tables[@(htonl('loca'))] = loca;
-            tables[@(htonl('glyf'))] = glyf;
+            global_tables[table_to_offset[@(htonl('loca'))]] = loca;
+            global_tables[table_to_offset[@(htonl('glyf'))]] = glyf;
+        }
+        
+        NSData *sbix = tables[@(htonl('sbix'))];
+        NSData *maxp = tables[@(htonl('maxp'))];
+        
+        if (sbix.length > 0x3fff) {
+            assert(maxp.length >= 0x6);
+            uint16_t glyph_count = htons(((uint16_t *)maxp.bytes)[2]);
+            if (glyph_count > 4095){
+                if (allow_corrupt_loca) {
+                    log(@"One of the fonts contain %hu glyphs, while the currently supported maximum is 4095. Some glyphs "
+                        "will be corrupt and potentially cause stability issues.", glyph_count);
+                }
+                else {
+                    log(@"One of the fonts contain %hu glyphs, while the currently supported maximum is 4095. You can "
+                        "force conversion to continue using the -f flag, at the cost of some corrupt glyphs and potential "
+                        "stability issues.", glyph_count);
+                    return nil;
+                }
+            }
+                
+            global_tables[table_to_offset[@(htonl('sbix'))]] = repack_sbix(sbix, glyph_count);
         }
     }
     

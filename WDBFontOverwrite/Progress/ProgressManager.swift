@@ -7,10 +7,12 @@
 
 import Foundation
 
+@MainActor
 final class ProgressManager: ObservableObject {
     static let shared = ProgressManager()
     @Published var completedProgress: Double = 0
     @Published var totalProgress: Double = 0
+    @Published var message: String = "Choose a font."
     
     var isBusy: Bool = false {
         didSet {

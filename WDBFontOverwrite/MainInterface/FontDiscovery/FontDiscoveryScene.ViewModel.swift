@@ -1,5 +1,5 @@
 //
-//  FontDiscoveryView.ViewModel.swift
+//  FontDiscoveryScene.ViewModel.swift
 //  WDBFontOverwrite
 //
 //  Created by Noah Little on 5/1/2023.
@@ -13,7 +13,7 @@ struct FontDiscoveryLinkDescriptor {
     let imageName: String
 }
 
-extension FontDiscoveryView {
+extension FontDiscoveryScene {
     final class ViewModel: ObservableObject {
         let descriptors = [
             FontDiscoveryCard.ViewDescriptor(
