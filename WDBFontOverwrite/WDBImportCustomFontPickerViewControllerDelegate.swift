@@ -1,5 +1,5 @@
 //
-//  ContentView.ViewModel.swift
+//  CustomFontsScene.ViewModel.swift
 //  WDBFontOverwrite
 //
 //  Created by Noah Little (@ginsudev) on 3/1/2023.
@@ -11,12 +11,10 @@ import UniformTypeIdentifiers
 class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPickerDelegate {
     let importType: CustomFontType
     let ttcRepackMode: TTCRepackMode
-    let completion: (String) -> Void
     
-    init(importType: CustomFontType, ttcRepackMode: TTCRepackMode, completion: @escaping (String) -> Void) {
+    init(importType: CustomFontType, ttcRepackMode: TTCRepackMode) {
         self.importType = importType
         self.ttcRepackMode = ttcRepackMode
-        self.completion = completion
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
@@ -26,7 +24,7 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
     }
     
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        completion("Cancelled")
+        ProgressManager.shared.message = "Cancelled"
     }
     
     private func importSelectedFonts(atURLs urls: [URL]) async {
@@ -54,16 +52,12 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
             }
         }
 
-        await MainActor.run { [weak self] in
-            self?.completion(
-                String(
-                    format: "Successfully imported %d/%d files.%@",
-                    successfullyImportedCount,
-                    urls.count,
-                    successfullyImportedCount == urls.count ? "" : " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device."
-                )
-            )
-        }
+        ProgressManager.shared.message = String(
+            format: "Successfully imported %d/%d files.%@",
+            successfullyImportedCount,
+            urls.count,
+            successfullyImportedCount == urls.count ? "" : " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device."
+        )
     }
     
     private func importFont(withFileURL fileURL: URL, targetURL: URL) async -> Int {
@@ -84,13 +78,11 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
 struct DocumentPicker: UIViewControllerRepresentable {
     var importType: CustomFontType
     var ttcRepackMode: TTCRepackMode
-    var completion: (String) -> Void
     
     func makeCoordinator() -> WDBImportCustomFontPickerViewControllerDelegate {
         return WDBImportCustomFontPickerViewControllerDelegate(
             importType: importType,
-            ttcRepackMode: ttcRepackMode,
-            completion: completion
+            ttcRepackMode: ttcRepackMode
         )
     }
     

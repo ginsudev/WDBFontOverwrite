@@ -8,7 +8,7 @@
 import UIKit
 import UniformTypeIdentifiers
 
-func overwriteWithFont(name: String, completion: @escaping (String) -> Void) async {
+func overwriteWithFont(name: String) async {
     let fontURL = Bundle.main.url(
         forResource: name,
         withExtension: nil,
@@ -17,24 +17,22 @@ func overwriteWithFont(name: String, completion: @escaping (String) -> Void) asy
     
     await overwriteWithFont(
         fontURL: fontURL,
-        pathToTargetFont: "/System/Library/Fonts/CoreUI/SFUI.ttf",
-        completion: completion
+        pathToTargetFont: "/System/Library/Fonts/CoreUI/SFUI.ttf"
     )
 }
 
 func overwriteWithFont(
     fontURL: URL,
-    pathToTargetFont: String,
-    completion: ((String) -> Void)?
+    pathToTargetFont: String
 ) async {
     let succeeded = overwriteWithFontImpl(
         fontURL: fontURL,
         pathToTargetFont: pathToTargetFont
     )
     
-    await MainActor.run(body: {
-        completion?(succeeded ? "Success: force close an app to see results" : "Failed")
-    })
+    await MainActor.run {
+        ProgressManager.shared.message = succeeded ? "Success: force close an app to see results" : "Failed"
+    }
 }
 
 /// Overwrite the system font with the given font using CVE-2022-46689.
@@ -108,6 +106,7 @@ func overwriteWithFontImpl(fontURL: URL, pathToTargetFont: String) -> Bool {
     for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
         print(String(format: "%lx", chunkOff))
         if chunkOff % 0x40000 == 0 {
+            
             DispatchQueue.main.async {
                 ProgressManager.shared.completedProgress = Double(chunkOff)
             }
@@ -151,8 +150,7 @@ func dumpCurrentFont() {
 
 func overwriteWithCustomFont(
     name: String,
-    targetPath: PathType?,
-    completion: ((String) -> Void)? = nil
+    targetPath: PathType?
 ) async {
     let documentDirectory = FileManager.default.urls(
         for: .documentDirectory,
@@ -161,7 +159,9 @@ func overwriteWithCustomFont(
     
     let fontURL = documentDirectory.appendingPathComponent(name)
     guard FileManager.default.fileExists(atPath: fontURL.path) else {
-        completion?("No custom font imported")
+        await MainActor.run {
+            ProgressManager.shared.message = "No custom font imported"
+        }
         return
     }
     
@@ -169,21 +169,21 @@ func overwriteWithCustomFont(
     case .single(let path):
         await overwriteWithFont(
             fontURL: fontURL,
-            pathToTargetFont: path,
-            completion: completion
+            pathToTargetFont: path
         )
     case .many(let paths):
         for path in paths {
             if (access(path, F_OK) == 0) {
                 await overwriteWithFont(
                     fontURL: fontURL,
-                    pathToTargetFont: path,
-                    completion: completion
+                    pathToTargetFont: path
                 )
             }
         }
     default:
-        completion?("Either targetName or targetNames must be provided")
+        await MainActor.run {
+            ProgressManager.shared.message = "Either targetName or targetNames must be provided"
+        }
     }
 }
 
