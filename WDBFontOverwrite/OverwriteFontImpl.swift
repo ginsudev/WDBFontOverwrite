@@ -38,8 +38,11 @@ func overwriteWithFont(
 /// Overwrite the system font with the given font using CVE-2022-46689.
 /// The font must be specially prepared so that it skips past the last byte in every 16KB page.
 /// See BrotliPadding.swift for an implementation that adds this padding to WOFF2 fonts.
-func overwriteWithFontImpl(fontURL: URL, pathToTargetFont: String) -> Bool {
-    var fontData = try! Data(contentsOf: fontURL)
+func overwriteWithFontImpl(
+    fontURL: URL,
+    pathToTargetFont: String
+) -> Bool {
+    var fontData: Data = try! Data(contentsOf: fontURL)
 #if false
     let documentDirectory = FileManager.default.urls(
         for: .documentDirectory,
@@ -100,13 +103,12 @@ func overwriteWithFontImpl(fontURL: URL, pathToTargetFont: String) -> Bool {
     DispatchQueue.main.async {
         ProgressManager.shared.totalProgress = Double(fontData.count)
     }
-    
+
     // for every 16k chunk, rewrite
     print(Date())
     for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
         print(String(format: "%lx", chunkOff))
         if chunkOff % 0x40000 == 0 {
-            
             DispatchQueue.main.async {
                 ProgressManager.shared.completedProgress = Double(chunkOff)
             }
@@ -130,11 +132,11 @@ func overwriteWithFontImpl(fontURL: URL, pathToTargetFont: String) -> Bool {
             return false
         }
     }
-    print(Date())
-    print("successfully overwrote everything")
     DispatchQueue.main.async {
         ProgressManager.shared.completedProgress = Double(fontData.count)
     }
+    print(Date())
+    print("successfully overwrote everything")
     return true
 }
 
@@ -193,7 +195,11 @@ enum TTCRepackMode {
     case firstFontOnly
 }
 
-func importCustomFontImpl(fileURL: URL, targetURL: URL, ttcRepackMode: TTCRepackMode = .woff2) async -> String? {
+func importCustomFontImpl(
+    fileURL: URL,
+    targetURL: URL,
+    ttcRepackMode: TTCRepackMode = .woff2
+) async -> String? {
     // read first 16k of font
     let fileHandle = try! FileHandle(forReadingFrom: fileURL)
     defer { fileHandle.closeFile() }
@@ -264,15 +270,26 @@ func repackTrueTypeFontAsPaddedWoff2(input: Data) -> Data? {
 // (We're recompressing it anyways in a second!)
 @_cdecl("BrotliEncoderCompress")
 func fakeBrotliEncoderCompress(
-    quality: Int, lgwin: Int, mode: Int, inputSize: size_t, inputBuffer: UnsafePointer<UInt8>,
-    encodedSize: UnsafeMutablePointer<size_t>, encodedBuffer: UnsafeMutablePointer<UInt8>
+    quality: Int,
+    lgwin: Int,
+    mode: Int,
+    inputSize: size_t,
+    inputBuffer: UnsafePointer<UInt8>,
+    encodedSize: UnsafeMutablePointer<size_t>,
+    encodedBuffer: UnsafeMutablePointer<UInt8>
 ) -> Int {
     let encodedSizeIn = encodedSize.pointee
     if inputSize > encodedSizeIn {
         return 0
     }
-    UnsafeBufferPointer(start: inputBuffer, count: inputSize).copyBytes(
-        to: UnsafeMutableRawBufferPointer(start: encodedBuffer, count: encodedSizeIn))
+    UnsafeBufferPointer(
+        start: inputBuffer,
+        count: inputSize).copyBytes(
+            to: UnsafeMutableRawBufferPointer(
+                start: encodedBuffer,
+                count: encodedSizeIn
+            )
+        )
     encodedSize[0] = inputSize
     return 1
 }
