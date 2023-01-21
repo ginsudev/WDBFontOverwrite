@@ -24,12 +24,7 @@
 		4FF28A1229679EEC00143640 /* ExplanationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A1129679EEC00143640 /* ExplanationView.swift */; };
 		4FF28A142967AA2D00143640 /* RespringButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A132967AA2D00143640 /* RespringButton.swift */; };
 		4FF28A162967B77800143640 /* _UIKeyboardCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A152967B77800143640 /* _UIKeyboardCache.m */; };
-		C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */; };
 		C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF775295BA9B1000DE71C /* BrotliPadding.swift */; };
-		C55CF778295BAF42000DE71C /* libwoff2enc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76E295BA346000DE71C /* libwoff2enc.a */; };
-		C55CF779295BAF42000DE71C /* libwoff2common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C55CF76F295BA346000DE71C /* libwoff2common.a */; };
-		C5999BFC295E69C200BBBE1F /* ttcpad.m in Sources */ = {isa = PBXBuildFile; fileRef = C5999BFB295E69C100BBBE1F /* ttcpad.m */; };
-		C5999BFF295E769700BBBE1F /* stripttc.c in Sources */ = {isa = PBXBuildFile; fileRef = C5999BFE295E769700BBBE1F /* stripttc.c */; };
 		C5A95F46295964AE00C58FDB /* PreviewFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5A95F45295964AE00C58FDB /* PreviewFonts */; };
 		C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */; };
 		C5C9A7952959261000466D87 /* CustomFontsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7942959261000466D87 /* CustomFontsScene.swift */; };
@@ -59,15 +54,7 @@
 		4FF28A132967AA2D00143640 /* RespringButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RespringButton.swift; sourceTree = "<group>"; };
 		4FF28A152967B77800143640 /* _UIKeyboardCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _UIKeyboardCache.m; sourceTree = "<group>"; };
 		4FF28A172967B78600143640 /* _UIKeyboardCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _UIKeyboardCache.h; sourceTree = "<group>"; };
-		C55CF76E295BA346000DE71C /* libwoff2enc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2enc.a; sourceTree = "<group>"; };
-		C55CF76F295BA346000DE71C /* libwoff2common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwoff2common.a; sourceTree = "<group>"; };
-		C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = woff2_wrapper.cpp; sourceTree = "<group>"; };
-		C55CF773295BA37D000DE71C /* woff2_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = woff2_wrapper.h; sourceTree = "<group>"; };
 		C55CF775295BA9B1000DE71C /* BrotliPadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BrotliPadding.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
-		C561309C295E7C66004FE863 /* stripttc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stripttc.h; sourceTree = "<group>"; };
-		C5999BFB295E69C100BBBE1F /* ttcpad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ttcpad.m; sourceTree = "<group>"; };
-		C5999BFD295E6A4A00BBBE1F /* ttcpad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ttcpad.h; sourceTree = "<group>"; };
-		C5999BFE295E769700BBBE1F /* stripttc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stripttc.c; sourceTree = "<group>"; };
 		C5A95F45295964AE00C58FDB /* PreviewFonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PreviewFonts; sourceTree = "<group>"; };
 		C5C9A78F2959261000466D87 /* WDBFontOverwrite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WDBFontOverwrite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WDBFontOverwriteApp.swift; sourceTree = "<group>"; };
@@ -87,8 +74,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C55CF778295BAF42000DE71C /* libwoff2enc.a in Frameworks */,
-				C55CF779295BAF42000DE71C /* libwoff2common.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,14 +168,6 @@
 				C5C9A7A92959417100466D87 /* vm_unaligned_copy_switch_race.c */,
 				C5C9A7AB2959438600466D87 /* vm_unaligned_copy_switch_race.h */,
 				C5C9A7A82959417100466D87 /* WDBFontOverwrite-Bridging-Header.h */,
-				C55CF76F295BA346000DE71C /* libwoff2common.a */,
-				C55CF76E295BA346000DE71C /* libwoff2enc.a */,
-				C55CF772295BA37D000DE71C /* woff2_wrapper.cpp */,
-				C55CF773295BA37D000DE71C /* woff2_wrapper.h */,
-				C5999BFB295E69C100BBBE1F /* ttcpad.m */,
-				C5999BFD295E6A4A00BBBE1F /* ttcpad.h */,
-				C5999BFE295E769700BBBE1F /* stripttc.c */,
-				C561309C295E7C66004FE863 /* stripttc.h */,
 				C5C9A7982959261200466D87 /* Preview Content */,
 			);
 			path = WDBFontOverwrite;
@@ -277,7 +254,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5999BFF295E769700BBBE1F /* stripttc.c in Sources */,
 				4FE5EF3A296561B2003384EC /* FileEditorView.ViewModel.swift in Sources */,
 				C5C9A7952959261000466D87 /* CustomFontsScene.swift in Sources */,
 				4FF28A0E2967955400143640 /* PresetFontsScene.swift in Sources */,
@@ -296,11 +272,9 @@
 				4FE5EF492966AE1A003384EC /* FontDiscoveryCard.swift in Sources */,
 				4FE5EF3529653188003384EC /* FontMap.swift in Sources */,
 				4FF28A102967956300143640 /* PresetFontsScene.ViewModel.swift in Sources */,
-				C5999BFC295E69C200BBBE1F /* ttcpad.m in Sources */,
 				4FE5EF312963E460003384EC /* NoticeView.swift in Sources */,
 				4FE5EF3329640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift in Sources */,
 				C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */,
-				C55CF774295BA37D000DE71C /* woff2_wrapper.cpp in Sources */,
 				4F4E64A7295F9AB600D4F04D /* CustomFontsScene.ViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

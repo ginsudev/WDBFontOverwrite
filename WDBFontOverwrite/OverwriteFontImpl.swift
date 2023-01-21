@@ -113,8 +113,7 @@ func overwriteWithFontImpl(
                 ProgressManager.shared.completedProgress = Double(chunkOff)
             }
         }
-        // we only rewrite 16383 bytes out of every 16384 bytes.
-        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x3fff)]
+        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
         var overwroteOne = false
         for _ in 0..<2 {
             let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
@@ -201,95 +200,7 @@ func importCustomFontImpl(
     ttcRepackMode: TTCRepackMode = .woff2
 ) async -> String? {
     // read first 16k of font
-    let fileHandle = try! FileHandle(forReadingFrom: fileURL)
-    defer { fileHandle.closeFile() }
-    let first16k = try! fileHandle.read(upToCount: 0x4000)!
-    if first16k.count == 0x4000 && first16k[0..<4] == Data([0x77, 0x4f, 0x46, 0x32])
-        && first16k[0x3fff] == 0x41
-    {
-        print("already padded WOFF2")
-        try? FileManager.default.removeItem(at: targetURL)
-        try! FileManager.default.copyItem(at: fileURL, to: targetURL)
-        return nil
-    }
-    try! fileHandle.seek(toOffset: 0)
-    let fileData = try! fileHandle.readToEnd()!
-    var repackedData: Data? = nil
-    if first16k.count >= 4 && first16k[0..<4] == Data([0x74, 0x74, 0x63, 0x66]) {
-        // ttcf
-        if ttcRepackMode == .woff2 {
-            repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData)
-        } else if ttcRepackMode == .ttcpad {
-            repackedData = repack_ttc(
-                fileData, /*delete_noncritical=*/ false, /*allow_corrupt_loca=*/ true)
-        } else if ttcRepackMode == .firstFontOnly {
-            let documentDirectory = FileManager.default.urls(
-                for: .documentDirectory, in: .userDomainMask)[0]
-            let tempDirectoryURL = documentDirectory.appendingPathComponent("ttc_convert")
-            try? FileManager.default.removeItem(at: tempDirectoryURL)
-            try! FileManager.default.createDirectory(
-                at: tempDirectoryURL, withIntermediateDirectories: false)
-            let tempTTCURL = tempDirectoryURL.appendingPathComponent("font.ttc")
-            try! FileManager.default.copyItem(at: fileURL, to: tempTTCURL)
-            if stripttc_handlefile(tempTTCURL.path) == 0 {
-                let ttfData = try! Data(contentsOf: tempDirectoryURL.appendingPathComponent("font_00.ttf"))
-                try! FileManager.default.removeItem(at: tempDirectoryURL)
-                repackedData = repackTrueTypeFontAsPaddedWoff2(input: ttfData)
-            }
-        }
-    } else {
-        repackedData = repackTrueTypeFontAsPaddedWoff2(input: fileData)
-    }
-    guard let repackedData = repackedData else {
-        return "Failed to repack"
-    }
-    try! repackedData.write(to: targetURL)
+    try? FileManager.default.removeItem(at: targetURL)
+    try! FileManager.default.copyItem(at: fileURL, to: targetURL)
     return nil
-}
-
-func repackTrueTypeFontAsPaddedWoff2(input: Data) -> Data? {
-    var outputBuffer = [UInt8](repeating: 0, count: input.count + 1024)
-    var outputLength = outputBuffer.count
-    let woff2Result = outputBuffer.withUnsafeMutableBytes {
-        WOFF2WrapperConvertTTFToWOFF2([UInt8](input), input.count, $0.baseAddress, &outputLength)
-    }
-    guard woff2Result else {
-        print("woff2 convert failed")
-        return nil
-    }
-    let woff2Data = Data(bytes: outputBuffer, count: outputLength)
-    do {
-        return try repackWoff2Font(input: woff2Data)
-    } catch {
-        print("error: \(error).")
-        return nil
-    }
-}
-
-// Hack: fake Brotli compress method that just returns the original uncompressed data.'
-// (We're recompressing it anyways in a second!)
-@_cdecl("BrotliEncoderCompress")
-func fakeBrotliEncoderCompress(
-    quality: Int,
-    lgwin: Int,
-    mode: Int,
-    inputSize: size_t,
-    inputBuffer: UnsafePointer<UInt8>,
-    encodedSize: UnsafeMutablePointer<size_t>,
-    encodedBuffer: UnsafeMutablePointer<UInt8>
-) -> Int {
-    let encodedSizeIn = encodedSize.pointee
-    if inputSize > encodedSizeIn {
-        return 0
-    }
-    UnsafeBufferPointer(
-        start: inputBuffer,
-        count: inputSize).copyBytes(
-            to: UnsafeMutableRawBufferPointer(
-                start: encodedBuffer,
-                count: encodedSizeIn
-            )
-        )
-    encodedSize[0] = inputSize
-    return 1
 }
