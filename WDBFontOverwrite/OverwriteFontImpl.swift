@@ -25,14 +25,10 @@ func overwriteWithFont(
     fontURL: URL,
     pathToTargetFont: String
 ) async {
-    let succeeded = overwriteWithFontImpl(
+    overwriteWithFontImpl(
         fontURL: fontURL,
         pathToTargetFont: pathToTargetFont
     )
-    
-    await MainActor.run {
-        ProgressManager.shared.message = succeeded ? "Success: force close an app to see results" : "Failed"
-    }
 }
 
 /// Overwrite the system font with the given font using CVE-2022-46689.
@@ -41,7 +37,7 @@ func overwriteWithFont(
 func overwriteWithFontImpl(
     fontURL: URL,
     pathToTargetFont: String
-) -> Bool {
+) {
     var fontData: Data = try! Data(contentsOf: fontURL)
 #if false
     let documentDirectory = FileManager.default.urls(
@@ -58,15 +54,15 @@ func overwriteWithFontImpl(
     // open and map original font
     let fd = open(pathToTargetFont, O_RDONLY | O_CLOEXEC)
     if fd == -1 {
-        print("can't open font?!")
-        return false
+        sendImportMessage(.failure("Unable to open font."))
+        return
     }
     defer { close(fd) }
     // check size of font
     let originalFontSize = lseek(fd, 0, SEEK_END)
     guard originalFontSize >= fontData.count else {
-        print("font too big!")
-        return false
+        sendImportMessage(.failure("Font too big."))
+        return
     }
     lseek(fd, 0, SEEK_SET)
     
@@ -91,27 +87,23 @@ func overwriteWithFontImpl(
     // Map the font we want to overwrite so we can mlock it
     let fontMap = mmap(nil, fontData.count, PROT_READ, MAP_SHARED, fd, 0)
     if fontMap == MAP_FAILED {
-        print("map failed")
-        return false
+        sendImportMessage(.failure("Map failed"))
+        return
     }
     // mlock so the file gets cached in memory
     guard mlock(fontMap, fontData.count) == 0 else {
-        print("can't mlock")
-        return false
+        sendImportMessage(.failure("Can't mlock"))
+        return
     }
     
-    DispatchQueue.main.async {
-        ProgressManager.shared.totalProgress = Double(fontData.count)
-    }
-
+    updateProgress(total: true, progress: Double(fontData.count))
+    
     // for every 16k chunk, rewrite
     print(Date())
     for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
         print(String(format: "%lx", chunkOff))
         if chunkOff % 0x40000 == 0 {
-            DispatchQueue.main.async {
-                ProgressManager.shared.completedProgress = Double(chunkOff)
-            }
+            updateProgress(total: false, progress: Double(chunkOff))
         }
         let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
         var overwroteOne = false
@@ -127,16 +119,29 @@ func overwriteWithFontImpl(
             print("try again?!")
         }
         guard overwroteOne else {
-            print("can't overwrite")
-            return false
+            sendImportMessage(.failure("can't overwrite"))
+            return
         }
     }
-    DispatchQueue.main.async {
-        ProgressManager.shared.completedProgress = Double(fontData.count)
-    }
+    updateProgress(total: false, progress: Double(fontData.count))
+    sendImportMessage(.success)
     print(Date())
-    print("successfully overwrote everything")
-    return true
+}
+
+func sendImportMessage(_ message: ProgressManager.ImportStatus) {
+    Task { @MainActor in
+        ProgressManager.shared.importResults.append(message)
+    }
+}
+
+func updateProgress(total: Bool, progress: Double) {
+    Task { @MainActor in
+        if total {
+            ProgressManager.shared.totalProgress = progress
+        } else {
+            ProgressManager.shared.completedProgress = progress
+        }
+    }
 }
 
 func dumpCurrentFont() {
@@ -190,7 +195,6 @@ func overwriteWithCustomFont(
 
 enum TTCRepackMode {
     case woff2
-    case ttcpad
     case firstFontOnly
 }
 

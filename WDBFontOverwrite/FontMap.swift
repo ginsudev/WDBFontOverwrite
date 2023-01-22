@@ -36,8 +36,7 @@ struct FontMap {
                 fontMap[key(forFont: font)] = CustomFont(
                     name: font,
                     targetPath: .single("\(fontDirPath)\(dir)/\(font)"),
-                    localPath: "Custom\(validatedLocalPath)",
-                    alternativeTTCRepackMode: .ttcpad
+                    localPath: "Custom\(validatedLocalPath)"
                 )
             }
         }

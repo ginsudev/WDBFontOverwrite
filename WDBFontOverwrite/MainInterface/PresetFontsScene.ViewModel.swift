@@ -62,5 +62,12 @@ extension PresetFontsScene {
                 repackedPath: "Chococooky.woff2"
             ),
         ]
+        
+        func overwrite(withName name: String) async {
+            await overwriteWithFont(name: name)
+            Task { @MainActor in
+                ProgressManager.shared.isBusy = false
+            }
+        }
     }
 }
