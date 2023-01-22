@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PresetFontsScene: View {
+    @EnvironmentObject private var progressManager: ProgressManager
     private let viewModel = ViewModel()
 
     var body: some View {
@@ -35,11 +36,10 @@ private extension PresetFontsScene {
         Section {
             ForEach(viewModel.fonts, id: \.name) { font in
                 Button {
+                    progressManager.isBusy = true
+                    progressManager.message = "Running"
                     Task {
-                        await MainActor.run {
-                            ProgressManager.shared.message = "Running"
-                        }
-                        await overwriteWithFont(name: font.repackedPath)
+                        await viewModel.overwrite(withName: font.repackedPath)
                     }
                 } label: {
                     Text(font.name)

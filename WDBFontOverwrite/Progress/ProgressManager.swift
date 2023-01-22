@@ -9,10 +9,27 @@ import Foundation
 
 @MainActor
 final class ProgressManager: ObservableObject {
+    enum ImportStatus {
+        case success
+        case failure(String)
+    }
+    
     static let shared = ProgressManager()
     @Published var completedProgress: Double = 0
     @Published var totalProgress: Double = 0
+    @Published var importResults = [ImportStatus]()
     @Published var message: String = "Choose a font."
+    
+    @Published var isPresentedResultsAlert = false {
+        didSet {
+            if !isPresentedResultsAlert {
+                Task { @MainActor in
+                    importResults = []
+                    message = "Done."
+                }
+            }
+        }
+    }
     
     var isBusy: Bool = false {
         didSet {
@@ -21,6 +38,7 @@ final class ProgressManager: ObservableObject {
                 Task { @MainActor in
                     completedProgress = 0
                     totalProgress = 0
+                    isPresentedResultsAlert = true
                 }
             }
         }
