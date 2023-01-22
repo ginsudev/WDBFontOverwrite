@@ -73,18 +73,6 @@ struct CustomFontsScene: View {
                     text: "Import custom \(viewModel.selectedCustomFontType.rawValue)"
                 )
             }
-            if viewModel.selectedCustomFontType == .font {
-                Button {
-                    progressManager.message = "Importing..."
-                    viewModel.importTTCRepackMode = .ttcpad
-                    viewModel.importPresented = true
-                } label: {
-                    AlignedRowContentView(
-                        imageName: "square.and.arrow.down",
-                        text: "Import custom \(viewModel.selectedCustomFontType.rawValue) with fix for .ttc"
-                    )
-                }
-            }
             Button {
                 progressManager.isBusy = true
                 progressManager.message = "Running"

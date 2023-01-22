@@ -16,7 +16,6 @@ struct CustomFont {
     var name: String
     var targetPath: PathType?
     var localPath: String
-    var alternativeTTCRepackMode: TTCRepackMode?
     var notice: Notice?
 }
 

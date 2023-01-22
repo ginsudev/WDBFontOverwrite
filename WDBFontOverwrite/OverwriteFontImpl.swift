@@ -190,7 +190,6 @@ func overwriteWithCustomFont(
 
 enum TTCRepackMode {
     case woff2
-    case ttcpad
     case firstFontOnly
 }
 
