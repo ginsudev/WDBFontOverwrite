@@ -13,7 +13,6 @@
 @implementation _UIKeyboardCache
 
 + (void)purge {
-    // TODO: - Find a way to make this work when sanbox is no longer a problem...
     void *handle = dlopen("/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore", RTLD_NOW);
     if (handle) {
         NSObject *kbCache = [objc_getClass("UIKeyboardCache") performSelector:@selector(sharedInstance)];

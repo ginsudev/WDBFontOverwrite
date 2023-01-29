@@ -28,17 +28,21 @@ struct WDBFontOverwriteApp: App {
                     }
             }
             .environmentObject(progressManager)
-            .alert("Import log", isPresented: $progressManager.isPresentedResultsAlert, actions: {
-                Button("Dismiss", role: .cancel) { }
-            }, message: {
-                Text(logMessage)
-            })
+            .alert(
+                isPresented: $progressManager.isPresentedResultsAlert,
+                content: {
+                    Alert(
+                        title: Text("Import log"),
+                        message: Text(logMessage),
+                        dismissButton: .cancel(Text("Dismiss"))
+                    )
+                }
+            )
         }
     }
     
     private var logMessage: String {
         var message = ""
-        
         for result in progressManager.importResults {
             switch result {
             case .success:
@@ -47,7 +51,6 @@ struct WDBFontOverwriteApp: App {
                 message += "\(string)\n"
             }
         }
-        
         return message
     }
 }

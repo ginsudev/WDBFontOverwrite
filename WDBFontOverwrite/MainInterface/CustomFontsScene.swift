@@ -100,7 +100,7 @@ struct CustomFontsScene: View {
                     text: "Manage imported fonts"
                 )
             }
-            RespringButton()
+            ActionButtons()
         } header: {
             Text("Actions")
         } footer: {

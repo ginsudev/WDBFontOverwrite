@@ -42,5 +42,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>WDBFontOverwrite</string>
 </dict>
 </plist>

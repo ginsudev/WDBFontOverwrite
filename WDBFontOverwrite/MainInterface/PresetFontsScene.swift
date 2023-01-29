@@ -56,7 +56,7 @@ private extension PresetFontsScene {
     
     private var actionSection: some View {
         Section {
-            RespringButton()
+            ActionButtons()
         } header: {
             Text("Actions")
         } footer: {

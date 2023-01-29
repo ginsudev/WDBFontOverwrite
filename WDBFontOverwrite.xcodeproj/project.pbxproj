@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4F4E64A7295F9AB600D4F04D /* CustomFontsScene.ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4E64A6295F9AB600D4F04D /* CustomFontsScene.ViewModel.swift */; };
+		4FD690952986367C00B751B2 /* grant_full_disk_access.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FD690942986367C00B751B2 /* grant_full_disk_access.m */; };
+		4FD690992986395B00B751B2 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FD690982986395B00B751B2 /* helpers.m */; };
 		4FE5EF312963E460003384EC /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF302963E460003384EC /* NoticeView.swift */; };
 		4FE5EF3329640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF3229640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift */; };
 		4FE5EF3529653188003384EC /* FontMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE5EF3429653188003384EC /* FontMap.swift */; };
@@ -22,7 +24,7 @@
 		4FF28A0E2967955400143640 /* PresetFontsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A0D2967955400143640 /* PresetFontsScene.swift */; };
 		4FF28A102967956300143640 /* PresetFontsScene.ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A0F2967956300143640 /* PresetFontsScene.ViewModel.swift */; };
 		4FF28A1229679EEC00143640 /* ExplanationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A1129679EEC00143640 /* ExplanationView.swift */; };
-		4FF28A142967AA2D00143640 /* RespringButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A132967AA2D00143640 /* RespringButton.swift */; };
+		4FF28A142967AA2D00143640 /* ActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A132967AA2D00143640 /* ActionButtons.swift */; };
 		4FF28A162967B77800143640 /* _UIKeyboardCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A152967B77800143640 /* _UIKeyboardCache.m */; };
 		C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF775295BA9B1000DE71C /* BrotliPadding.swift */; };
 		C5A95F46295964AE00C58FDB /* PreviewFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5A95F45295964AE00C58FDB /* PreviewFonts */; };
@@ -37,6 +39,10 @@
 
 /* Begin PBXFileReference section */
 		4F4E64A6295F9AB600D4F04D /* CustomFontsScene.ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontsScene.ViewModel.swift; sourceTree = "<group>"; };
+		4FD690942986367C00B751B2 /* grant_full_disk_access.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = grant_full_disk_access.m; sourceTree = "<group>"; };
+		4FD69096298637D400B751B2 /* grant_full_disk_access.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grant_full_disk_access.h; sourceTree = "<group>"; };
+		4FD690972986394200B751B2 /* helpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
+		4FD690982986395B00B751B2 /* helpers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		4FE5EF302963E460003384EC /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
 		4FE5EF3229640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WDBImportCustomFontPickerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		4FE5EF3429653188003384EC /* FontMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontMap.swift; sourceTree = "<group>"; };
@@ -51,7 +57,7 @@
 		4FF28A0D2967955400143640 /* PresetFontsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetFontsScene.swift; sourceTree = "<group>"; };
 		4FF28A0F2967956300143640 /* PresetFontsScene.ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetFontsScene.ViewModel.swift; sourceTree = "<group>"; };
 		4FF28A1129679EEC00143640 /* ExplanationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplanationView.swift; sourceTree = "<group>"; };
-		4FF28A132967AA2D00143640 /* RespringButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RespringButton.swift; sourceTree = "<group>"; };
+		4FF28A132967AA2D00143640 /* ActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtons.swift; sourceTree = "<group>"; };
 		4FF28A152967B77800143640 /* _UIKeyboardCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _UIKeyboardCache.m; sourceTree = "<group>"; };
 		4FF28A172967B78600143640 /* _UIKeyboardCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _UIKeyboardCache.h; sourceTree = "<group>"; };
 		C55CF775295BA9B1000DE71C /* BrotliPadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BrotliPadding.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
@@ -109,7 +115,7 @@
 				4FF28A0F2967956300143640 /* PresetFontsScene.ViewModel.swift */,
 				4FE5EF302963E460003384EC /* NoticeView.swift */,
 				4FF28A1129679EEC00143640 /* ExplanationView.swift */,
-				4FF28A132967AA2D00143640 /* RespringButton.swift */,
+				4FF28A132967AA2D00143640 /* ActionButtons.swift */,
 			);
 			path = MainInterface;
 			sourceTree = "<group>";
@@ -165,6 +171,10 @@
 				C5C9A7962959261200466D87 /* Assets.xcassets */,
 				4FF28A152967B77800143640 /* _UIKeyboardCache.m */,
 				4FF28A172967B78600143640 /* _UIKeyboardCache.h */,
+				4FD690942986367C00B751B2 /* grant_full_disk_access.m */,
+				4FD69096298637D400B751B2 /* grant_full_disk_access.h */,
+				4FD690982986395B00B751B2 /* helpers.m */,
+				4FD690972986394200B751B2 /* helpers.h */,
 				C5C9A7A92959417100466D87 /* vm_unaligned_copy_switch_race.c */,
 				C5C9A7AB2959438600466D87 /* vm_unaligned_copy_switch_race.h */,
 				C5C9A7A82959417100466D87 /* WDBFontOverwrite-Bridging-Header.h */,
@@ -261,13 +271,15 @@
 				C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */,
 				4FE5EF3E29664537003384EC /* ProgressManager.swift in Sources */,
 				4FE5EF452966AD87003384EC /* FontDiscoveryScene.swift in Sources */,
+				4FD690992986395B00B751B2 /* helpers.m in Sources */,
 				4FF28A1229679EEC00143640 /* ExplanationView.swift in Sources */,
 				C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */,
 				4FE5EF38296561A5003384EC /* FileEditorView.swift in Sources */,
+				4FD690952986367C00B751B2 /* grant_full_disk_access.m in Sources */,
 				4FF28A162967B77800143640 /* _UIKeyboardCache.m in Sources */,
 				4FE5EF472966AD98003384EC /* FontDiscoveryScene.ViewModel.swift in Sources */,
 				C5C9A7AA2959417100466D87 /* vm_unaligned_copy_switch_race.c in Sources */,
-				4FF28A142967AA2D00143640 /* RespringButton.swift in Sources */,
+				4FF28A142967AA2D00143640 /* ActionButtons.swift in Sources */,
 				4FE5EF4129668C9C003384EC /* AlignedRowContentView.swift in Sources */,
 				4FE5EF492966AE1A003384EC /* FontDiscoveryCard.swift in Sources */,
 				4FE5EF3529653188003384EC /* FontMap.swift in Sources */,
@@ -414,7 +426,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -423,7 +435,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
-				MARKETING_VERSION = 1.10.4;
+				MARKETING_VERSION = 1.10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsu.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -452,7 +464,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -461,7 +473,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
-				MARKETING_VERSION = 1.10.4;
+				MARKETING_VERSION = 1.10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ginsu.WDBFontOverwrite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
