@@ -33,7 +33,7 @@ extension CustomFontsScene {
         @Published var importType: CustomFontType = .font
         
         var selectedCustomFontType: CustomFontType {
-            return customFontPickerSelection == 0 ? .font : .emoji
+            customFontPickerSelection == 0 ? .font : .emoji
         }
         
         func batchOverwriteFonts() async {

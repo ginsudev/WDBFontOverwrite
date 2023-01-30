@@ -16,7 +16,7 @@ struct FontMap {
             "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
             "/System/Library/Fonts/Core/AppleColorEmoji.ttc",
         ]),
-        localPath: "CustomAppleColorEmoji.woff2"
+        localPath: "CustomAppleColorEmoji.ttc"
     )
     
     static func populateFontMap() async throws {
@@ -30,13 +30,10 @@ struct FontMap {
                 guard !font.contains("AppleColorEmoji") else {
                     continue
                 }
-                guard let validatedLocalPath = validateFont(name: font) else {
-                    continue
-                }
                 fontMap[key(forFont: font)] = CustomFont(
                     name: font,
                     targetPath: .single("\(fontDirPath)\(dir)/\(font)"),
-                    localPath: "Custom\(validatedLocalPath)"
+                    localPath: "Custom\(font)"
                 )
             }
         }
@@ -50,17 +47,5 @@ struct FontMap {
             rejoinedString = rejoinedString.replacingOccurrences(of: "Custom", with: "")
         }
         return rejoinedString
-    }
-    
-    private static func validateFont(name: String) -> String? {
-        var components = name.components(separatedBy: ".")
-        guard components.last != "woff2" else {
-            return components.joined(separator: ".")
-        }
-        guard components.last == "ttc" || components.last == "ttf" else {
-            return nil
-        }
-        components[components.count - 1] = "woff2"
-        return components.joined(separator: ".")
     }
 }

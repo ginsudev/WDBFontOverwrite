@@ -40,11 +40,11 @@ struct ActionButtons: View {
     }
     
     private func respring() {
-        let sharedApplication = UIApplication.shared
-        let windows = sharedApplication.windows
-        if let window = windows.first {
-            while true {
-                window.snapshotView(afterScreenUpdates: false)
+        grant_full_disk_access { error in
+            if error != nil {
+                print("can't get disk access")
+            } else {
+                xpc_crasher(UnsafeMutablePointer<Int8>(mutating: "com.apple.frontboard.systemappservices"))
             }
         }
     }
