@@ -40,6 +40,21 @@ struct ActionButtons: View {
     }
     
     private func respring() {
+        if #available(iOS 15, *) {
+            grant_full_disk_access { error in
+                if error != nil {
+                    print("can't get disk access, using backup respring")
+                    respringBackup()
+                } else {
+                    xpc_crasher(UnsafeMutablePointer<Int8>(mutating: "com.apple.frontboard.systemappservices"))
+                }
+            }
+        } else {
+            respringBackup()
+        }
+    }
+    
+    private func respringBackup() {
         let sharedApplication = UIApplication.shared
         let windows = sharedApplication.windows
         if let window = windows.first {
