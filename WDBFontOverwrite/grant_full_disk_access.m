@@ -307,6 +307,16 @@ static void grant_full_disk_access_impl(void (^completion)(NSString* extension_t
                                                            NSError* _Nullable error)) {
   char* targetPath = "/System/Library/PrivateFrameworks/TCC.framework/Support/tccd";
   int fd = open(targetPath, O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    targetPath = "/System/Library/PrivateFrameworks/TCC.framework/tccd";
+    fd = open(targetPath, O_RDONLY | O_CLOEXEC);
+    if (fd == -1) {
+        completion(nil, [NSError errorWithDomain:@"com.worthdoingbadly.fulldiskaccess"
+                                            code:5
+                                        userInfo:@{NSLocalizedDescriptionKey : @"Can't patchfind."}]);
+        return;
+    }
+  }
   off_t targetLength = lseek(fd, 0, SEEK_END);
   lseek(fd, 0, SEEK_SET);
   void* targetMap = mmap(nil, targetLength, PROT_READ, MAP_SHARED, fd, 0);
