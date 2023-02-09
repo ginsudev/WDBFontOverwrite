@@ -12,10 +12,10 @@ struct FontMap {
     
     static let emojiCustomFont = CustomFont(
         name: "Emoji",
-        targetPath: .many([
+        targetPaths: [
             "/System/Library/Fonts/CoreAddition/AppleColorEmoji-160px.ttc",
             "/System/Library/Fonts/Core/AppleColorEmoji.ttc",
-        ]),
+        ],
         localPath: "CustomAppleColorEmoji.ttc"
     )
     
@@ -32,7 +32,7 @@ struct FontMap {
                 }
                 fontMap[key(forFont: font)] = CustomFont(
                     name: font,
-                    targetPath: .single("\(fontDirPath)\(dir)/\(font)"),
+                    targetPaths: ["\(fontDirPath)\(dir)/\(font)"],
                     localPath: "Custom\(font)"
                 )
             }

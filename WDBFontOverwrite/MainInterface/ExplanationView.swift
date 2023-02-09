@@ -18,7 +18,12 @@ struct ExplanationView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 5)
-                .fill(Color(UIColor(red: 0.44, green: 0.69, blue: 0.67, alpha: 1.00)))
+                .fill(Color(UIColor(
+                    red: 0.44,
+                    green: 0.69,
+                    blue: 0.67,
+                    alpha: 1.00
+                )))
             VStack(alignment: .center, spacing: 10) {
                 imageView
                 descriptionView

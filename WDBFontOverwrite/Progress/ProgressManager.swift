@@ -23,10 +23,8 @@ final class ProgressManager: ObservableObject {
     @Published var isPresentedResultsAlert = false {
         didSet {
             if !isPresentedResultsAlert {
-                Task { @MainActor in
-                    importResults = []
-                    message = "Done."
-                }
+                importResults = []
+                message = "Done."
             }
         }
     }
@@ -35,11 +33,9 @@ final class ProgressManager: ObservableObject {
         didSet {
             if !isBusy {
                 // Reset values when done.
-                Task { @MainActor in
-                    completedProgress = 0
-                    totalProgress = 0
-                    isPresentedResultsAlert = true
-                }
+                completedProgress = 0
+                totalProgress = 0
+                isPresentedResultsAlert = true
             }
         }
     }

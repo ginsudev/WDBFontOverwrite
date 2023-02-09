@@ -13,12 +13,19 @@ extension FileEditorView {
         @Published var files = [String]()
         @Published var isVisibleRemoveAllAlert = false
         
+        private var documentsDirectory: URL {
+            fileManager.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            )[0]
+        }
+        
         func populateFiles() async {
             do {
-                let path = documentsDirectory().relativePath
+                let path = documentsDirectory.relativePath
                 
                 try await MainActor.run { [weak self] in
-                    self?.files = try fileManager.contentsOfDirectory(atPath: path)
+                    self?.files = try fileManager.contentsOfDirectory(atPath: path).filter({ !$0.hasSuffix("token.txt") })
                 }
             } catch {
                 print(error)
@@ -27,7 +34,7 @@ extension FileEditorView {
         
         func remove(file: String) {
             do {
-                try fileManager.removeItem(at: documentsDirectory().appendingPathComponent(file))
+                try fileManager.removeItem(at: documentsDirectory.appendingPathComponent(file))
             } catch {
                 print(error)
             }
@@ -37,13 +44,6 @@ extension FileEditorView {
             for file in files {
                 remove(file: file)
             }
-        }
-        
-        private func documentsDirectory() -> URL {
-            return fileManager.urls(
-                for: .documentDirectory,
-                in: .userDomainMask
-            )[0]
         }
     }
 }
