@@ -7,14 +7,9 @@
 
 import Foundation
 
-enum PathType {
-    case single(String)
-    case many([String])
-}
-
 struct CustomFont {
     var name: String
-    var targetPath: PathType?
+    var targetPaths: [String]
     var localPath: String
     var notice: Notice?
 }
@@ -42,7 +37,7 @@ extension CustomFontsScene {
                 let emojiFont = FontMap.emojiCustomFont
                 await overwriteWithCustomFont(
                     name: emojiFont.localPath,
-                    targetPath: emojiFont.targetPath
+                    targetPaths: emojiFont.targetPaths
                 )
                 await MainActor.run {
                     ProgressManager.shared.isBusy = false
@@ -62,7 +57,7 @@ extension CustomFontsScene {
                     if let customFont = FontMap.fontMap[key] {
                         await overwriteWithCustomFont(
                             name: customFont.localPath,
-                            targetPath: customFont.targetPath
+                            targetPaths: customFont.targetPaths
                         )
                     }
                 }

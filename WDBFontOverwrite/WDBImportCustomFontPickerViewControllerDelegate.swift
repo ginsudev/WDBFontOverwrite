@@ -24,7 +24,9 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
     }
     
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-        ProgressManager.shared.message = "Cancelled"
+        Task { @MainActor in
+            ProgressManager.shared.message = "Cancelled"
+        }
     }
     
     private func importSelectedFonts(atURLs urls: [URL]) async {
@@ -66,11 +68,7 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
             targetURL: targetURL,
             ttcRepackMode: self.ttcRepackMode
         )
-        if success == nil {
-            return 1
-        } else {
-            return 0
-        }
+        return success == nil ? 1 : 0
     }
 }
 

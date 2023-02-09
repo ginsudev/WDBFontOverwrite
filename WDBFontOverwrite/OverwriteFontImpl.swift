@@ -156,7 +156,7 @@ func dumpCurrentFont() {
 
 func overwriteWithCustomFont(
     name: String,
-    targetPath: PathType?
+    targetPaths: [String]?
 ) async {
     let documentDirectory = FileManager.default.urls(
         for: .documentDirectory,
@@ -171,14 +171,8 @@ func overwriteWithCustomFont(
         return
     }
     
-    switch targetPath {
-    case .single(let path):
-        await overwriteWithFont(
-            fontURL: fontURL,
-            pathToTargetFont: path
-        )
-    case .many(let paths):
-        for path in paths {
+    if let targetPaths {
+        for path in targetPaths {
             if (access(path, F_OK) == 0) {
                 await overwriteWithFont(
                     fontURL: fontURL,
@@ -186,7 +180,7 @@ func overwriteWithCustomFont(
                 )
             }
         }
-    default:
+    } else {
         await MainActor.run {
             ProgressManager.shared.message = "Either targetName or targetNames must be provided"
         }

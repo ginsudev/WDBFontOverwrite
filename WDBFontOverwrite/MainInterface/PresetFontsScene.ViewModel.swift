@@ -63,9 +63,9 @@ extension PresetFontsScene {
             ),
         ]
         
-        func overwrite(withName name: String) async {
+        nonisolated func overwrite(withName name: String) async {
             await overwriteWithFont(name: name)
-            Task { @MainActor in
+            await MainActor.run {
                 ProgressManager.shared.isBusy = false
             }
         }
