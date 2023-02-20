@@ -17,7 +17,7 @@ struct ActionButtons: View {
             } label: {
                 AlignedRowContentView(
                     imageName: "trash",
-                    text: "Clear keyboard cache"
+                    text: NSLocalizedString("Clear keyboard cache", comment: "Clear keyboard cache")
                 )
             }
         }
@@ -30,7 +30,7 @@ struct ActionButtons: View {
         } label: {
             AlignedRowContentView(
                 imageName: "arrow.triangle.2.circlepath",
-                text: "Restart SpringBoard"
+                text: NSLocalizedString("Restart SpringBoard", comment: "Restart SpringBoard")
             )
         }
     }

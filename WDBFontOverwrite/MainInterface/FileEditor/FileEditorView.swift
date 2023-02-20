@@ -41,7 +41,7 @@ struct FileEditorView: View {
                     }
                 }
             }
-            .navigationTitle("Imported fonts (\(viewModel.files.count))")
+            .navigationTitle(NSLocalizedString("Imported fonts", comment: "Imported fonts") + " (\(viewModel.files.count))")
         }
         .alert(isPresented: $viewModel.isVisibleRemoveAllAlert) {
             Alert(

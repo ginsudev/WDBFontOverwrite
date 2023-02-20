@@ -25,7 +25,7 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
     
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         Task { @MainActor in
-            ProgressManager.shared.message = "Cancelled"
+            ProgressManager.shared.message = NSLocalizedString("Cancelled", comment: "Cancelled")
         }
     }
     
@@ -55,10 +55,10 @@ class WDBImportCustomFontPickerViewControllerDelegate: NSObject, UIDocumentPicke
         }
 
         ProgressManager.shared.message = String(
-            format: "Successfully imported %d/%d files.%@",
+            format: NSLocalizedString("Successfully imported %d/%d files.%@", comment: "Successfully imported %d/%d files.%@"),
             successfullyImportedCount,
             urls.count,
-            successfullyImportedCount == urls.count ? "" : " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device."
+            successfullyImportedCount == urls.count ? "" : NSLocalizedString(" Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device.", comment: " Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device.")
         )
     }
     

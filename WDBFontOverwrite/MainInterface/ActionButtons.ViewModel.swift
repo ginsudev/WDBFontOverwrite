@@ -26,7 +26,7 @@ extension ActionButtons {
                     print("can't get disk access, using backup respring")
                     respringLegacy()
                 } else {
-                    xpc_crasher(UnsafeMutablePointer<CChar>(mutating: "com.apple.frontboard.systemappservices"))
+                    respring()
                 }
             }
         }
@@ -43,3 +43,4 @@ extension ActionButtons {
         }
     }
 }
+

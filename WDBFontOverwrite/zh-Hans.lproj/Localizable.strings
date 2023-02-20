@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  WDBFontOverwrite
+
+  Created by 迟浩东 on 2023/2/20.
+  
+*/
+
+"Successfully imported.\n" = "导入成功\n";
+"Import log" = "导入日志";
+"Dismiss" = "关闭";
+"iOS version not supported. Don't ask us to support newer versions because the exploit used just simply does not support newer iOS versions." = "不支持iOS版本。不要要求我们支持较新版本，因为所使用的漏洞在较新的iOS版本已经被修复。";
+"Custom fonts require font files that are ported for iOS. See https://github.com/ginsudev/WDBFontOverwrite for details." = "自定义字体需要为iOS移植的字体文件。请参阅https://github.com/ginsudev/WDBFontOverwrite详细信息。";
+"Keyboard fonts may not be applied immediately due to iOS caching issues. IF POSSIBLE, remove the folder /var/mobile/Library/Caches/com.apple.keyboards/ if you wish for changes to take effect immediately." = "由于iOS缓存问题，键盘字体可能无法立即应用。如果可能，如果希望更改立即生效，请删除/var/mobile/Library/Caches/com.apple.keyboards/文件夹。";
+"Clear keyboard cache" = "清除键盘缓存";
+"Restart SpringBoard" = "重启SpringBoard";
+"Choose a font." = "选择字体";
+"Done." = "完成";
+"Custom" = "自定义";
+"Presets" = "预设";
+"Discovery" = "发现";
+"Choose from a selection of preset fonts." = "从预设字体中选择";
+"Fonts" = "字体";
+"Actions" = "动作";
+"Custom font" = "自定义字体";
+"Custom Emoji" = "自定义Emoji";
+"Import & manage custom fonts that have been ported to iOS." = "导入并管理自定义的iOS字体";
+"Importing..." = "导入中...";
+"Import custom fonts" = "导入自定义字体";
+"Import custom emojis" = "导入自定义Emoji";
+"Apply emojis" = "应用Emoji";
+"Apply fonts" = "应用字体";
+"Manage imported fonts" = "管理已导入字体";
+"Successfully imported %d/%d files.%@" = "成功导入 %d/%d 文件 %@";
+" Some files were skipped because your device doesn't have those fonts or because they don't support your iOS/device." = "某些文件被跳过，因为您的设备没有这些字体，或者它们不支持您的iOS/设备。";
+"Imported fonts" = "已导入字体";
+"Remove all" = "移出所有";
+"Are you sure you want to remove all imported font files?" = "确实要删除所有导入的字体文件吗？";
+"Running" = "运行中";
+"Find fonts and emojis from these talented developers and themers." = "从这些才华横溢的开发人员和主题作者那里找到字体和表情符号";
+"Cancelled" = "已取消";
+"Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev). Chinese translation by [@chihaodong](https://twitter.com/chihaodong)." = "由[@zhuowei](https://twitter.com/zhuowei)原创。 由[@GinsuDev](https://twitter.com/GinsuDev)更新和维护。中文由[@chihaodong](https://twitter.com/chihaodong)翻译和维护。";

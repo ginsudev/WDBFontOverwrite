@@ -17,7 +17,7 @@ struct PresetFontsScene: View {
                 Section {
                     ExplanationView(
                         systemImage: "textformat",
-                        description: "Choose from a selection of preset fonts.",
+                        description: NSLocalizedString("Choose from a selection of preset fonts.", comment: "Choose from a selection of preset fonts."),
                         canShowProgress: true
                     )
                 }
@@ -60,7 +60,7 @@ private extension PresetFontsScene {
         } header: {
             Text("Actions")
         } footer: {
-            Text("Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev).")
+            Text("Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev). Chinese translation by [@chihaodong](https://twitter.com/chihaodong).")
         }
     }
 }

@@ -20,7 +20,7 @@ struct CustomFontsScene: View {
                     Section {
                         ExplanationView(
                             systemImage: "textformat",
-                            description: "Import & manage custom fonts that have been ported to iOS.",
+                            description: NSLocalizedString("Import & manage custom fonts that have been ported to iOS.", comment: "Import & manage custom fonts that have been ported to iOS."),
                             canShowProgress: true
                         )
                     }
@@ -64,25 +64,25 @@ struct CustomFontsScene: View {
             .pickerStyle(.segmented)
             
             Button {
-                progressManager.message = "Importing..."
+                progressManager.message = NSLocalizedString("Importing...", comment: "Importing...")
                 viewModel.importTTCRepackMode = .woff2
                 viewModel.importPresented = true
             } label: {
                 AlignedRowContentView(
                     imageName: "square.and.arrow.down",
-                    text: "Import custom \(viewModel.selectedCustomFontType.rawValue)"
+                    text: NSLocalizedString("Import custom \(viewModel.selectedCustomFontType.rawValue)", comment: "Import custom")
                 )
             }
             Button {
                 progressManager.isBusy = true
-                progressManager.message = "Running"
+                progressManager.message = NSLocalizedString("Running", comment: "Running")
                 Task {
                     await viewModel.batchOverwriteFonts()
                 }
             } label: {
                 AlignedRowContentView(
                     imageName: "checkmark.circle",
-                    text: "Apply \(viewModel.selectedCustomFontType.rawValue)"
+                    text: NSLocalizedString("Apply \(viewModel.selectedCustomFontType.rawValue)", comment: "Apply")
                 )
             }
         } header: {
@@ -97,14 +97,14 @@ struct CustomFontsScene: View {
             } label: {
                 AlignedRowContentView(
                     imageName: "doc.badge.gearshape",
-                    text: "Manage imported fonts"
+                    text: NSLocalizedString("Manage imported fonts", comment: "Manage imported fonts")
                 )
             }
             ActionButtons()
         } header: {
             Text("Actions")
         } footer: {
-            Text("Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev).")
+            Text("Originally created by [@zhuowei](https://twitter.com/zhuowei). Updated & maintained by [@GinsuDev](https://twitter.com/GinsuDev). Chinese translation by [@chihaodong](https://twitter.com/chihaodong).")
         }
     }
 }
