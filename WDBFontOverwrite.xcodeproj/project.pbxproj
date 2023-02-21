@@ -38,6 +38,7 @@
 		C5C9A7AA2959417100466D87 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7A92959417100466D87 /* vm_unaligned_copy_switch_race.c */; };
 		EE205E7E29A37AF50086D58E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EE205E8029A37AF50086D58E /* Localizable.strings */; };
 		EE205E8329A3924D0086D58E /* ToolsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE205E8229A3924D0086D58E /* ToolsManager.swift */; };
+		EEFA4D3E29A4762B00D51F8D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEFA4D4029A4762B00D51F8D /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,8 @@
 		EE205E7F29A37AF50086D58E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EE205E8129A37AF80086D58E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EE205E8229A3924D0086D58E /* ToolsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsManager.swift; sourceTree = "<group>"; };
+		EEFA4D3F29A4762B00D51F8D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		EEFA4D4129A4763000D51F8D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +192,7 @@
 				C5C9A7A82959417100466D87 /* WDBFontOverwrite-Bridging-Header.h */,
 				C5C9A7982959261200466D87 /* Preview Content */,
 				EE205E8029A37AF50086D58E /* Localizable.strings */,
+				EEFA4D4029A4762B00D51F8D /* InfoPlist.strings */,
 			);
 			path = WDBFontOverwrite;
 			sourceTree = "<group>";
@@ -261,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE205E7E29A37AF50086D58E /* Localizable.strings in Resources */,
+				EEFA4D3E29A4762B00D51F8D /* InfoPlist.strings in Resources */,
 				C5A95F46295964AE00C58FDB /* PreviewFonts in Resources */,
 				C5C9A79A2959261200466D87 /* Preview Assets.xcassets in Resources */,
 				C5C9A7A32959341600466D87 /* RepackedFonts in Resources */,
@@ -314,6 +319,15 @@
 				EE205E8129A37AF80086D58E /* zh-Hans */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		EEFA4D4029A4762B00D51F8D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EEFA4D3F29A4762B00D51F8D /* zh-Hans */,
+				EEFA4D4129A4763000D51F8D /* en */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
