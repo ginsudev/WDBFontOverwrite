@@ -10,6 +10,7 @@ import SwiftUI
 struct PresetFontsScene: View {
     @EnvironmentObject private var progressManager: ProgressManager
     private let viewModel = ViewModel()
+    @State private var versionBuildString: String?
 
     var body: some View {
         NavigationView {
@@ -24,10 +25,19 @@ struct PresetFontsScene: View {
                 .listRowBackground(Color(UIColor(red: 0.44, green: 0.69, blue: 0.67, alpha: 1.00)))
                 fontsSection
                 actionSection
+                Section { 
+                } header: {
+                    Label("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "UNKNOWN") (\(versionBuildString ?? "Release"))", systemImage: "info")
+                }
             }
             .navigationTitle("Presets")
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, build != "0" {
+                versionBuildString = "Beta \(build)"
+            }
+        }
     }
 }
 
