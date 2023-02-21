@@ -18,13 +18,13 @@ final class ProgressManager: ObservableObject {
     @Published var completedProgress: Double = 0
     @Published var totalProgress: Double = 0
     @Published var importResults = [ImportStatus]()
-    @Published var message: String = "Choose a font."
+    @Published var message: String = NSLocalizedString("Choose a font.", comment: "Choose a font.")
     
     @Published var isPresentedResultsAlert = false {
         didSet {
             if !isPresentedResultsAlert {
                 importResults = []
-                message = "Done."
+                message = NSLocalizedString("Done.", comment: "Done.")
             }
         }
     }

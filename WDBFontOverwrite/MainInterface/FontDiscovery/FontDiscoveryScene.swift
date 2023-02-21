@@ -16,7 +16,7 @@ struct FontDiscoveryScene: View {
                 VStack(spacing: 10) {
                     ExplanationView(
                         systemImage: "star.fill",
-                        description: "Find fonts and emojis from these talented developers and themers.",
+                        description: NSLocalizedString("Find fonts and emojis from these talented developers and themers.", comment: "Find fonts and emojis from these talented developers and themers."),
                         canShowProgress: false
                     )
                     ForEach(viewModel.descriptors, id: \.name) { descriptor in

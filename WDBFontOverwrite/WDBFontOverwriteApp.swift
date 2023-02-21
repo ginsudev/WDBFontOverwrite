@@ -46,7 +46,7 @@ struct WDBFontOverwriteApp: App {
         for result in progressManager.importResults {
             switch result {
             case .success:
-                message += "Successfully imported.\n"
+                message += NSLocalizedString("Successfully imported.\n", comment: "Successfully imported.\n")
             case .failure(let string):
                 message += "\(string)\n"
             }

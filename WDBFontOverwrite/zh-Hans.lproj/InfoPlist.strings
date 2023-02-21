@@ -1,0 +1,13 @@
+/* 
+  InfoPlist.strings
+  WDBFontOverwrite
+
+  Created by 迟浩东 on 2023/2/21.
+  
+*/
+
+/* Bundle display name */
+"CFBundleDisplayName" = "WDB字体修改";
+
+/* Bundle name */
+"CFBundleName" = "WDB字体修改";
