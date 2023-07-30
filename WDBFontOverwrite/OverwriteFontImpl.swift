@@ -109,7 +109,9 @@ func overwriteWithFontImpl(
         var overwroteOne = false
         for _ in 0..<2 {
             let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
-                return unaligned_copy_switch_race(
+//                return vm_unaligned_copy_switch_race(
+//                    fd, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
+                return overwrite_file(
                     fd, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
             }
             if overwriteSucceeded {
