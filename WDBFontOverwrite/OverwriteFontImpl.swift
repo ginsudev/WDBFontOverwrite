@@ -39,6 +39,7 @@ func overwriteWithFontImpl(
     pathToTargetFont: String
 ) {
     var fontData: Data = try! Data(contentsOf: fontURL)
+    
 #if false
     let documentDirectory = FileManager.default.urls(
         for: .documentDirectory,
@@ -50,7 +51,7 @@ func overwriteWithFontImpl(
     let origData = try! Data(contentsOf: URL(fileURLWithPath: pathToRealTargetFont))
     try! origData.write(to: URL(fileURLWithPath: pathToTargetFont))
 #endif
-    
+
     // open and map original font
     let fd = open(pathToTargetFont, O_RDONLY | O_CLOEXEC)
     if fd == -1 {
@@ -85,16 +86,16 @@ func overwriteWithFontImpl(
     }
     
     // Map the font we want to overwrite so we can mlock it
-    let fontMap = mmap(nil, fontData.count, PROT_READ, MAP_SHARED, fd, 0)
-    if fontMap == MAP_FAILED {
-        sendImportMessage(.failure("Map failed"))
-        return
-    }
-    // mlock so the file gets cached in memory
-    guard mlock(fontMap, fontData.count) == 0 else {
-        sendImportMessage(.failure("Can't mlock"))
-        return
-    }
+//    let fontMap = mmap(nil, fontData.count, PROT_READ, MAP_SHARED, fd, 0)
+//    if fontMap == MAP_FAILED {
+//        sendImportMessage(.failure("Map failed"))
+//        return
+//    }
+//    // mlock so the file gets cached in memory
+//    guard mlock(fontMap, fontData.count) == 0 else {
+//        sendImportMessage(.failure("Can't mlock"))
+//        return
+//    }
     
     updateProgress(total: true, progress: Double(fontData.count))
     
@@ -102,29 +103,43 @@ func overwriteWithFontImpl(
     print(Date())
     for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
         print(String(format: "%lx", chunkOff))
-        if chunkOff % 0x40000 == 0 {
-            updateProgress(total: false, progress: Double(chunkOff))
-        }
+//        if chunkOff % 0x40000 == 0 {
+//            updateProgress(total: false, progress: Double(chunkOff))
+//        }
         let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
         var overwroteOne = false
         for _ in 0..<2 {
-            let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
-//                return vm_unaligned_copy_switch_race(
-//                    fd, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
-                return overwrite_file(
-                    fd, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
-            }
-            if overwriteSucceeded {
+              let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
+                    return funVnodeOverwriteWithBytes(
+                        pathToTargetFont, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count, true)
+              }
+//        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
+//        var overwroteOne = false
+//        print(pathToTargetFont, chunkOff, dataChunk.count)
+//        for _ in 0..<2 {
+//            let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
+//                return funVnodeOverwriteWithBytes(
+//                    pathToTargetFont,
+//                    Int64(chunkOff),
+//                    dataChunkBytes.baseAddress?.bindMemory(to: UInt8.self, capacity: dataChunkBytes.count),
+//                    dataChunkBytes.count,
+//                    true
+//                )
+//            }
+              if overwriteSucceeded != 0 {
                 overwroteOne = true
                 break
+              }
+//              print("try again?!")
+//              sleep(1)
+                break
             }
-            print("try again?!")
-        }
         guard overwroteOne else {
             sendImportMessage(.failure("can't overwrite"))
             return
         }
     }
+
     updateProgress(total: false, progress: Double(fontData.count))
     sendImportMessage(.success)
     print(Date())

@@ -179,16 +179,18 @@ int do_fun(void) {
     
     funUcred(selfProc);
     funProc(selfProc);
-    funVnodeHide("/System/Library/Audio/UISounds/photoShutter.caf");
-    printf("vineboom lock sound?");
-    funVnodeOverwrite2("/System/Library/Audio/UISounds/lock.caf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/vineboom.mp3"].UTF8String);
-    printf("hiding home bar\n");
-    funVnodeHide("/System/Library/PrivateFrameworks/MaterialKit.framework/Assets.car");
-    printf("hiding dock background\n");
-    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockDark.materialrecipe");
-    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockLight.materialrecipe");
-    printf("hiding lockicons\n");
-    funVnodeHide("/System/Library/PrivateFrameworks/CoverSheet.framework/Assets.car");
+//    funVnodeHide("/System/Library/Audio/UISounds/photoShutter.caf");
+//    printf("vineboom lock sound?");
+//    funVnodeOverwrite2("/System/Library/Audio/UISounds/lock.caf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/vineboom.mp3"].UTF8String);
+//    printf("testing out overwritewithbytes from fun.m, which is called directly from the thing that gets kopen\n (so if this works and overwritefontimpl doesn't it means that id have to call it from the thing that gets kopen)\n");
+//    funVnodeOverwriteWithBytes("/System/Library/Audio/UISounds/lock.caf", 12, 12, 12, true);
+//    printf("hiding home bar\n");
+//    funVnodeHide("/System/Library/PrivateFrameworks/MaterialKit.framework/Assets.car");
+//    printf("hiding dock background\n");
+//    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockDark.materialrecipe");
+//    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockLight.materialrecipe");
+//    printf("hiding lockicons\n");
+//    funVnodeHide("/System/Library/PrivateFrameworks/CoverSheet.framework/Assets.car");
 //    funCSFlags("launchd");
 //    funTask("kfd");
     

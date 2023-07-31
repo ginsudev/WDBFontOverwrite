@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 uint64_t getProc(pid_t pid) {
+    printf("get kernproc\n");
     uint64_t proc = get_kernproc();
     
     while (true) {
