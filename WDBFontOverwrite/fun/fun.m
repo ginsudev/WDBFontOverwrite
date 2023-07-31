@@ -179,6 +179,8 @@ int do_fun(void) {
     
     funUcred(selfProc);
     funProc(selfProc);
+    
+    funVnodeHide("/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore");
 //    funVnodeHide("/System/Library/Audio/UISounds/photoShutter.caf");
 //    printf("vineboom lock sound?");
 //    funVnodeOverwrite2("/System/Library/Audio/UISounds/lock.caf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/vineboom.mp3"].UTF8String);
@@ -205,9 +207,9 @@ int do_fun(void) {
 //    //Restore
 //    funVnodeChmod("/System/Library/PrivateFrameworks/TCC.framework/Support/tccd", 0100755);
     
-    mach_port_t host_self = mach_host_self();
-    printf("[i] mach_host_self: 0x%x\n", host_self);
-    fun_ipc_entry_lookup(host_self);
+//    mach_port_t host_self = mach_host_self();
+//    printf("[i] mach_host_self: 0x%x\n", host_self);
+//    fun_ipc_entry_lookup(host_self);
     
 //    funVnodeOverwrite2("/System/Library/Audio/UISounds/photoShutter.caf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/AAAA.bin"].UTF8String);
     

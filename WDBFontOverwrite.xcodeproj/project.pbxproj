@@ -599,7 +599,7 @@
 					"$(PROJECT_DIR)/WDBFontOverwrite",
 				);
 				MARKETING_VERSION = 1.10.8;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lrdsnow.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amongus.sussy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "WDBFontOverWrite/WDBFontOverwrite-Bridging-Header.h";
