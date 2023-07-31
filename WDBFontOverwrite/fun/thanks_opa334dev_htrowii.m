@@ -220,10 +220,8 @@ uint64_t funVnodeOverwriteWithBytes(const char* filename, off_t file_offset, con
         return -1;
     }
     
-    printf("task_get_vm_map -> vm ptr\n");
     uint64_t task_ptr = getTask();
     uint64_t vm_ptr = task_get_vm_map(task_ptr);
-    printf("entry_ptr\n");
     uint64_t entry_ptr = vm_map_find_entry(vm_ptr, (uint64_t)file_data);
     printf("set prot to rw-\n");
     vm_map_entry_set_prot(entry_ptr, PROT_READ | PROT_WRITE, PROT_READ | PROT_WRITE);

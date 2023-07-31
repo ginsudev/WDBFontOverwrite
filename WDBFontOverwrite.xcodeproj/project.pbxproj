@@ -40,6 +40,7 @@
 		C5C9A79A2959261200466D87 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7992959261200466D87 /* Preview Assets.xcassets */; };
 		C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */; };
 		C5C9A7A32959341600466D87 /* RepackedFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7A22959341600466D87 /* RepackedFonts */; };
+		C82854152A781CDD0050E059 /* Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = C82854142A781CDD0050E059 /* Dynamic */; };
 		C832BDD02A76374500F0D136 /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C832BDCF2A76374500F0D136 /* fun.m */; };
 		C832BDD92A76475600F0D136 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C832BDD82A76475600F0D136 /* vm_unaligned_copy_switch_race.c */; };
 		C842B8F82A76821F0012C54E /* LaunchKexploit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C842B8F72A76821F0012C54E /* LaunchKexploit.swift */; };
@@ -102,6 +103,7 @@
 		C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverwriteFontImpl.swift; sourceTree = "<group>"; };
 		C5C9A7A22959341600466D87 /* RepackedFonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = RepackedFonts; sourceTree = "<group>"; };
 		C5C9A7A72959351A00466D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C82854122A781AE60050E059 /* ISIconCacheServiceProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ISIconCacheServiceProtocol-Protocol.h"; sourceTree = "<group>"; };
 		C832BDCE2A76374500F0D136 /* fun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fun.h; sourceTree = "<group>"; };
 		C832BDCF2A76374500F0D136 /* fun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fun.m; sourceTree = "<group>"; };
 		C832BDD12A76398400F0D136 /* WDBFontOverwrite-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WDBFontOverwrite-Bridging-Header.h"; path = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
@@ -116,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C82854152A781CDD0050E059 /* Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +287,7 @@
 				C55CF775295BA9B1000DE71C /* BrotliPadding.swift */,
 				4FE5EF3429653188003384EC /* FontMap.swift */,
 				C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */,
+				C82854112A781AC50050E059 /* uicache */,
 				C5C9A7922959261000466D87 /* WDBFontOverwriteApp.swift */,
 				4FE5EF3229640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift */,
 				C5C9A7962959261200466D87 /* Assets.xcassets */,
@@ -303,6 +307,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		C82854112A781AC50050E059 /* uicache */ = {
+			isa = PBXGroup;
+			children = (
+				C82854122A781AE60050E059 /* ISIconCacheServiceProtocol-Protocol.h */,
+			);
+			path = uicache;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -319,6 +331,9 @@
 			dependencies = (
 			);
 			name = WDBFontOverwrite;
+			packageProductDependencies = (
+				C82854142A781CDD0050E059 /* Dynamic */,
+			);
 			productName = WDBFontOverwrite;
 			productReference = C5C9A78F2959261000466D87 /* WDBFontOverwrite.app */;
 			productType = "com.apple.product-type.application";
@@ -348,6 +363,9 @@
 				Base,
 			);
 			mainGroup = C5C9A7862959261000466D87;
+			packageReferences = (
+				C82854132A781CDD0050E059 /* XCRemoteSwiftPackageReference "Dynamic" */,
+			);
 			productRefGroup = C5C9A7902959261000466D87 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -631,6 +649,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C82854132A781CDD0050E059 /* XCRemoteSwiftPackageReference "Dynamic" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mhdhejazi/Dynamic";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C82854142A781CDD0050E059 /* Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C82854132A781CDD0050E059 /* XCRemoteSwiftPackageReference "Dynamic" */;
+			productName = Dynamic;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C5C9A7872959261000466D87 /* Project object */;
 }

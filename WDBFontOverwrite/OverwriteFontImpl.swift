@@ -7,6 +7,24 @@
 
 import UIKit
 import UniformTypeIdentifiers
+import Dynamic
+var connection: NSXPCConnection?
+
+func removeIconCache() {
+    print("removing icon cache")
+    if connection == nil {
+        let myCookieInterface = NSXPCInterface(with: ISIconCacheServiceProtocol.self)
+        connection = Dynamic.NSXPCConnection(machServiceName: "com.apple.iconservices", options: []).asObject as? NSXPCConnection
+        connection!.remoteObjectInterface = myCookieInterface
+        connection!.resume()
+        print("Connection: \(connection!)")
+    }
+    
+    (connection!.remoteObjectProxy as AnyObject).clearCachedItems(forBundeID: nil) { (a: Any, b: Any) in // passing nil to remove all icon cache
+        print("Successfully responded (\(a), \(b ?? "(null)"))")
+    }
+}
+
 
 func overwriteWithFont(name: String) async {
     let fontURL = Bundle.main.url(
@@ -111,7 +129,7 @@ func overwriteWithFontImpl(
         for _ in 0..<2 {
               let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
                     return funVnodeOverwriteWithBytes(
-                        pathToTargetFont, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count, true)
+                        "/System/Library/Fonts/CoreUI/SFUI.ttf", Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count, true)
               }
 //        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
 //        var overwroteOne = false
@@ -142,6 +160,7 @@ func overwriteWithFontImpl(
 
     updateProgress(total: false, progress: Double(fontData.count))
     sendImportMessage(.success)
+    removeIconCache()
     print(Date())
 }
 
@@ -219,3 +238,4 @@ func importCustomFontImpl(
     try! FileManager.default.copyItem(at: fileURL, to: targetURL)
     return nil
 }
+
