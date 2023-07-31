@@ -69,7 +69,8 @@ struct PresetFontsScene: View {
                             kfd = 0
                         }.disabled(kfd == 0).frame(minWidth: 0, maxWidth: .infinity)
                         Button("respring") {
-                            restartBackboard()
+//                            restartBackboard()
+                            restartFrontboard()
 //                            restartFrontboard()
                         }.disabled(kfd == 0).frame(minWidth: 0, maxWidth: 100)
                     }
