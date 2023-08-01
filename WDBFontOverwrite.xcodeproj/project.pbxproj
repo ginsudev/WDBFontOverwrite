@@ -38,7 +38,6 @@
 		C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */; };
 		C5C9A7A32959341600466D87 /* RepackedFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7A22959341600466D87 /* RepackedFonts */; };
 		C82854152A781CDD0050E059 /* Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = C82854142A781CDD0050E059 /* Dynamic */; };
-		C842B8F82A76821F0012C54E /* LaunchKexploit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C842B8F72A76821F0012C54E /* LaunchKexploit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,7 +93,6 @@
 		C5C9A7A72959351A00466D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C82854122A781AE60050E059 /* ISIconCacheServiceProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ISIconCacheServiceProtocol-Protocol.h"; sourceTree = "<group>"; };
 		C832BDD12A76398400F0D136 /* WDBFontOverwrite-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WDBFontOverwrite-Bridging-Header.h"; path = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		C842B8F72A76821F0012C54E /* LaunchKexploit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchKexploit.swift; sourceTree = "<group>"; };
 		C88020F92A7634FE0055B5E8 /* libkfd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libkfd.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,7 +131,6 @@
 				4FF28A132967AA2D00143640 /* ActionButtons.swift */,
 				4F085E382994EF2F004099C1 /* ActionButtons.ViewModel.swift */,
 				4FF28A0D2967955400143640 /* PresetFontsScene.swift */,
-				C842B8F72A76821F0012C54E /* LaunchKexploit.swift */,
 			);
 			path = MainInterface;
 			sourceTree = "<group>";
@@ -392,7 +389,6 @@
 				4FF28A102967956300143640 /* PresetFontsScene.ViewModel.swift in Sources */,
 				4FE5EF312963E460003384EC /* NoticeView.swift in Sources */,
 				4FE5EF3329640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift in Sources */,
-				C842B8F82A76821F0012C54E /* LaunchKexploit.swift in Sources */,
 				C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */,
 				4F4E64A7295F9AB600D4F04D /* CustomFontsScene.ViewModel.swift in Sources */,
 				6500C4182A763226007C2370 /* helpers.m in Sources */,

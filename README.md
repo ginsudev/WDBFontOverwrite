@@ -1,6 +1,19 @@
 # KFDFontOverwrite
 KFDFontOverwrite is an app that allows you to overwrite fonts on iOS ported to use the [kfd](https://github.com/felix-pb/kfd) kernel read/write primitives and [xsf1re's fork](https://github.com/wh1te4ever/kfd), which further built on them.
 
+This needs kfd offsets found in [dynamic_info.h](https://github.com/hrtowii/WDBFontOverwrite/blob/main/WDBFontOverwrite/libkfd/info/dynamic_info.h). 
+If you don't see your device + iOS combination, please refer to [lrdsnow's kfd-offsets repository](https://github.com/Lrdsnow/kfd_offsets), add them to dynamic_info, and change the 4 + 0x8 to 0x10. then build with xcode. 
+
+If you don't have xcode, please wait or open a PR with your dynamic_info.h. I will collate them together and push IPAs everyday.
+
+I'm waiting for a unfiied dynamic_info.h file to come out with every device/iOS combination (it will be monstrously long)
+
+## How do I use it?
+1. kopen 
+2. apply fonts
+3. kclose (it will automatically respring)
+
+If you're using custom fonts, you can import them first, then follow the 3 steps.
 
 ## How does overwriting to a file work?
 Answer: Following [opa334's](https://twitter.com/opa334dev/status/1684995963960643584) [instructions](https://twitter.com/opa334dev/status/1684993935213539328) on Twitter, I managed to create a function that overwrites the contents of one file to another without requiring vnode offsets.
