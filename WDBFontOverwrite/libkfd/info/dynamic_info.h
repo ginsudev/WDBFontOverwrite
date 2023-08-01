@@ -755,7 +755,7 @@ const struct dynamic_info kern_versions[] = {
     },
 
     //iPhone 14 Pro, 16.4.1 
-  {
+    {
         .kern_version = "Darwin Kernel Version 22.4.0: Mon Mar  6 20:42:19 PST 2023; root:xnu-8796.102.5~1/RELEASE_ARM64_T8120",
         .fileglob__fg_ops = 0x28,
         .fileglob__fg_data = 0x40 - 8,
