@@ -9,7 +9,7 @@ If you don't have xcode, please wait or open a PR with your dynamic_info.h. I wi
 I'm waiting for a unfiied dynamic_info.h file to come out with every device/iOS combination (it will be monstrously long)
 
 ## How do I use it?
-1. kopen 
+1. open the app, wait 30 seconds to kopen 
 2. apply fonts
 3. kclose (it will automatically respring)
 
