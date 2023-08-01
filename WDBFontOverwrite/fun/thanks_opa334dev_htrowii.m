@@ -141,15 +141,22 @@ uint64_t task_get_vm_map(uint64_t task_ptr)
 }
 
 #pragma mark overwrite2
-uint64_t funVnodeOverwrite2(char* to, char* from) {
-    printf("attempting opa's method\n");
+uint64_t funVnodeOverwrite2(char * to, char * from) {
+    printf("Attempting to overwrite %s with %s\n", to, from);
+//    printf("attempting opa's method\n");
     
     int to_file_index = open(to, O_RDONLY);
-    if (to_file_index == -1) return -1;
+    if (to_file_index == -1) {
+        printf("filepath doesn't exist!\n");
+        return -1;
+    }
     off_t to_file_size = lseek(to_file_index, 0, SEEK_END);
     
     int from_file_index = open(from, O_RDONLY);
-    if (from_file_index == -1) return -1;
+    if (from_file_index == -1) {
+        printf("filepath doesn't exist!\n");
+        return -1;
+    }
     off_t from_file_size = lseek(from_file_index, 0, SEEK_END);
     
     
@@ -185,7 +192,7 @@ uint64_t funVnodeOverwrite2(char* to, char* from) {
     }
     
     printf("it is writable!!\n");
-    memcpy(to_file_data, from_file_data, 1);
+    memcpy(to_file_data, from_file_data, from_file_size);
 
     // Cleanup
     munmap(from_file_data, from_file_size);
@@ -210,7 +217,7 @@ uint64_t funVnodeOverwriteWithBytes(const char* filename, off_t file_offset, con
         return -1;
     }
     
-//     mmap as read-write
+//     mmap as read-only
     printf("mmap as read only\n");
     char* file_data = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, file_index, 0);
     if (file_data == MAP_FAILED) {
@@ -219,6 +226,10 @@ uint64_t funVnodeOverwriteWithBytes(const char* filename, off_t file_offset, con
         // Handle error mapping the file
         return -1;
     }
+    
+    // mlock to cache in memory (copying overwritefontimpl) (does this even work)
+//    printf("mlock: %p\n", file_data);
+//    mlock(file_data, file_size);
     
     uint64_t task_ptr = getTask();
     uint64_t vm_ptr = task_get_vm_map(task_ptr);
@@ -229,11 +240,12 @@ uint64_t funVnodeOverwriteWithBytes(const char* filename, off_t file_offset, con
     printf("Writing data at offset %lld\n", file_offset);
     memcpy(file_data + file_offset, overwrite_data, overwrite_length);
     
-//    if (unmapAtEnd) {
+    if (unmapAtEnd) {
         munmap(file_data, file_size);
         close(file_index);
-//    }
-
+    } else {
+        close(file_index);
+    }
     return 1;
 }
 

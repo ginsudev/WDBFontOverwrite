@@ -25,12 +25,9 @@
 		4FF28A1229679EEC00143640 /* ExplanationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A1129679EEC00143640 /* ExplanationView.swift */; };
 		4FF28A142967AA2D00143640 /* ActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A132967AA2D00143640 /* ActionButtons.swift */; };
 		4FF28A162967B77800143640 /* _UIKeyboardCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FF28A152967B77800143640 /* _UIKeyboardCache.m */; };
-		6500C4172A763226007C2370 /* grant_full_disk_access.m in Sources */ = {isa = PBXBuildFile; fileRef = 6500C40C2A763226007C2370 /* grant_full_disk_access.m */; };
 		6500C4182A763226007C2370 /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 6500C40D2A763226007C2370 /* helpers.m */; };
 		6500C4192A763226007C2370 /* thanks_opa334dev_htrowii.m in Sources */ = {isa = PBXBuildFile; fileRef = 6500C40E2A763226007C2370 /* thanks_opa334dev_htrowii.m */; };
 		6500C41A2A763226007C2370 /* krw.c in Sources */ = {isa = PBXBuildFile; fileRef = 6500C40F2A763226007C2370 /* krw.c */; };
-		6500C41B2A763226007C2370 /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 6500C4102A763226007C2370 /* offsets.m */; };
-		6500C41C2A763226007C2370 /* vnode.c in Sources */ = {isa = PBXBuildFile; fileRef = 6500C4112A763226007C2370 /* vnode.c */; };
 		6500C41D2A763226007C2370 /* proc.c in Sources */ = {isa = PBXBuildFile; fileRef = 6500C4122A763226007C2370 /* proc.c */; };
 		C55CF776295BA9B1000DE71C /* BrotliPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF775295BA9B1000DE71C /* BrotliPadding.swift */; };
 		C5A95F46295964AE00C58FDB /* PreviewFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5A95F45295964AE00C58FDB /* PreviewFonts */; };
@@ -41,8 +38,6 @@
 		C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C9A7A02959263A00466D87 /* OverwriteFontImpl.swift */; };
 		C5C9A7A32959341600466D87 /* RepackedFonts in Resources */ = {isa = PBXBuildFile; fileRef = C5C9A7A22959341600466D87 /* RepackedFonts */; };
 		C82854152A781CDD0050E059 /* Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = C82854142A781CDD0050E059 /* Dynamic */; };
-		C832BDD02A76374500F0D136 /* fun.m in Sources */ = {isa = PBXBuildFile; fileRef = C832BDCF2A76374500F0D136 /* fun.m */; };
-		C832BDD92A76475600F0D136 /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = C832BDD82A76475600F0D136 /* vm_unaligned_copy_switch_race.c */; };
 		C842B8F82A76821F0012C54E /* LaunchKexploit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C842B8F72A76821F0012C54E /* LaunchKexploit.swift */; };
 /* End PBXBuildFile section */
 
@@ -80,19 +75,13 @@
 		6500C3EA2A7631D0007C2370 /* perf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perf.h; sourceTree = "<group>"; };
 		6500C3EB2A7631D0007C2370 /* info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = info.h; sourceTree = "<group>"; };
 		6500C4062A763226007C2370 /* thanks_opa334dev_htrowii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thanks_opa334dev_htrowii.h; sourceTree = "<group>"; };
-		6500C4072A763226007C2370 /* vnode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vnode.h; sourceTree = "<group>"; };
 		6500C4082A763226007C2370 /* proc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proc.h; sourceTree = "<group>"; };
-		6500C4092A763226007C2370 /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
 		6500C40A2A763226007C2370 /* krw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = krw.h; sourceTree = "<group>"; };
-		6500C40C2A763226007C2370 /* grant_full_disk_access.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = grant_full_disk_access.m; sourceTree = "<group>"; };
 		6500C40D2A763226007C2370 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		6500C40E2A763226007C2370 /* thanks_opa334dev_htrowii.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = thanks_opa334dev_htrowii.m; sourceTree = "<group>"; };
 		6500C40F2A763226007C2370 /* krw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = krw.c; sourceTree = "<group>"; };
-		6500C4102A763226007C2370 /* offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
-		6500C4112A763226007C2370 /* vnode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vnode.c; sourceTree = "<group>"; };
 		6500C4122A763226007C2370 /* proc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = proc.c; sourceTree = "<group>"; };
 		6500C4142A763226007C2370 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
-		6500C4152A763226007C2370 /* grant_full_disk_access.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = grant_full_disk_access.h; sourceTree = "<group>"; };
 		C55CF775295BA9B1000DE71C /* BrotliPadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BrotliPadding.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		C5A95F45295964AE00C58FDB /* PreviewFonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PreviewFonts; sourceTree = "<group>"; };
 		C5C9A78F2959261000466D87 /* WDBFontOverwrite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WDBFontOverwrite.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,11 +93,7 @@
 		C5C9A7A22959341600466D87 /* RepackedFonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = RepackedFonts; sourceTree = "<group>"; };
 		C5C9A7A72959351A00466D87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C82854122A781AE60050E059 /* ISIconCacheServiceProtocol-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ISIconCacheServiceProtocol-Protocol.h"; sourceTree = "<group>"; };
-		C832BDCE2A76374500F0D136 /* fun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fun.h; sourceTree = "<group>"; };
-		C832BDCF2A76374500F0D136 /* fun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = fun.m; sourceTree = "<group>"; };
 		C832BDD12A76398400F0D136 /* WDBFontOverwrite-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WDBFontOverwrite-Bridging-Header.h"; path = "WDBFontOverwrite/WDBFontOverwrite-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		C832BDD72A76475600F0D136 /* vm_unaligned_copy_switch_race.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vm_unaligned_copy_switch_race.h; sourceTree = "<group>"; };
-		C832BDD82A76475600F0D136 /* vm_unaligned_copy_switch_race.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vm_unaligned_copy_switch_race.c; sourceTree = "<group>"; };
 		C842B8F72A76821F0012C54E /* LaunchKexploit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchKexploit.swift; sourceTree = "<group>"; };
 		C88020F92A7634FE0055B5E8 /* libkfd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libkfd.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -227,24 +212,14 @@
 		6500C4052A763226007C2370 /* fun */ = {
 			isa = PBXGroup;
 			children = (
-				C832BDD72A76475600F0D136 /* vm_unaligned_copy_switch_race.h */,
-				C832BDD82A76475600F0D136 /* vm_unaligned_copy_switch_race.c */,
 				6500C4062A763226007C2370 /* thanks_opa334dev_htrowii.h */,
-				6500C4072A763226007C2370 /* vnode.h */,
-				6500C4082A763226007C2370 /* proc.h */,
-				6500C4092A763226007C2370 /* offsets.h */,
-				6500C40A2A763226007C2370 /* krw.h */,
-				6500C40C2A763226007C2370 /* grant_full_disk_access.m */,
-				6500C40D2A763226007C2370 /* helpers.m */,
 				6500C40E2A763226007C2370 /* thanks_opa334dev_htrowii.m */,
-				6500C40F2A763226007C2370 /* krw.c */,
-				6500C4102A763226007C2370 /* offsets.m */,
-				6500C4112A763226007C2370 /* vnode.c */,
+				6500C4082A763226007C2370 /* proc.h */,
 				6500C4122A763226007C2370 /* proc.c */,
-				C832BDCE2A76374500F0D136 /* fun.h */,
-				C832BDCF2A76374500F0D136 /* fun.m */,
+				6500C40A2A763226007C2370 /* krw.h */,
+				6500C40F2A763226007C2370 /* krw.c */,
 				6500C4142A763226007C2370 /* helpers.h */,
-				6500C4152A763226007C2370 /* grant_full_disk_access.h */,
+				6500C40D2A763226007C2370 /* helpers.m */,
 			);
 			path = fun;
 			sourceTree = "<group>";
@@ -395,7 +370,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6500C41A2A763226007C2370 /* krw.c in Sources */,
-				C832BDD92A76475600F0D136 /* vm_unaligned_copy_switch_race.c in Sources */,
 				4FE5EF3A296561B2003384EC /* FileEditorView.ViewModel.swift in Sources */,
 				C5C9A7952959261000466D87 /* CustomFontsScene.swift in Sources */,
 				4FF28A0E2967955400143640 /* PresetFontsScene.swift in Sources */,
@@ -407,7 +381,6 @@
 				4FF28A1229679EEC00143640 /* ExplanationView.swift in Sources */,
 				C5C9A7932959261000466D87 /* WDBFontOverwriteApp.swift in Sources */,
 				4FE5EF38296561A5003384EC /* FileEditorView.swift in Sources */,
-				6500C41C2A763226007C2370 /* vnode.c in Sources */,
 				6500C4192A763226007C2370 /* thanks_opa334dev_htrowii.m in Sources */,
 				4FF28A162967B77800143640 /* _UIKeyboardCache.m in Sources */,
 				4FE5EF472966AD98003384EC /* FontDiscoveryScene.ViewModel.swift in Sources */,
@@ -418,13 +391,10 @@
 				4F085E392994EF2F004099C1 /* ActionButtons.ViewModel.swift in Sources */,
 				4FF28A102967956300143640 /* PresetFontsScene.ViewModel.swift in Sources */,
 				4FE5EF312963E460003384EC /* NoticeView.swift in Sources */,
-				6500C4172A763226007C2370 /* grant_full_disk_access.m in Sources */,
 				4FE5EF3329640075003384EC /* WDBImportCustomFontPickerViewControllerDelegate.swift in Sources */,
 				C842B8F82A76821F0012C54E /* LaunchKexploit.swift in Sources */,
 				C5C9A7A12959263A00466D87 /* OverwriteFontImpl.swift in Sources */,
 				4F4E64A7295F9AB600D4F04D /* CustomFontsScene.ViewModel.swift in Sources */,
-				C832BDD02A76374500F0D136 /* fun.m in Sources */,
-				6500C41B2A763226007C2370 /* offsets.m in Sources */,
 				6500C4182A763226007C2370 /* helpers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

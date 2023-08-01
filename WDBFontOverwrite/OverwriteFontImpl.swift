@@ -69,94 +69,17 @@ func overwriteWithFontImpl(
     let origData = try! Data(contentsOf: URL(fileURLWithPath: pathToRealTargetFont))
     try! origData.write(to: URL(fileURLWithPath: pathToTargetFont))
 #endif
-
-    // open and map original font
-    let fd = open(pathToTargetFont, O_RDONLY | O_CLOEXEC)
-    if fd == -1 {
-        sendImportMessage(.failure("Unable to open font."))
-        return
-    }
-    defer { close(fd) }
-    // check size of font
-    let originalFontSize = lseek(fd, 0, SEEK_END)
-    guard originalFontSize >= fontData.count else {
-        sendImportMessage(.failure("Font too big."))
-        return
-    }
-    lseek(fd, 0, SEEK_SET)
-    
-    if fontData[0..<4] == Data([0x77, 0x4f, 0x46, 0x32]) {
-        // if this is a woff2 (and not a ttc)
-        // patch our font with the padding
-        // https://www.w3.org/TR/WOFF2/#woff20Header
-        // length
-        withUnsafeBytes(of: UInt32(originalFontSize).bigEndian) {
-            fontData.replaceSubrange(0x8..<0x8 + 4, with: $0)
+    let cPathtoTargetFont = pathToTargetFont.withCString { ptr in
+            return strdup(ptr)
         }
-        // privOffset
-        withUnsafeBytes(of: UInt32(fontData.count).bigEndian) {
-            fontData.replaceSubrange(0x28..<0x28 + 4, with: $0)
-        }
-        // privLength
-        withUnsafeBytes(of: UInt32(Int(originalFontSize) - fontData.count).bigEndian) {
-            fontData.replaceSubrange(0x2c..<0x2c + 4, with: $0)
-        }
-    }
+    let mutablecPathtoTargetFont = UnsafeMutablePointer<Int8>(mutating: cPathtoTargetFont)
     
-    // Map the font we want to overwrite so we can mlock it
-//    let fontMap = mmap(nil, fontData.count, PROT_READ, MAP_SHARED, fd, 0)
-//    if fontMap == MAP_FAILED {
-//        sendImportMessage(.failure("Map failed"))
-//        return
-//    }
-//    // mlock so the file gets cached in memory
-//    guard mlock(fontMap, fontData.count) == 0 else {
-//        sendImportMessage(.failure("Can't mlock"))
-//        return
-//    }
-    
-    updateProgress(total: true, progress: Double(fontData.count))
-    
-    // for every 16k chunk, rewrite
-    print(Date())
-    for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
-        print(String(format: "%lx", chunkOff))
-//        if chunkOff % 0x40000 == 0 {
-//            updateProgress(total: false, progress: Double(chunkOff))
-//        }
-        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
-        var overwroteOne = false
-        for _ in 0..<2 {
-              let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
-                    return funVnodeOverwriteWithBytes(
-                        "/System/Library/Fonts/CoreUI/SFUI.ttf", Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count, true)
-              }
-//        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
-//        var overwroteOne = false
-//        print(pathToTargetFont, chunkOff, dataChunk.count)
-//        for _ in 0..<2 {
-//            let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
-//                return funVnodeOverwriteWithBytes(
-//                    pathToTargetFont,
-//                    Int64(chunkOff),
-//                    dataChunkBytes.baseAddress?.bindMemory(to: UInt8.self, capacity: dataChunkBytes.count),
-//                    dataChunkBytes.count,
-//                    true
-//                )
-//            }
-              if overwriteSucceeded != 0 {
-                overwroteOne = true
-                break
-              }
-//              print("try again?!")
-//              sleep(1)
-                break
-            }
-        guard overwroteOne else {
-            sendImportMessage(.failure("can't overwrite"))
-            return
+    let cFontURL = fontURL.path.withCString { ptr in
+            return strdup(ptr)
         }
-    }
+    let mutablecFontURL = UnsafeMutablePointer<Int8>(mutating: cFontURL)
+    
+    funVnodeOverwrite2(cPathtoTargetFont, mutablecFontURL) // the magic is here
 
     updateProgress(total: false, progress: Double(fontData.count))
     sendImportMessage(.success)
