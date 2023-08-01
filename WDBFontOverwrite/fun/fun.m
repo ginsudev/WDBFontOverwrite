@@ -20,7 +20,6 @@
 #include "vnode.h"
 #include "grant_full_disk_access.h"
 #include "thanks_opa334dev_htrowii.h"
-#include "utils.h"
 
 
 int funUcred(uint64_t proc) {
@@ -180,33 +179,20 @@ int do_fun(void) {
     
     funUcred(selfProc);
     funProc(selfProc);
-//    printf("grant full disk access\n");
-//    grant_full_disk_access(^(NSError* error) {
-//        NSLog(@"[-] grant_full_disk_access returned error: %@", error);
-//    });
     
-//    findRootVnode();
-//    funVnodeOverwriteWithBytes("/System/Library/Audio/UISounds/lock.caf", 0x21, 1, 1, true);
-    funVnodeHide("/System/Library/Audio/UISounds/photoShutter.caf");
+    funVnodeHide("/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore");
+//    funVnodeHide("/System/Library/Audio/UISounds/photoShutter.caf");
+//    printf("vineboom lock sound?");
 //    funVnodeOverwrite2("/System/Library/Audio/UISounds/lock.caf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/vineboom.mp3"].UTF8String);
-//    funVnodeOverwriteWithBytes("/System/Library/Audio/UISounds/photoShutter.caf", 1, 1, 1, true);
-//    funVnodeHide("/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore");
-    funVnodeOverwrite2("/System/Library/Fonts/CoreUI/SFUI.ttf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/SFUI.ttf"].UTF8String);
-//    funVnodeOverwriteFile("/System/Library/Fonts/CoreUI/SFUI.ttf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/SFUI.ttf"].UTF8String);
+//    printf("testing out overwritewithbytes from fun.m, which is called directly from the thing that gets kopen\n (so if this works and overwritefontimpl doesn't it means that id have to call it from the thing that gets kopen)\n");
+//    funVnodeOverwriteWithBytes("/System/Library/Audio/UISounds/lock.caf", 12, 12, 12, true);
 //    printf("hiding home bar\n");
 //    funVnodeHide("/System/Library/PrivateFrameworks/MaterialKit.framework/Assets.car");
 //    printf("hiding dock background\n");
 //    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockDark.materialrecipe");
 //    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/dockLight.materialrecipe");
-////    printf("hiding lockicons\n");
-////    funVnodeHide("/System/Library/PrivateFrameworks/CoverSheet.framework/Assets.car");
-//    printf("hiding notifications/music player\n");
-//    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/platterStrokeLight.visualstyleset");
-//    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/platterStrokeDark.visualstyleset");
-//    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/plattersDark.materialrecipe");
-//    funVnodeHide("/System/Library/PrivateFrameworks/SpringBoardHome.framework/folderLight.materialrecipe");
-//    funVnodeHide("/System/Library/PrivateFrameworks/SpringBoardHome.framework/folderDark.materialrecipe");
-//    funVnodeHide("/System/Library/PrivateFrameworks/CoreMaterial.framework/platters.materialrecipe");
+//    printf("hiding lockicons\n");
+//    funVnodeHide("/System/Library/PrivateFrameworks/CoverSheet.framework/Assets.car");
 //    funCSFlags("launchd");
 //    funTask("kfd");
     
@@ -224,8 +210,6 @@ int do_fun(void) {
 //    mach_port_t host_self = mach_host_self();
 //    printf("[i] mach_host_self: 0x%x\n", host_self);
 //    fun_ipc_entry_lookup(host_self);
-    
-//    ResSet16(); offsets broken
     
 //    funVnodeOverwrite2("/System/Library/Audio/UISounds/photoShutter.caf", [NSString stringWithFormat:@"%@%@", NSBundle.mainBundle.bundlePath, @"/AAAA.bin"].UTF8String);
     
@@ -318,5 +302,6 @@ int do_fun(void) {
 //#endif
     
 //    sleep(5);
+    
     return 0;
 }
