@@ -7,7 +7,7 @@
 
 #define pages(number_of_pages) ((number_of_pages) * (16384ull))
 
-#define t1sz_boot (17ull)
+#define t1sz_boot (25ull)
 #define ptr_mask ((1ull << (64ull - t1sz_boot)) - 1ull)
 #define pac_mask (~ptr_mask)
 #define unsign_kaddr(kaddr) ((kaddr) | (pac_mask))
