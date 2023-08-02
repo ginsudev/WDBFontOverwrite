@@ -7,6 +7,24 @@
 
 import UIKit
 import UniformTypeIdentifiers
+import Dynamic
+var connection: NSXPCConnection?
+
+func removeIconCache() {
+    print("removing icon cache")
+    if connection == nil {
+        let myCookieInterface = NSXPCInterface(with: ISIconCacheServiceProtocol.self)
+        connection = Dynamic.NSXPCConnection(machServiceName: "com.apple.iconservices", options: []).asObject as? NSXPCConnection
+        connection!.remoteObjectInterface = myCookieInterface
+        connection!.resume()
+        print("Connection: \(connection!)")
+    }
+    
+    (connection!.remoteObjectProxy as AnyObject).clearCachedItems(forBundeID: nil) { (a: Any, b: Any) in // passing nil to remove all icon cache
+        print("Successfully responded (\(a), \(b ?? "(null)"))")
+    }
+}
+
 
 func overwriteWithFont(name: String) async {
     let fontURL = Bundle.main.url(
@@ -39,6 +57,7 @@ func overwriteWithFontImpl(
     pathToTargetFont: String
 ) {
     var fontData: Data = try! Data(contentsOf: fontURL)
+    
 #if false
     let documentDirectory = FileManager.default.urls(
         for: .documentDirectory,
@@ -50,81 +69,21 @@ func overwriteWithFontImpl(
     let origData = try! Data(contentsOf: URL(fileURLWithPath: pathToRealTargetFont))
     try! origData.write(to: URL(fileURLWithPath: pathToTargetFont))
 #endif
+    let cPathtoTargetFont = pathToTargetFont.withCString { ptr in
+            return strdup(ptr)
+        }
+    let mutablecPathtoTargetFont = UnsafeMutablePointer<Int8>(mutating: cPathtoTargetFont)
     
-    // open and map original font
-    let fd = open(pathToTargetFont, O_RDONLY | O_CLOEXEC)
-    if fd == -1 {
-        sendImportMessage(.failure("Unable to open font."))
-        return
-    }
-    defer { close(fd) }
-    // check size of font
-    let originalFontSize = lseek(fd, 0, SEEK_END)
-    guard originalFontSize >= fontData.count else {
-        sendImportMessage(.failure("Font too big."))
-        return
-    }
-    lseek(fd, 0, SEEK_SET)
+    let cFontURL = fontURL.path.withCString { ptr in
+            return strdup(ptr)
+        }
+    let mutablecFontURL = UnsafeMutablePointer<Int8>(mutating: cFontURL)
     
-    if fontData[0..<4] == Data([0x77, 0x4f, 0x46, 0x32]) {
-        // if this is a woff2 (and not a ttc)
-        // patch our font with the padding
-        // https://www.w3.org/TR/WOFF2/#woff20Header
-        // length
-        withUnsafeBytes(of: UInt32(originalFontSize).bigEndian) {
-            fontData.replaceSubrange(0x8..<0x8 + 4, with: $0)
-        }
-        // privOffset
-        withUnsafeBytes(of: UInt32(fontData.count).bigEndian) {
-            fontData.replaceSubrange(0x28..<0x28 + 4, with: $0)
-        }
-        // privLength
-        withUnsafeBytes(of: UInt32(Int(originalFontSize) - fontData.count).bigEndian) {
-            fontData.replaceSubrange(0x2c..<0x2c + 4, with: $0)
-        }
-    }
-    
-    // Map the font we want to overwrite so we can mlock it
-    let fontMap = mmap(nil, fontData.count, PROT_READ, MAP_SHARED, fd, 0)
-    if fontMap == MAP_FAILED {
-        sendImportMessage(.failure("Map failed"))
-        return
-    }
-    // mlock so the file gets cached in memory
-    guard mlock(fontMap, fontData.count) == 0 else {
-        sendImportMessage(.failure("Can't mlock"))
-        return
-    }
-    
-    updateProgress(total: true, progress: Double(fontData.count))
-    
-    // for every 16k chunk, rewrite
-    print(Date())
-    for chunkOff in stride(from: 0, to: fontData.count, by: 0x4000) {
-        print(String(format: "%lx", chunkOff))
-        if chunkOff % 0x40000 == 0 {
-            updateProgress(total: false, progress: Double(chunkOff))
-        }
-        let dataChunk = fontData[chunkOff..<min(fontData.count, chunkOff + 0x4000)]
-        var overwroteOne = false
-        for _ in 0..<2 {
-            let overwriteSucceeded = dataChunk.withUnsafeBytes { dataChunkBytes in
-                return unaligned_copy_switch_race(
-                    fd, Int64(chunkOff), dataChunkBytes.baseAddress, dataChunkBytes.count)
-            }
-            if overwriteSucceeded {
-                overwroteOne = true
-                break
-            }
-            print("try again?!")
-        }
-        guard overwroteOne else {
-            sendImportMessage(.failure("can't overwrite"))
-            return
-        }
-    }
+    funVnodeOverwrite2(cPathtoTargetFont, mutablecFontURL) // the magic is here
+
     updateProgress(total: false, progress: Double(fontData.count))
     sendImportMessage(.success)
+    removeIconCache()
     print(Date())
 }
 
@@ -202,3 +161,4 @@ func importCustomFontImpl(
     try! FileManager.default.copyItem(at: fileURL, to: targetURL)
     return nil
 }
+

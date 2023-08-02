@@ -128,3 +128,13 @@ void xpc_crasher(char* service_name) {
 
   return;
 }
+
+void restartBackboard(void) {
+  xpc_crasher("com.apple.backboard.TouchDeliveryPolicyServer");
+}
+
+void restartFrontboard(void) {
+  // NOTE: This will not kill your app on some versions
+  // You may also need to exit(0) afterwards
+  xpc_crasher("com.apple.frontboard.systemappservices");
+}

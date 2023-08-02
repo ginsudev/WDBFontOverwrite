@@ -25,14 +25,17 @@ extension ActionButtons {
                 if error != nil {
                     print("can't get disk access, using backup respring")
                     respringLegacy()
+                    xpc_crasher(UnsafeMutablePointer<CChar>(mutating: "com.apple.backboard.TouchDeliveryPolicyServer"))
                 } else {
                     xpc_crasher(UnsafeMutablePointer<CChar>(mutating: "com.apple.frontboard.systemappservices"))
+                    xpc_crasher(UnsafeMutablePointer<CChar>(mutating: "com.apple.backboard.TouchDeliveryPolicyServer"))
                 }
             }
         }
         
         @available(iOS, deprecated: 15)
         func respringLegacy() {
+            xpc_crasher(UnsafeMutablePointer<CChar>(mutating: "com.apple.backboard.TouchDeliveryPolicyServer"))
             let sharedApplication = UIApplication.shared
             let windows = sharedApplication.windows
             if let window = windows.first {
